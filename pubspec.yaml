@@ -1,0 +1,8 @@
+name: focus
+publish_to: none
+environment:
+  sdk: ^3.6.0
+workspace:
+  - focus_client
+  - focus_flutter
+  - focus_server
