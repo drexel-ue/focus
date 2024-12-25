@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:focus_flutter/app/routing.dart';
 import 'package:go_router/go_router.dart';
 
 /// Auth Page.
@@ -13,7 +14,7 @@ class AuthPage extends StatelessWidget {
   /// [GoRoute].
   static GoRoute route = GoRoute(
     path: path,
-    builder: (BuildContext context, GoRouterState state) => const AuthPage(),
+    pageBuilder: defaultPageBuilder(const AuthPage()),
   );
 
   @override
