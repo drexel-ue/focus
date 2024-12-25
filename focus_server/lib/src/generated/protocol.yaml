@@ -1,2 +1,4 @@
+auth:
+  - authenticate:
 example:
   - hello:

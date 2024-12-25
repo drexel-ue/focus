@@ -1,0 +1,7 @@
+### Auth session containing an [AuthToken] and a [User].
+class: AuthSession
+fields:
+  ### [AuthToken].
+  token: AuthToken?
+  ### [User].
+  user: User?

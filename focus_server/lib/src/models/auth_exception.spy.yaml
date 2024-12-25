@@ -1,0 +1,5 @@
+### To be thrown if there is an exception during the authentication process.
+exception: AuthException
+fields:
+  ### Message to be shown client side.
+  message: String

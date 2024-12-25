@@ -1,0 +1,7 @@
+### Contains an access and refresh token.
+class: AuthToken
+fields:
+ ### Access token.
+ accessToken: String
+ ### Refresh token keyed to access token.
+ refreshToken: String

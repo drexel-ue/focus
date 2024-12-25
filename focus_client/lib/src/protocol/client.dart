@@ -11,8 +11,27 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
-import 'protocol.dart' as _i3;
+import 'package:focus_client/src/protocol/auth_session.dart' as _i3;
+import 'protocol.dart' as _i4;
 
+/// Handles [AuthSession] creation.
+/// {@category Endpoint}
+class EndpointAuth extends _i1.EndpointRef {
+  EndpointAuth(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'auth';
+
+  /// Creates a new [AuthSession].
+  _i2.Future<_i3.AuthSession> authenticate() =>
+      caller.callServerEndpoint<_i3.AuthSession>(
+        'auth',
+        'authenticate',
+        {},
+      );
+}
+
+///
 /// {@category Endpoint}
 class EndpointExample extends _i1.EndpointRef {
   EndpointExample(_i1.EndpointCaller caller) : super(caller);
@@ -20,6 +39,7 @@ class EndpointExample extends _i1.EndpointRef {
   @override
   String get name => 'example';
 
+  ///
   _i2.Future<String> hello(String name) => caller.callServerEndpoint<String>(
         'example',
         'hello',
@@ -43,7 +63,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
           host,
-          _i3.Protocol(),
+          _i4.Protocol(),
           securityContext: securityContext,
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,
@@ -53,13 +73,19 @@ class Client extends _i1.ServerpodClientShared {
           disconnectStreamsOnLostInternetConnection:
               disconnectStreamsOnLostInternetConnection,
         ) {
+    auth = EndpointAuth(this);
     example = EndpointExample(this);
   }
+
+  late final EndpointAuth auth;
 
   late final EndpointExample example;
 
   @override
-  Map<String, _i1.EndpointRef> get endpointRefLookup => {'example': example};
+  Map<String, _i1.EndpointRef> get endpointRefLookup => {
+        'auth': auth,
+        'example': example,
+      };
 
   @override
   Map<String, _i1.ModuleEndpointCaller> get moduleLookup => {};

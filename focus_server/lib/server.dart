@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:focus_server/src/custom_scope.dart';
 import 'package:serverpod/serverpod.dart';
 
 import 'package:focus_server/src/web/routes/root.dart';
@@ -16,6 +20,15 @@ void run(List<String> args) async {
     args,
     Protocol(),
     Endpoints(),
+    authenticationHandler: (Session session, String token) async {
+      if (token.isEmpty) {
+        return null;
+      }
+      if (session.endpoint == "auth" && session.method != "refresh") {
+        return await _validateClerkToken(session, token);
+      }
+      return await _validateFocusToken(session, token);
+    },
   );
 
   // If you are using any future calls, they need to be registered here.
@@ -32,4 +45,33 @@ void run(List<String> args) async {
 
   // Start the server.
   await pod.start();
+}
+
+Future<AuthenticationInfo?> _validateClerkToken(Session session, String token) async {
+  try {
+    final pemString = await File(session.passwords['clerkJwtPem'] as String).readAsString();
+    final jwt = JWT.verify(token, RSAPublicKey(pemString));
+    final clerkId = jwt.payload['clerk_id'] as String;
+    final user = await User.db.findFirstRow(
+      session,
+      where: (UserTable table) => table.clerkUserId.equals(clerkId),
+    );
+    return AuthenticationInfo(
+      user != null ? user.id! : jwt.subject.hashCode,
+      <Scope>{CustomScope.auth},
+    );
+  } catch (error, stackTrace) {
+    session.log(
+      'error in _validateClerkToken',
+      level: LogLevel.error,
+      exception: error,
+      stackTrace: stackTrace,
+    );
+    return null;
+  }
+}
+
+Future<AuthenticationInfo?> _validateFocusToken(Session session, String token) async {
+  // FIXME(drexel-ue): implement.
+  return null;
 }
