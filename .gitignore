@@ -1,3 +1,4 @@
 focus_flutter/.env
 .dart_tool/
 pubspec.lock
+.DS_Store
