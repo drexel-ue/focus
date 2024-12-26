@@ -15,11 +15,15 @@ import 'auth_exception.dart' as _i3;
 import 'auth_session.dart' as _i4;
 import 'auth_token.dart' as _i5;
 import 'example.dart' as _i6;
-import 'user.dart' as _i7;
+import 'expired_jwt_exception.dart' as _i7;
+import 'token_mismatch_exception.dart' as _i8;
+import 'user.dart' as _i9;
 export 'auth_exception.dart';
 export 'auth_session.dart';
 export 'auth_token.dart';
 export 'example.dart';
+export 'expired_jwt_exception.dart';
+export 'token_mismatch_exception.dart';
 export 'user.dart';
 
 class Protocol extends _i1.SerializationManagerServer {
@@ -119,8 +123,14 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i6.Example) {
       return _i6.Example.fromJson(data) as T;
     }
-    if (t == _i7.User) {
-      return _i7.User.fromJson(data) as T;
+    if (t == _i7.ExpiredJWTException) {
+      return _i7.ExpiredJWTException.fromJson(data) as T;
+    }
+    if (t == _i8.TokenMismatchException) {
+      return _i8.TokenMismatchException.fromJson(data) as T;
+    }
+    if (t == _i9.User) {
+      return _i9.User.fromJson(data) as T;
     }
     if (t == _i1.getType<_i3.AuthException?>()) {
       return (data != null ? _i3.AuthException.fromJson(data) : null) as T;
@@ -134,8 +144,16 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i6.Example?>()) {
       return (data != null ? _i6.Example.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i7.User?>()) {
-      return (data != null ? _i7.User.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i7.ExpiredJWTException?>()) {
+      return (data != null ? _i7.ExpiredJWTException.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i8.TokenMismatchException?>()) {
+      return (data != null ? _i8.TokenMismatchException.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i9.User?>()) {
+      return (data != null ? _i9.User.fromJson(data) : null) as T;
     }
     try {
       return _i2.Protocol().deserialize<T>(data, t);
@@ -159,7 +177,13 @@ class Protocol extends _i1.SerializationManagerServer {
     if (data is _i6.Example) {
       return 'Example';
     }
-    if (data is _i7.User) {
+    if (data is _i7.ExpiredJWTException) {
+      return 'ExpiredJWTException';
+    }
+    if (data is _i8.TokenMismatchException) {
+      return 'TokenMismatchException';
+    }
+    if (data is _i9.User) {
       return 'User';
     }
     className = _i2.Protocol().getClassNameForObject(data);
@@ -187,8 +211,14 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'Example') {
       return deserialize<_i6.Example>(data['data']);
     }
+    if (dataClassName == 'ExpiredJWTException') {
+      return deserialize<_i7.ExpiredJWTException>(data['data']);
+    }
+    if (dataClassName == 'TokenMismatchException') {
+      return deserialize<_i8.TokenMismatchException>(data['data']);
+    }
     if (dataClassName == 'User') {
-      return deserialize<_i7.User>(data['data']);
+      return deserialize<_i9.User>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -206,8 +236,8 @@ class Protocol extends _i1.SerializationManagerServer {
       }
     }
     switch (t) {
-      case _i7.User:
-        return _i7.User.t;
+      case _i9.User:
+        return _i9.User.t;
     }
     return null;
   }

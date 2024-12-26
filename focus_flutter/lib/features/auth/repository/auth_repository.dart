@@ -26,6 +26,8 @@ class AuthRepository extends AsyncNotifier<AuthSession>
     notifyListeners();
   }
 
+  set session(AuthSession session) => state = AsyncData(session);
+
   /// Requests a new [AuthSession].
   Future<void> authenticate(BuildContext context) async {
     Session? clerkSession;

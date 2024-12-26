@@ -1,4 +1,5 @@
 auth:
   - authenticate:
+  - refresh:
 example:
   - hello:

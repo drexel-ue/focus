@@ -46,6 +46,33 @@ class AuthEndpoint extends Endpoint {
     });
   }
 
+  /// Exchanges a refresh token for a fresh [AuthSession].
+  Future<AuthSession> refresh(Session session, AuthToken authToken) async {
+    try {
+      final jwt = JWT.verify(authToken.refreshToken, _secretKey);
+      if (jwt.payload['parent_token'] == authToken.accessToken) {
+        final userId = int.parse(jwt.subject!);
+        final user = await User.db.findById(session, userId);
+        final authSession = AuthSession(
+          token: _generateAuthToken(session, user!),
+          user: user,
+        );
+        return authSession;
+      }
+      throw TokenMismatchException();
+    } on TokenMismatchException catch (_) {
+      rethrow;
+    } catch (error, stackTrace) {
+      session.log(
+        'errro in refresh',
+        level: LogLevel.error,
+        exception: error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
+
   Future<User> _parseUserFromSession(Session session) async {
     final clerkPem = await File(session.passwords['clerkJwtPem'] as String).readAsString();
     final key = RSAPublicKey(clerkPem);

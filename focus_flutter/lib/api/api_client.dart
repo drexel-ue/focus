@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/app_environment.dart';
+import 'package:focus_flutter/features/auth/repository/auth_repository.dart';
 import 'package:serverpod_flutter/serverpod_flutter.dart';
 
 /// Method ran by [Client].
@@ -11,19 +12,19 @@ mixin ApiClientRef<T> on AsyncNotifier<T> {
   /// The [Api] instance.
   Client get api => ref.read(apiClientProvider);
 
-  // /// Will run [method] and retry after refreshing [AuthSession] if needed.
-  // Future<M> refreshIfNeeded<M>(ClientMethod<M> method) async {
-  //   try {
-  //     return await method(api);
-  //   } on ExpiredJWTException catch (_) {
-  //     final currentAuthToken = ref.read(authRepositoryProvider).requireValue.token!;
-  //     await api.authenticationKeyManager!.put(currentAuthToken.refreshToken);
-  //     final newSession = await api.auth.refresh(currentAuthToken);
-  //     ref.read(authRepositoryProvider.notifier).session = newSession;
-  //     await api.authenticationKeyManager!.put(newSession.token!.accessToken);
-  //     return await method(api);
-  //   }
-  // }
+  /// Will run [method] and retry after refreshing [AuthSession] if needed.
+  Future<M> refreshIfNeeded<M>(ClientMethod<M> method) async {
+    try {
+      return await method(api);
+    } on ExpiredJWTException catch (_) {
+      final currentAuthToken = ref.read(authRepositoryProvider).requireValue.token!;
+      await api.authenticationKeyManager!.put(currentAuthToken.refreshToken);
+      final newSession = await api.auth.refresh(currentAuthToken);
+      ref.read(authRepositoryProvider.notifier).session = newSession;
+      await api.authenticationKeyManager!.put(newSession.token!.accessToken);
+      return await method(api);
+    }
+  }
 }
 
 /// Provides access to the Serverpod RPC client.

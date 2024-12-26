@@ -1,0 +1,2 @@
+### To be thrown when server detects an expired jwt.
+exception: ExpiredJWTException

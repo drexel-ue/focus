@@ -12,7 +12,8 @@
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
 import 'package:focus_client/src/protocol/auth_session.dart' as _i3;
-import 'protocol.dart' as _i4;
+import 'package:focus_client/src/protocol/auth_token.dart' as _i4;
+import 'protocol.dart' as _i5;
 
 /// Handles [AuthSession] creation.
 /// {@category Endpoint}
@@ -28,6 +29,14 @@ class EndpointAuth extends _i1.EndpointRef {
         'auth',
         'authenticate',
         {},
+      );
+
+  /// Exchanges a refresh token for a fresh [AuthSession].
+  _i2.Future<_i3.AuthSession> refresh(_i4.AuthToken authToken) =>
+      caller.callServerEndpoint<_i3.AuthSession>(
+        'auth',
+        'refresh',
+        {'authToken': authToken},
       );
 }
 
@@ -63,7 +72,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
           host,
-          _i4.Protocol(),
+          _i5.Protocol(),
           securityContext: securityContext,
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,
