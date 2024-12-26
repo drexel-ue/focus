@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
+import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/auth/repository/auth_repository.dart';
 import 'package:focus_flutter/features/auth/view/auth_page.dart';
 import 'package:focus_flutter/features/home/view/home_page.dart';
@@ -47,10 +48,58 @@ CustomTransitionPage<T> _buildPageWithDefaultTransition<T>(
       Animation<double> secondaryAnimation,
       Widget child,
     ) {
-      return FadeTransition(
-        opacity: animation,
+      return _PageAnimation(
+        animation: animation,
         child: child,
       );
     },
   );
+}
+
+@immutable
+class _PageAnimation extends StatefulWidget {
+  const _PageAnimation({
+    required this.animation,
+    required this.child,
+  });
+
+  final Animation<double> animation;
+  final Widget child;
+
+  @override
+  State<_PageAnimation> createState() => __PageAnimationState();
+}
+
+class __PageAnimationState extends State<_PageAnimation> {
+  @override
+  void initState() {
+    super.initState();
+    widget.animation.addListener(_listener);
+  }
+
+  void _listener() {
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: allPadding16,
+      child: FractionallySizedBox(
+        heightFactor: widget.animation.value,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.white, width: 2.0),
+            color: Colors.black,
+          ),
+          child: Padding(
+            padding: allPadding16,
+            child: widget.animation.isCompleted //
+                ? widget.child
+                : null,
+          ),
+        ),
+      ),
+    );
+  }
 }
