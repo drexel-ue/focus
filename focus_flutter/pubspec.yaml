@@ -28,6 +28,7 @@ dependencies:
       path: packages/clerk_flutter
   clerk_auth:
   flutter_svg: ^2.0.16
+  path_provider: ^2.1.5
 
 dependency_overrides:
   clerk_auth:
