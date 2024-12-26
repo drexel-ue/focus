@@ -6,4 +6,7 @@ class AppAssets {
 
   /// Google sign in icon.
   static const googleSignInIcon = '$_svgBasePath/android_dark_sq_na.svg';
+
+  /// Default avatar.
+  static const defaultAvatar = '$_svgBasePath/avatar_default_svgrepo_com.svg';
 }

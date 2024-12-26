@@ -43,7 +43,7 @@ class FocusApp extends ConsumerWidget {
                 ),
               ),
               builder: (BuildContext context, Widget? child) {
-                return Material(child: child);
+                return Material(child: SafeArea(child: child!));
               },
             ),
           ),
