@@ -13,7 +13,7 @@ mixin ApiClientRef<T> on AsyncNotifier<T> {
   Client get api => ref.read(apiClientProvider);
 
   /// Will run [method] and retry after refreshing [AuthSession] if needed.
-  Future<M> refreshIfNeeded<M>(ClientMethod<M> method) async {
+  Future<M?> refreshIfNeeded<M>(ClientMethod<M> method) async {
     try {
       return await method(api);
     } on ExpiredJWTException catch (_) {
@@ -23,6 +23,9 @@ mixin ApiClientRef<T> on AsyncNotifier<T> {
       ref.read(authRepositoryProvider.notifier).session = newSession;
       await api.authenticationKeyManager!.put(newSession.token!.accessToken);
       return await method(api);
+    } catch (_) {
+      await ref.read(authRepositoryProvider.notifier).logout();
+      return null;
     }
   }
 }

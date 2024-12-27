@@ -58,6 +58,17 @@ class AuthRepository extends AsyncNotifier<AuthSession>
     }
   }
 
+  /// Remove stored [AuthSession].
+  Future<void> logout() async {
+    try {
+      await _file.delete();
+      state = AsyncData(AuthSession());
+    } catch (error, stackTrace) {
+      logSevere('error in logout', error, stackTrace);
+      await _file.delete();
+    }
+  }
+
   Future<AuthSession> _maybeRestoreSession() async {
     try {
       final directory = await getApplicationDocumentsDirectory();
