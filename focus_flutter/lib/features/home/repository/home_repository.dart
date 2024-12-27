@@ -9,11 +9,11 @@ enum HomeTab {
   /// Goals.
   goals('GOALS'),
 
-  /// Tasks.
-  tasks('TASKS'),
-
   /// Routines.
   routines('ROUTINES'),
+
+  /// Tasks.
+  tasks('TASKS'),
 
   /// Games.
   games('GAMES'),

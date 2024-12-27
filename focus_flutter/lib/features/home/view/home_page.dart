@@ -86,8 +86,8 @@ class _HomePageState extends ConsumerState<HomePage> {
               children: const [
                 StatsPage(),
                 GoalsPage(),
-                TasksPage(),
                 RoutinesPage(),
+                TasksPage(),
                 GamesPage(),
                 SettingsPage(),
               ],
