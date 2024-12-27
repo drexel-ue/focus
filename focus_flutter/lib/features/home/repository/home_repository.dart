@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Denotes a tab of the home page view.
@@ -34,6 +35,14 @@ final homeRepositoryProvider = NotifierProvider<HomeRepository, HomeTab>(() => H
 
 /// Manages the home page view.
 class HomeRepository extends Notifier<HomeTab> {
+  final _overlayController = OverlayPortalController();
+
+  /// Overlay menu controller;
+  OverlayPortalController get overlayController => _overlayController;
+
+  /// Is the overlay menu showing?
+  bool get overlayMenuOpen => _overlayController.isShowing;
+
   set tab(HomeTab value) => state = value;
 
   @override

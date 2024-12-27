@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_flutter/app/routing.dart';
 import 'package:focus_flutter/features/auth/repository/clerk_auth_provider.dart';
+import 'package:focus_flutter/features/home/repository/home_repository.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 /// App.
@@ -25,6 +26,7 @@ class FocusApp extends ConsumerWidget {
             if (FocusManager.instance.primaryFocus?.hasFocus == true) {
               FocusManager.instance.primaryFocus!.unfocus();
             }
+            ref.read(homeRepositoryProvider.notifier).overlayController.hide();
           },
           child: ClerkAuth(
             auth: data,

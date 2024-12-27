@@ -35,16 +35,15 @@ class HomePage extends ConsumerStatefulWidget {
 
 class _HomePageState extends ConsumerState<HomePage> {
   late final PageController _pageController;
-  late final OverlayPortalController _overlayController;
   late final LayerLink _layerLink;
 
-  bool _overlayOpen = false;
+  OverlayPortalController get _overlayController =>
+      ref.read(homeRepositoryProvider.notifier).overlayController;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: ref.read(homeRepositoryProvider).index);
-    _overlayController = OverlayPortalController();
     _layerLink = LayerLink();
   }
 
@@ -56,12 +55,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 
-  void _toggleOverlay() {
-    setState(() {
-      _overlayController.toggle();
-      _overlayOpen = !_overlayOpen;
-    });
-  }
+  void _toggleOverlay() => _overlayController.toggle();
 
   @override
   void dispose() {
@@ -112,7 +106,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               child: FocusButton(
                 onTap: () => _toggleOverlay(),
                 square: true,
-                selected: _overlayOpen,
+                selected: _overlayController.isShowing,
                 child: OverlayPortal(
                   controller: _overlayController,
                   overlayChildBuilder: (BuildContext context) {
