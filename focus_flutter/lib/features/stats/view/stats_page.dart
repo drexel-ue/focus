@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,9 +40,22 @@ class StatsPage extends ConsumerWidget {
                       clipBehavior: Clip.antiAlias,
                       type: MaterialType.circle,
                       color: Colors.black,
-                      child: Image.network(
-                        user.profileImageUrl ?? '',
-                        errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                      child: CachedNetworkImage(
+                        imageUrl: user.profileImageUrl ?? '',
+                        fadeInDuration: const Duration(milliseconds: 300),
+                        fadeOutDuration: const Duration(milliseconds: 300),
+                        progressIndicatorBuilder: (
+                          BuildContext context,
+                          String url,
+                          DownloadProgress progress,
+                        ) {
+                          if (progress.progress case double value) {
+                            final percent = (value * 100).round();
+                            return Center(child: Text('$percent%'));
+                          }
+                          return const Center(child: Text('100%'));
+                        },
+                        errorWidget: (BuildContext context, String url, Object error) {
                           return SvgPicture.asset(AppAssets.defaultAvatar);
                         },
                       ),
