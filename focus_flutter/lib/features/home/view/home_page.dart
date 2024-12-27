@@ -13,6 +13,7 @@ import 'package:focus_flutter/features/settings/view/settings_page.dart';
 import 'package:focus_flutter/features/stats/view/stats_page.dart';
 import 'package:focus_flutter/features/tasks/view/tasks_page.dart';
 import 'package:focus_flutter/features/widget/focus_button.dart';
+import 'package:focus_flutter/features/widget/focus_painter.dart';
 import 'package:go_router/go_router.dart';
 
 /// Home Page.
@@ -102,11 +103,22 @@ class _HomePageState extends ConsumerState<HomePage> {
         Row(
           children: [
             Expanded(
-              child: Text(
-                ref.watch(homeRepositoryProvider).tab.label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontWeight: FontWeight.w600),
+              child: SizedBox(
+                height: 46.0,
+                child: CustomPaint(
+                  painter: const FocusPainter(),
+                  child: Center(
+                    child: Padding(
+                      padding: horizontalPadding16,
+                      child: Text(
+                        ref.watch(homeRepositoryProvider).tab.label,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
             horizontalMargin16,
