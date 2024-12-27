@@ -8,6 +8,6 @@ class GamesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text('Games'));
+    return const Center(child: Text('Games'));
   }
 }

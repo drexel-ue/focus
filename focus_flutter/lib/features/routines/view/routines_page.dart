@@ -8,6 +8,6 @@ class RoutinesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text('Routines'));
+    return const Center(child: Text('Routines'));
   }
 }
