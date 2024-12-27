@@ -64,6 +64,9 @@ class HomeRepository extends Notifier<HomeState> {
   /// Open/close overlay menu.
   void toggleMenu() => state = state.copyWith(menuOpen: !state.menuOpen);
 
+  /// Close overlay menu.
+  void closeMenu() => state = state.copyWith(menuOpen: false);
+
   @override
   HomeState build() {
     // FIXME(drexel-ue): should we remember the last visited tab on start? maybe the most frequently visited?

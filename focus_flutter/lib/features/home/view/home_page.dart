@@ -60,8 +60,6 @@ class _HomePageState extends ConsumerState<HomePage> {
     final menuOpen = next.menuOpen;
     if (menuOpen && !_overlayController.isShowing) {
       _overlayController.show();
-    } else if (!menuOpen && _overlayController.isShowing) {
-      _overlayController.hide();
     }
   }
 
@@ -125,7 +123,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       child: _OverlayMenu(
                         layerLink: _layerLink,
                         tabs: _tabs,
-                        onSelection: () => _toggleOverlay(),
+                        closeMenu: () => _overlayController.hide(),
                       ),
                     );
                   },
@@ -145,12 +143,12 @@ class _OverlayMenu extends ConsumerStatefulWidget {
   const _OverlayMenu({
     required this.layerLink,
     required this.tabs,
-    required this.onSelection,
+    required this.closeMenu,
   });
 
   final LayerLink layerLink;
   final List<HomeTab> tabs;
-  final VoidCallback onSelection;
+  final VoidCallback closeMenu;
 
   @override
   ConsumerState<_OverlayMenu> createState() => _OverlayMenuState();
@@ -166,11 +164,12 @@ class _OverlayMenuState extends ConsumerState<_OverlayMenu> with SingleTickerPro
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 750),
+      duration: const Duration(milliseconds: 550),
+      reverseDuration: const Duration(milliseconds: 250),
     );
     _initializeTweens();
     _animationController
-      ..addListener(_listener)
+      ..addListener(_animationControllerListener)
       ..forward();
   }
 
@@ -200,18 +199,28 @@ class _OverlayMenuState extends ConsumerState<_OverlayMenu> with SingleTickerPro
     }
   }
 
-  void _listener() => setState(() {});
+  void _animationControllerListener() => setState(() {});
+
+  Future<void> _homeRepositoryListener(HomeState? prev, HomeState next) async {
+    if (!next.menuOpen) {
+      await _animationController.reverse();
+      if (mounted) {
+        widget.closeMenu();
+      }
+    }
+  }
 
   @override
   void dispose() {
     _animationController
-      ..removeListener(_listener)
+      ..removeListener(_animationControllerListener)
       ..dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(homeRepositoryProvider, _homeRepositoryListener);
     return CompositedTransformFollower(
       link: widget.layerLink,
       followerAnchor: Alignment.bottomRight,
@@ -231,8 +240,10 @@ class _OverlayMenuState extends ConsumerState<_OverlayMenu> with SingleTickerPro
                   opacity: _opacityAnimations[index].value,
                   child: FocusButton(
                     onTap: () {
-                      ref.read(homeRepositoryProvider.notifier).tab = widget.tabs[index];
-                      widget.onSelection();
+                      final homeRepository = ref.read(homeRepositoryProvider.notifier);
+                      homeRepository
+                        ..tab = widget.tabs[index]
+                        ..closeMenu();
                     },
                     child: Text(widget.tabs[index].label),
                   ),
