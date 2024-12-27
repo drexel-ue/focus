@@ -13,7 +13,9 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
 import 'package:focus_client/src/protocol/auth_session.dart' as _i3;
 import 'package:focus_client/src/protocol/auth_token.dart' as _i4;
-import 'protocol.dart' as _i5;
+import 'package:focus_client/src/protocol/task.dart' as _i5;
+import 'package:focus_client/src/protocol/ability_experience_value.dart' as _i6;
+import 'protocol.dart' as _i7;
 
 /// Handles [AuthSession] creation.
 /// {@category Endpoint}
@@ -56,6 +58,39 @@ class EndpointExample extends _i1.EndpointRef {
       );
 }
 
+/// Handles work related to [Task]s.
+/// {@category Endpoint}
+class EndpointTask extends _i1.EndpointRef {
+  EndpointTask(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'task';
+
+  /// Get all tasks for a [User].
+  _i2.Future<List<_i5.Task>> getTasks() =>
+      caller.callServerEndpoint<List<_i5.Task>>(
+        'task',
+        'getTasks',
+        {},
+      );
+
+  /// Create a [Task].
+  _i2.Future<_i5.Task> createTask({
+    required String title,
+    String? desription,
+    required List<_i6.AbilityExperienceValue> abilityExpValues,
+  }) =>
+      caller.callServerEndpoint<_i5.Task>(
+        'task',
+        'createTask',
+        {
+          'title': title,
+          'desription': desription,
+          'abilityExpValues': abilityExpValues,
+        },
+      );
+}
+
 class Client extends _i1.ServerpodClientShared {
   Client(
     String host, {
@@ -72,7 +107,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
           host,
-          _i5.Protocol(),
+          _i7.Protocol(),
           securityContext: securityContext,
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,
@@ -84,16 +119,20 @@ class Client extends _i1.ServerpodClientShared {
         ) {
     auth = EndpointAuth(this);
     example = EndpointExample(this);
+    task = EndpointTask(this);
   }
 
   late final EndpointAuth auth;
 
   late final EndpointExample example;
 
+  late final EndpointTask task;
+
   @override
   Map<String, _i1.EndpointRef> get endpointRefLookup => {
         'auth': auth,
         'example': example,
+        'task': task,
       };
 
   @override

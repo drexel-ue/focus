@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:focus_flutter/app/layout.dart';
 
 /// Tasks Page.
 @immutable
@@ -8,6 +9,12 @@ class TasksPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('Tasks'));
+    return Padding(
+      padding: allPadding16,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [],
+      ),
+    );
   }
 }

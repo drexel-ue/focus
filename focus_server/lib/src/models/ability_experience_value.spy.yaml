@@ -1,0 +1,7 @@
+### A model tracking experience gained toward a specific [Ability].
+class: AbilityExperienceValue
+fields:
+  ### The ability.
+  ability: Ability
+  ### Experience points to be earned.
+  exp: int

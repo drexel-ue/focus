@@ -1,0 +1,14 @@
+### An upgradable aspect of the [User].
+enum: Ability
+serialized: byName
+values:
+  ### Physical power, physical work capacity, resistence, durability.
+  - strength
+  ### Capacity to grow, live, or develop. Vigor, endurance.
+  - vitality
+  ### Nimbleness, power of moving the limbs quickly and easily.
+  - agility
+  ### Ability to aquire, understand, and use knowledge.
+  - intelligence
+  ### Process of perceiving something with the senses. Capacity for insight.
+  - perception

@@ -12,7 +12,10 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../endpoints/auth_endpoint.dart' as _i2;
 import '../endpoints/example_endpoint.dart' as _i3;
-import 'package:focus_server/src/generated/auth_token.dart' as _i4;
+import '../endpoints/task_endpoint.dart' as _i4;
+import 'package:focus_server/src/generated/auth_token.dart' as _i5;
+import 'package:focus_server/src/generated/ability_experience_value.dart'
+    as _i6;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -28,6 +31,12 @@ class Endpoints extends _i1.EndpointDispatch {
         ..initialize(
           server,
           'example',
+          null,
+        ),
+      'task': _i4.TaskEndpoint()
+        ..initialize(
+          server,
+          'task',
           null,
         ),
     };
@@ -49,7 +58,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'authToken': _i1.ParameterDescription(
               name: 'authToken',
-              type: _i1.getType<_i4.AuthToken>(),
+              type: _i1.getType<_i5.AuthToken>(),
               nullable: false,
             )
           },
@@ -86,6 +95,51 @@ class Endpoints extends _i1.EndpointDispatch {
             params['name'],
           ),
         )
+      },
+    );
+    connectors['task'] = _i1.EndpointConnector(
+      name: 'task',
+      endpoint: endpoints['task']!,
+      methodConnectors: {
+        'getTasks': _i1.MethodConnector(
+          name: 'getTasks',
+          params: {},
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['task'] as _i4.TaskEndpoint).getTasks(session),
+        ),
+        'createTask': _i1.MethodConnector(
+          name: 'createTask',
+          params: {
+            'title': _i1.ParameterDescription(
+              name: 'title',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'desription': _i1.ParameterDescription(
+              name: 'desription',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+            'abilityExpValues': _i1.ParameterDescription(
+              name: 'abilityExpValues',
+              type: _i1.getType<List<_i6.AbilityExperienceValue>>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['task'] as _i4.TaskEndpoint).createTask(
+            session,
+            title: params['title'],
+            desription: params['desription'],
+            abilityExpValues: params['abilityExpValues'],
+          ),
+        ),
       },
     );
   }

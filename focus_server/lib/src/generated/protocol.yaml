@@ -3,3 +3,6 @@ auth:
   - refresh:
 example:
   - hello:
+task:
+  - getTasks:
+  - createTask:

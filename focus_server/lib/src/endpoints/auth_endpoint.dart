@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:focus_server/src/custom_scope.dart';
+import 'package:focus_server/src/extensions/session_extension.dart';
 import 'package:focus_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
 
@@ -16,7 +15,7 @@ class AuthEndpoint extends Endpoint {
   Future<AuthSession> authenticate(Session session) async {
     return session.db.transaction((Transaction transaction) async {
       try {
-        final parsedUser = await _parseUserFromSession(session);
+        final parsedUser = await session.parseUserFromClerkSession();
         User? user = await User.db.findFirstRow(
           session,
           where: (UserTable table) => table.clerkUserId.equals(parsedUser.clerkUserId),
@@ -73,23 +72,11 @@ class AuthEndpoint extends Endpoint {
     }
   }
 
-  Future<User> _parseUserFromSession(Session session) async {
-    final clerkPem = await File(session.passwords['clerkJwtPem'] as String).readAsString();
-    final key = RSAPublicKey(clerkPem);
-    final jwt = JWT.verify(session.authenticationKey!, key);
-    return User(
-      clerkUserId: jwt.payload['clerk_id'],
-      firstName: jwt.payload['first_name'],
-      lastName: jwt.payload['last_name'],
-      profileImageUrl: jwt.payload['image_url'],
-    );
-  }
-
   /// Generates an [AuthToken] containing an access token and a refresh token.
   /// The refresh token is keyed to the access token.
   AuthToken _generateAuthToken(Session session, User user) {
     const issuer = 'focus_server';
-    final scopes = <CustomScope>{CustomScope.home};
+    final scopes = <CustomScope>{CustomScope.task};
     final scopeString = scopes.map((CustomScope scope) => scope.name).join(', ');
     final accessTokenJwt = JWT(
       // FIXME(drexel-ue): what data should we bake into this token?

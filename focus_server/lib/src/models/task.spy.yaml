@@ -1,0 +1,18 @@
+### A one-off task to be completed.
+class: Task
+table: tasks
+fields:
+  ### Timestamp of entry into database.
+  createdAt: DateTime?
+  ### Timestamp of last update to database entry.
+  lastModifiedAt: DateTime?
+  ### [User] that created this task.
+  userId: int
+  ### Title.
+  title: String
+  ### Description.
+  description: String?
+  ### Is the task completed?
+  completed: bool, default=false
+  ### Collection of [ExperiencePointValue]s to be rewarded upon completion of this task.
+  abilityExpValues: List<AbilityExperienceValue>

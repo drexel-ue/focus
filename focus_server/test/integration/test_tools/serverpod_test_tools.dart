@@ -16,6 +16,9 @@ import 'package:serverpod/serverpod.dart' as _i2;
 import 'dart:async' as _i3;
 import 'package:focus_server/src/generated/auth_session.dart' as _i4;
 import 'package:focus_server/src/generated/auth_token.dart' as _i5;
+import 'package:focus_server/src/generated/task.dart' as _i6;
+import 'package:focus_server/src/generated/ability_experience_value.dart'
+    as _i7;
 import 'package:focus_server/src/generated/protocol.dart';
 import 'package:focus_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -99,6 +102,8 @@ class TestEndpoints {
   late final _AuthEndpoint auth;
 
   late final _ExampleEndpoint example;
+
+  late final _TaskEndpoint task;
 }
 
 class _InternalTestEndpoints extends TestEndpoints
@@ -113,6 +118,10 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
     example = _ExampleEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    task = _TaskEndpoint(
       endpoints,
       serializationManager,
     );
@@ -218,6 +227,79 @@ class _ExampleEndpoint {
           _localUniqueSession,
           _localCallContext.arguments,
         ) as _i3.Future<String>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
+class _TaskEndpoint {
+  _TaskEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _i2.EndpointDispatch _endpointDispatch;
+
+  final _i2.SerializationManager _serializationManager;
+
+  _i3.Future<List<_i6.Task>> getTasks(
+      _i1.TestSessionBuilder sessionBuilder) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'task',
+        method: 'getTasks',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'task',
+          methodName: 'getTasks',
+          parameters: _i1.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<List<_i6.Task>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i6.Task> createTask(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required String title,
+    String? desription,
+    required List<_i7.AbilityExperienceValue> abilityExpValues,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'task',
+        method: 'createTask',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'task',
+          methodName: 'createTask',
+          parameters: _i1.testObjectToJson({
+            'title': title,
+            'desription': desription,
+            'abilityExpValues': abilityExpValues,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i6.Task>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

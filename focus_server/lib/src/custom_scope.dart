@@ -11,14 +11,14 @@ class CustomScope extends Scope {
   /// May access [AuthEndpoint].
   static const auth = CustomScope('auth');
 
-  /// May access [HomeEndpoint].
-  static const home = CustomScope('home');
+  /// May access [TaskEndpoint].
+  static const task = CustomScope('task');
 
   /// All values.
   static const values = [
     none,
     auth,
-    home,
+    task,
   ];
 
   /// Parses [value] into a [CustomScope]. Will return [CustomScope.auth] by default.
