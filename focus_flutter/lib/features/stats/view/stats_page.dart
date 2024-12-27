@@ -24,47 +24,58 @@ class StatsPage extends ConsumerWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const _UserAvatar(),
+              horizontalMargin16,
               Expanded(
                 child: Text(user.fullName),
-              ),
-              horizontalMargin16,
-              SizedBox.square(
-                dimension: 64.0,
-                child: Material(
-                  type: MaterialType.circle,
-                  color: Colors.white,
-                  child: Padding(
-                    padding: allPadding2,
-                    child: Material(
-                      clipBehavior: Clip.antiAlias,
-                      type: MaterialType.circle,
-                      color: Colors.black,
-                      child: CachedNetworkImage(
-                        imageUrl: user.profileImageUrl ?? '',
-                        fadeInDuration: const Duration(milliseconds: 300),
-                        fadeOutDuration: const Duration(milliseconds: 300),
-                        progressIndicatorBuilder: (
-                          BuildContext context,
-                          String url,
-                          DownloadProgress progress,
-                        ) {
-                          if (progress.progress case double value) {
-                            final percent = (value * 100).round();
-                            return Center(child: Text('$percent%'));
-                          }
-                          return const Center(child: Text('100%'));
-                        },
-                        errorWidget: (BuildContext context, String url, Object error) {
-                          return SvgPicture.asset(AppAssets.defaultAvatar);
-                        },
-                      ),
-                    ),
-                  ),
-                ),
               ),
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+@immutable
+class _UserAvatar extends ConsumerWidget {
+  const _UserAvatar();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(authRepositoryProvider).requireValue.user!;
+    return SizedBox.square(
+      dimension: 64.0,
+      child: Material(
+        type: MaterialType.circle,
+        color: Colors.white,
+        child: Padding(
+          padding: allPadding2,
+          child: Material(
+            clipBehavior: Clip.antiAlias,
+            type: MaterialType.circle,
+            color: Colors.black,
+            child: CachedNetworkImage(
+              imageUrl: user.profileImageUrl ?? '',
+              fadeInDuration: const Duration(milliseconds: 300),
+              fadeOutDuration: const Duration(milliseconds: 300),
+              progressIndicatorBuilder: (
+                BuildContext context,
+                String url,
+                DownloadProgress progress,
+              ) {
+                if (progress.progress case double value) {
+                  final percent = (value * 100).round();
+                  return Center(child: Text('$percent%'));
+                }
+                return const Center(child: Text('100%'));
+              },
+              errorWidget: (BuildContext context, String url, Object error) {
+                return SvgPicture.asset(AppAssets.defaultAvatar);
+              },
+            ),
+          ),
+        ),
       ),
     );
   }
