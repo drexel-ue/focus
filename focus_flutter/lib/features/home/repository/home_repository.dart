@@ -11,8 +11,11 @@ enum HomeTab {
   /// Tasks.
   tasks('TASKS'),
 
-  /// Settings.
-  settings('SETTINGS');
+  /// Routines.
+  routines('ROUTINES'),
+
+  /// Games.
+  games('GAMES');
 
   const HomeTab(this.label);
 

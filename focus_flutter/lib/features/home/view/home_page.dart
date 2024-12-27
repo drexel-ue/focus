@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/app/routing.dart';
+import 'package:focus_flutter/features/games/view/games_page.dart';
 import 'package:focus_flutter/features/goals/view/goals_page.dart';
 import 'package:focus_flutter/features/home/repository/home_repository.dart';
-import 'package:focus_flutter/features/settings/view/settings_page.dart';
+import 'package:focus_flutter/features/routines/view/routines_page.dart';
 import 'package:focus_flutter/features/stats/view/stats_page.dart';
 import 'package:focus_flutter/features/tasks/view/tasks_page.dart';
 import 'package:go_router/go_router.dart';
@@ -69,26 +70,29 @@ class _HomePageState extends ConsumerState<HomePage> {
                 StatsPage(),
                 GoalsPage(),
                 TasksPage(),
-                SettingsPage(),
+                RoutinesPage(),
+                GamesPage(),
               ],
             ),
           ),
         ),
         verticalMargin16,
-        Row(
-          children: [
-            for (final tab in HomeTab.values) //
-              Expanded(
-                child: Padding(
-                  padding: tab == HomeTab.settings ? EdgeInsets.zero : rightPadding16,
-                  child: _HomeTabButton(
-                    tab: tab,
-                    onTap: () => ref.read(homeRepositoryProvider.notifier).tab = tab,
-                    label: tab.label,
-                  ),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (final tab in HomeTab.values) ...[
+                _HomeTabButton(
+                  tab: tab,
+                  onTap: () => ref.read(homeRepositoryProvider.notifier).tab = tab,
+                  label: tab.label,
                 ),
-              ),
-          ],
+                if (tab != HomeTab.values.last) //
+                  horizontalMargin16,
+              ],
+            ],
+          ),
         ),
       ],
     );
@@ -123,11 +127,14 @@ class _HomeTabButton extends ConsumerWidget {
         child: SizedBox(
           height: 48.0,
           child: Center(
-            child: Text(
-              label,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontWeight: selected ? FontWeight.w600 : null,
+            child: Padding(
+              padding: horizontalPadding16,
+              child: Text(
+                label,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: selected ? FontWeight.w600 : null,
+                ),
               ),
             ),
           ),
