@@ -30,24 +30,46 @@ enum HomeTab {
   final String label;
 }
 
+/// State of [HomeRepository].
+@immutable
+class HomeState {
+  /// Constructs a const [HomeState].
+  const HomeState({
+    required this.tab,
+    required this.menuOpen,
+  });
+
+  /// Current tab.
+  final HomeTab tab;
+
+  /// Is the overlay menu open?
+  final bool menuOpen;
+
+  /// Creates a new [HomeState] while preserving data.
+  HomeState copyWith({HomeTab? tab, bool? menuOpen}) {
+    return HomeState(
+      tab: tab ?? this.tab,
+      menuOpen: menuOpen ?? this.menuOpen,
+    );
+  }
+}
+
 /// Provides access to the [HomeRepository].
-final homeRepositoryProvider = NotifierProvider<HomeRepository, HomeTab>(() => HomeRepository());
+final homeRepositoryProvider = NotifierProvider<HomeRepository, HomeState>(() => HomeRepository());
 
 /// Manages the home page view.
-class HomeRepository extends Notifier<HomeTab> {
-  final _overlayController = OverlayPortalController();
+class HomeRepository extends Notifier<HomeState> {
+  set tab(HomeTab value) => state = state.copyWith(tab: value);
 
-  /// Overlay menu controller;
-  OverlayPortalController get overlayController => _overlayController;
-
-  /// Is the overlay menu showing?
-  bool get overlayMenuOpen => _overlayController.isShowing;
-
-  set tab(HomeTab value) => state = value;
+  /// Open/close overlay menu.
+  void toggleMenu() => state = state.copyWith(menuOpen: !state.menuOpen);
 
   @override
-  HomeTab build() {
+  HomeState build() {
     // FIXME(drexel-ue): should we remember the last visited tab on start? maybe the most frequently visited?
-    return HomeTab.stats;
+    return const HomeState(
+      tab: HomeTab.stats,
+      menuOpen: false,
+    );
   }
 }

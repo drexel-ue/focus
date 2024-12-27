@@ -26,7 +26,7 @@ class FocusApp extends ConsumerWidget {
             if (FocusManager.instance.primaryFocus?.hasFocus == true) {
               FocusManager.instance.primaryFocus!.unfocus();
             }
-            ref.read(homeRepositoryProvider.notifier).overlayController.hide();
+            ref.read(homeRepositoryProvider.notifier).toggleMenu();
           },
           child: ClerkAuth(
             auth: data,

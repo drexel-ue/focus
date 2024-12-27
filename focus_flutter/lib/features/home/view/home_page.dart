@@ -36,31 +36,36 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage> {
   late final PageController _pageController;
   late final LayerLink _layerLink;
-
-  OverlayPortalController get _overlayController =>
-      ref.read(homeRepositoryProvider.notifier).overlayController;
+  late final OverlayPortalController _overlayController;
 
   List<HomeTab> get _tabs {
-    final currentTab = ref.watch(homeRepositoryProvider);
+    final currentTab = ref.watch(homeRepositoryProvider).tab;
     return HomeTab.values.where((HomeTab tab) => tab != currentTab).toList();
   }
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: ref.read(homeRepositoryProvider).index);
+    _pageController = PageController(initialPage: ref.read(homeRepositoryProvider).tab.index);
     _layerLink = LayerLink();
+    _overlayController = OverlayPortalController();
   }
 
-  void _homeRepositoryListener(HomeTab? prev, HomeTab next) {
+  void _homeRepositoryListener(HomeState? prev, HomeState next) {
     _pageController.animateToPage(
-      next.index,
+      next.tab.index,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeOut,
     );
+    final menuOpen = next.menuOpen;
+    if (menuOpen && !_overlayController.isShowing) {
+      _overlayController.show();
+    } else if (!menuOpen && _overlayController.isShowing) {
+      _overlayController.hide();
+    }
   }
 
-  void _toggleOverlay() => _overlayController.toggle();
+  void _toggleOverlay() => ref.read(homeRepositoryProvider.notifier).toggleMenu();
 
   @override
   void dispose() {
@@ -99,7 +104,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           children: [
             Expanded(
               child: Text(
-                ref.watch(homeRepositoryProvider).label,
+                ref.watch(homeRepositoryProvider).tab.label,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(fontWeight: FontWeight.w600),
