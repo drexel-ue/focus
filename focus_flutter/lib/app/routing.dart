@@ -83,22 +83,13 @@ class __PageAnimationState extends State<_PageAnimation> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: allPadding16,
-      child: FractionallySizedBox(
-        heightFactor: widget.animation.value,
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.white, width: 2.0),
-            color: Colors.black,
-          ),
-          child: Padding(
-            padding: allPadding16,
-            child: widget.animation.isCompleted //
-                ? widget.child
-                : null,
-          ),
-        ),
+    return FractionallySizedBox(
+      heightFactor: widget.animation.value,
+      child: Padding(
+        padding: allPadding16,
+        child: widget.animation.isCompleted //
+            ? widget.child
+            : null,
       ),
     );
   }

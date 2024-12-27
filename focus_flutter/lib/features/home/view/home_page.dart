@@ -58,15 +58,20 @@ class _HomePageState extends ConsumerState<HomePage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Expanded(
-          child: PageView(
-            controller: _controller,
-            physics: const NeverScrollableScrollPhysics(),
-            children: const [
-              StatsPage(),
-              GoalsPage(),
-              TasksPage(),
-              SettingsPage(),
-            ],
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.white, width: 2.0),
+            ),
+            child: PageView(
+              controller: _controller,
+              physics: const NeverScrollableScrollPhysics(),
+              children: const [
+                StatsPage(),
+                GoalsPage(),
+                TasksPage(),
+                SettingsPage(),
+              ],
+            ),
           ),
         ),
         verticalMargin16,
