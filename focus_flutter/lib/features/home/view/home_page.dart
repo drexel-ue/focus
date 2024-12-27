@@ -102,20 +102,19 @@ class _HomePageState extends ConsumerState<HomePage> {
         verticalMargin16,
         Row(
           children: [
-            Expanded(
-              child: SizedBox(
-                height: 46.0,
-                child: CustomPaint(
-                  painter: const FocusPainter(),
-                  child: Center(
-                    child: Padding(
-                      padding: horizontalPadding16,
-                      child: Text(
-                        ref.watch(homeRepositoryProvider).tab.label,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontWeight: FontWeight.w600),
-                      ),
+            spacer,
+            SizedBox(
+              height: 46.0,
+              child: CustomPaint(
+                painter: const FocusPainter(),
+                child: Center(
+                  child: Padding(
+                    padding: horizontalPadding16,
+                    child: Text(
+                      ref.watch(homeRepositoryProvider).tab.label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
