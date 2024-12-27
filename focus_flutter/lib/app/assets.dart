@@ -9,4 +9,7 @@ class AppAssets {
 
   /// Default avatar.
   static const defaultAvatar = '$_svgBasePath/avatar_default_svgrepo_com.svg';
+
+  /// App icon.
+  static const focusIcon = 'assets/icon/icon.svg';
 }

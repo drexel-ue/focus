@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:focus_flutter/app/assets.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/app/routing.dart';
 import 'package:focus_flutter/features/games/view/games_page.dart';
 import 'package:focus_flutter/features/goals/view/goals_page.dart';
 import 'package:focus_flutter/features/home/repository/home_repository.dart';
 import 'package:focus_flutter/features/routines/view/routines_page.dart';
+import 'package:focus_flutter/features/settings/view/settings_page.dart';
 import 'package:focus_flutter/features/stats/view/stats_page.dart';
 import 'package:focus_flutter/features/tasks/view/tasks_page.dart';
+import 'package:focus_flutter/features/widget/focus_button.dart';
 import 'package:go_router/go_router.dart';
 
 /// Home Page.
@@ -30,25 +34,38 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  late final PageController _controller;
+  late final PageController _pageController;
+  late final OverlayPortalController _overlayController;
+  late final LayerLink _layerLink;
+
+  bool _overlayOpen = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = PageController(initialPage: ref.read(homeRepositoryProvider).index);
+    _pageController = PageController(initialPage: ref.read(homeRepositoryProvider).index);
+    _overlayController = OverlayPortalController();
+    _layerLink = LayerLink();
   }
 
   void _homeRepositoryListener(HomeTab? prev, HomeTab next) {
-    _controller.animateToPage(
+    _pageController.animateToPage(
       next.index,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeOut,
     );
   }
 
+  void _toggleOverlay() {
+    setState(() {
+      _overlayController.toggle();
+      _overlayOpen = !_overlayOpen;
+    });
+  }
+
   @override
   void dispose() {
-    _controller.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
@@ -64,35 +81,54 @@ class _HomePageState extends ConsumerState<HomePage> {
               border: Border.all(color: Colors.white, width: 2.0),
             ),
             child: PageView(
-              controller: _controller,
+              controller: _pageController,
               physics: const NeverScrollableScrollPhysics(),
+              scrollDirection: Axis.vertical,
               children: const [
                 StatsPage(),
                 GoalsPage(),
                 TasksPage(),
                 RoutinesPage(),
                 GamesPage(),
+                SettingsPage(),
               ],
             ),
           ),
         ),
         verticalMargin16,
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              for (final tab in HomeTab.values) ...[
-                _HomeTabButton(
-                  tab: tab,
-                  onTap: () => ref.read(homeRepositoryProvider.notifier).tab = tab,
-                  label: tab.label,
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                ref.watch(homeRepositoryProvider).label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
+            ),
+            horizontalMargin16,
+            CompositedTransformTarget(
+              link: _layerLink,
+              child: FocusButton(
+                onTap: () => _toggleOverlay(),
+                square: true,
+                selected: _overlayOpen,
+                child: OverlayPortal(
+                  controller: _overlayController,
+                  overlayChildBuilder: (BuildContext context) {
+                    return Positioned(
+                      width: 200.0,
+                      child: _OverlayMenu(
+                        layerLink: _layerLink,
+                        onSelection: () => _toggleOverlay(),
+                      ),
+                    );
+                  },
+                  child: SvgPicture.asset(AppAssets.focusIcon),
                 ),
-                if (tab != HomeTab.values.last) //
-                  horizontalMargin16,
-              ],
-            ],
-          ),
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -100,44 +136,40 @@ class _HomePageState extends ConsumerState<HomePage> {
 }
 
 @immutable
-class _HomeTabButton extends ConsumerWidget {
-  const _HomeTabButton({
-    required this.tab,
-    required this.onTap,
-    required this.label,
+class _OverlayMenu extends ConsumerWidget {
+  const _OverlayMenu({
+    required this.layerLink,
+    required this.onSelection,
   });
 
-  final HomeTab tab;
-  final VoidCallback onTap;
-  final String label;
+  final LayerLink layerLink;
+  final VoidCallback onSelection;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentTab = ref.watch(homeRepositoryProvider);
-    final selected = tab == currentTab;
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.white,
-          width: selected ? 2.5 : 2.0,
-        ),
-      ),
-      child: InkWell(
-        onTap: () => onTap(),
-        child: SizedBox(
-          height: 48.0,
-          child: Center(
-            child: Padding(
-              padding: horizontalPadding16,
-              child: Text(
-                label,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: selected ? FontWeight.w600 : null,
-                ),
+    final tabs = HomeTab.values.where((HomeTab tab) => tab != currentTab);
+    return CompositedTransformFollower(
+      link: layerLink,
+      followerAnchor: Alignment.bottomRight,
+      targetAnchor: Alignment.topRight,
+      child: ColoredBox(
+        color: Colors.black,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final tab in tabs) ...[
+              FocusButton(
+                onTap: () {
+                  ref.read(homeRepositoryProvider.notifier).tab = tab;
+                  onSelection();
+                },
+                child: Text(tab.label),
               ),
-            ),
-          ),
+              verticalMargin16,
+            ],
+          ],
         ),
       ),
     );

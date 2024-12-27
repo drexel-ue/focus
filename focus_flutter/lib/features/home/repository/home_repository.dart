@@ -15,7 +15,13 @@ enum HomeTab {
   routines('ROUTINES'),
 
   /// Games.
-  games('GAMES');
+  games('GAMES'),
+
+  /// Settings.
+  settings('SETTINGS'),
+
+  //
+  ;
 
   const HomeTab(this.label);
 
