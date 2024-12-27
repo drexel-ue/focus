@@ -40,6 +40,11 @@ class _HomePageState extends ConsumerState<HomePage> {
   OverlayPortalController get _overlayController =>
       ref.read(homeRepositoryProvider.notifier).overlayController;
 
+  List<HomeTab> get _tabs {
+    final currentTab = ref.watch(homeRepositoryProvider);
+    return HomeTab.values.where((HomeTab tab) => tab != currentTab).toList();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -114,6 +119,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       width: 200.0,
                       child: _OverlayMenu(
                         layerLink: _layerLink,
+                        tabs: _tabs,
                         onSelection: () => _toggleOverlay(),
                       ),
                     );
@@ -130,36 +136,102 @@ class _HomePageState extends ConsumerState<HomePage> {
 }
 
 @immutable
-class _OverlayMenu extends ConsumerWidget {
+class _OverlayMenu extends ConsumerStatefulWidget {
   const _OverlayMenu({
     required this.layerLink,
+    required this.tabs,
     required this.onSelection,
   });
 
   final LayerLink layerLink;
+  final List<HomeTab> tabs;
   final VoidCallback onSelection;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final currentTab = ref.watch(homeRepositoryProvider);
-    final tabs = HomeTab.values.where((HomeTab tab) => tab != currentTab);
+  ConsumerState<_OverlayMenu> createState() => _OverlayMenuState();
+}
+
+class _OverlayMenuState extends ConsumerState<_OverlayMenu> with SingleTickerProviderStateMixin {
+  late final AnimationController _animationController;
+  final _offsetAnimations = <Animation<double>>[];
+  final _opacityAnimations = <Animation<double>>[];
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 750),
+    );
+    _initializeTweens();
+    _animationController
+      ..addListener(_listener)
+      ..forward();
+  }
+
+  void _initializeTweens() {
+    final segment = 1.0 / widget.tabs.length;
+    for (int index = 0; index < widget.tabs.length; index++) {
+      final curvedAnimation = CurvedAnimation(
+        parent: _animationController,
+        curve: Interval(
+          index * segment,
+          (index * segment) + segment,
+          curve: Curves.easeOut,
+        ),
+      );
+      _offsetAnimations.add(
+        Tween<double>(
+          begin: (48.0 + 16.0) * (widget.tabs.length - index),
+          end: 0.0,
+        ).animate(curvedAnimation),
+      );
+      _opacityAnimations.add(
+        Tween<double>(
+          begin: 0.0,
+          end: 1.0,
+        ).animate(curvedAnimation),
+      );
+    }
+  }
+
+  void _listener() => setState(() {});
+
+  @override
+  void dispose() {
+    _animationController
+      ..removeListener(_listener)
+      ..dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return CompositedTransformFollower(
-      link: layerLink,
+      link: widget.layerLink,
       followerAnchor: Alignment.bottomRight,
       targetAnchor: Alignment.topRight,
       child: ColoredBox(
-        color: Colors.black,
+        color: Colors.black.withAlpha(
+          Tween<double>(begin: 0.0, end: 255.0).animate(_animationController).value.round(),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
           children: [
-            for (final tab in tabs) ...[
-              FocusButton(
-                onTap: () {
-                  ref.read(homeRepositoryProvider.notifier).tab = tab;
-                  onSelection();
-                },
-                child: Text(tab.label),
+            for (int index = 0; index < widget.tabs.length; index++) ...[
+              Transform.translate(
+                offset: Offset(0.0, _offsetAnimations[index].value),
+                child: Opacity(
+                  opacity: _opacityAnimations[index].value,
+                  child: FocusButton(
+                    onTap: () {
+                      ref.read(homeRepositoryProvider.notifier).tab = widget.tabs[index];
+                      widget.onSelection();
+                    },
+                    child: Text(widget.tabs[index].label),
+                  ),
+                ),
               ),
               verticalMargin16,
             ],
