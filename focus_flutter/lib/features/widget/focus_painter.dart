@@ -6,7 +6,7 @@ class FocusPainter extends CustomPainter {
   /// Constructs a const [FocusPainter].
   const FocusPainter();
 
-  static const _lineLength = 5.0;
+  static const _lineLength = 8.0;
 
   static final _paint = Paint()
     ..color = Colors.white
