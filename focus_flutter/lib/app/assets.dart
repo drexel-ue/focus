@@ -12,4 +12,7 @@ class AppAssets {
 
   /// App icon.
   static const focusIcon = 'assets/icon/icon.svg';
+
+  /// Checkmark.
+  static const checkmark = '$_svgBasePath/checkmark_small_svgrepo_com.svg';
 }
