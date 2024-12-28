@@ -67,11 +67,11 @@ class EndpointTask extends _i1.EndpointRef {
   String get name => 'task';
 
   /// Get all tasks for a [User].
-  _i2.Future<List<_i5.Task>> getTasks() =>
+  _i2.Future<List<_i5.Task>> getTasks(int page) =>
       caller.callServerEndpoint<List<_i5.Task>>(
         'task',
         'getTasks',
-        {},
+        {'page': page},
       );
 
   /// Create a [Task].

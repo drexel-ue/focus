@@ -9,13 +9,16 @@ class TaskEndpoint extends Endpoint {
   Set<Scope> get requiredScopes => {CustomScope.task};
 
   /// Get all tasks for a [User].
-  Future<List<Task>> getTasks(Session session) async {
+  Future<List<Task>> getTasks(Session session, int page) async {
     return session.db.transaction((Transaction transaction) async {
       try {
         final user = await session.parseUserFromFocusSession(transaction);
         return await Task.db.find(
           session,
           where: (TaskTable table) => table.userId.equals(user.id!),
+          orderBy: (TaskTable table) => table.createdAt,
+          limit: 25,
+          offset: page * 25,
           transaction: transaction,
         );
       } on InvalidTokenException catch (_) {
