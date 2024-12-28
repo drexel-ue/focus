@@ -8,7 +8,7 @@ import 'package:focus_flutter/api/api_client.dart';
 
 /// Proivdes access to [TasksRepository].
 final taskRepositoryProvider = AsyncNotifierProvider<TasksRepository, TaskState>(() {
-  return TasksRepository()..loadTasks();
+  return TasksRepository();
 });
 
 /// State of [TaskRepository].
@@ -51,7 +51,7 @@ class TasksRepository extends AsyncNotifier<TaskState> with ApiClientRef, Loggin
       state = AsyncData(
         TaskState(
           tasks: [...currentState.requireValue.tasks, ...tasks!],
-          page: currentState.requireValue.page + 1,
+          page: currentState.requireValue.page + (tasks.length == 25 ? 1 : 0),
         ),
       );
     } catch (error, stackTrace) {
@@ -77,9 +77,8 @@ class TasksRepository extends AsyncNotifier<TaskState> with ApiClientRef, Loggin
         );
       });
       state = AsyncData(
-        TaskState(
+        currentState.requireValue.copyWith(
           tasks: [task!, ...currentState.requireValue.tasks],
-          page: currentState.requireValue.page + 1,
         ),
       );
     } catch (error, stackTrace) {
@@ -89,5 +88,18 @@ class TasksRepository extends AsyncNotifier<TaskState> with ApiClientRef, Loggin
   }
 
   @override
-  FutureOr<TaskState> build() => const TaskState();
+  Future<TaskState> build() async {
+    try {
+      final tasks = await refreshIfNeeded((api) async {
+        return await api.task.getTasks(0);
+      });
+      return TaskState(
+        tasks: tasks!,
+        page: tasks.length == 25 ? 1 : 0,
+      );
+    } catch (error, stackTrace) {
+      logSevere('error in build', error, stackTrace);
+      return const TaskState();
+    }
+  }
 }
