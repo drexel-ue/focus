@@ -9,6 +9,7 @@ class FocusButton extends StatelessWidget {
     super.key,
     this.selected = false,
     this.square = false,
+    this.filled = false,
     required this.onTap,
     required this.child,
   });
@@ -18,6 +19,9 @@ class FocusButton extends StatelessWidget {
 
   /// Square?
   final bool square;
+
+  /// Fill?.
+  final bool filled;
 
   /// Callback to be ran on tap.
   final VoidCallback onTap;
@@ -33,6 +37,7 @@ class FocusButton extends StatelessWidget {
           color: Colors.white,
           width: selected ? 2.5 : 2.0,
         ),
+        color: filled ? Colors.white : Colors.black,
       ),
       child: InkWell(
         onTap: () => onTap(),
@@ -47,6 +52,7 @@ class FocusButton extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
+                  color: filled ? Colors.black : Colors.white,
                   fontWeight: selected ? FontWeight.w600 : null,
                 ),
                 child: child,

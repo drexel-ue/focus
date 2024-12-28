@@ -120,7 +120,10 @@ class HomeRepository extends Notifier<HomeState> {
   }
 
   /// Clear current [Snack].
-  void clearSnack() => state = state.copyWith();
+  void clearSnack() {
+    _snackTimer?.cancel();
+    state = state.copyWith();
+  }
 
   @override
   HomeState build() {

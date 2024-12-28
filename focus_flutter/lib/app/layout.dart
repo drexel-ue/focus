@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart'
     show
         BorderRadius,
+        BorderSide,
+        Colors,
         EdgeInsets,
         EdgeInsetsDirectional,
+        OutlineInputBorder,
         Radius,
         SizedBox,
         SliverToBoxAdapter,
@@ -16,6 +19,8 @@ const emptyWidgetWide = SizedBox(width: double.infinity);
 
 /// Spacer()
 const spacer = Spacer();
+
+/// Input border.
 
 // Margins ================================================================================
 
@@ -54,6 +59,18 @@ const verticalMargin8 = SizedBox(height: 8.0);
 
 /// SizedBox(height: 12.0)
 const verticalMargin12 = SizedBox(height: 12.0);
+
+/// Input border.
+const outlineInputBorder = OutlineInputBorder(
+  borderSide: BorderSide(color: Colors.white, width: 2.0),
+  borderRadius: BorderRadius.all(Radius.zero),
+);
+
+/// Focused input border.
+const focusedOutlineInputBorder = OutlineInputBorder(
+  borderSide: BorderSide(color: Colors.white, width: 2.5),
+  borderRadius: BorderRadius.all(Radius.zero),
+);
 
 /// SizedBox(height: 16.0)
 const verticalMargin16 = SizedBox(height: 16.0);
