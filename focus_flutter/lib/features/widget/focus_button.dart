@@ -10,6 +10,7 @@ class FocusButton extends StatelessWidget {
     this.selected = false,
     this.square = false,
     this.filled = false,
+    this.enabled = true,
     required this.onTap,
     required this.child,
   });
@@ -20,8 +21,11 @@ class FocusButton extends StatelessWidget {
   /// Square?
   final bool square;
 
-  /// Fill?.
+  /// Fill?
   final bool filled;
+
+  /// Enabled?
+  final bool enabled;
 
   /// Callback to be ran on tap.
   final VoidCallback onTap;
@@ -31,16 +35,21 @@ class FocusButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
           width: selected ? 2.5 : 2.0,
         ),
-        color: filled ? Colors.white : Colors.black,
+        color: !enabled
+            ? Colors.grey
+            : filled //
+                ? Colors.white
+                : Colors.black,
       ),
       child: InkWell(
-        onTap: () => onTap(),
+        onTap: enabled ? () => onTap() : null,
         child: SizedBox(
           height: 48.0,
           width: square ? 48.0 : null,
