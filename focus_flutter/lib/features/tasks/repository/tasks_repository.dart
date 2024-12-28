@@ -63,7 +63,13 @@ class TasksRepository extends AsyncNotifier<TaskState> with ApiClientRef, Loggin
     } catch (error, stackTrace) {
       logSevere('error in createTask', error, stackTrace);
       state = AsyncError<TaskState>(error, stackTrace).copyWithPrevious(currentState);
-      homeRepo.showNegativeSnack('Failed to create task: $title');
+      homeRepo.showNegativeSnack('Failed to create task: $title. Tap to retry.', () async {
+        createTask(
+          title: title,
+          description: description,
+          abilityExpValues: abilityExpValues,
+        );
+      });
     }
   }
 
