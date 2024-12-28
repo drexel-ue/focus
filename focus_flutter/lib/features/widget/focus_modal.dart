@@ -6,20 +6,37 @@ import 'package:focus_flutter/app/layout.dart';
 class FocusModal extends StatelessWidget {
   const FocusModal._({
     required this.readyToRender,
+    required this.builder,
   });
 
   /// Modal animation complete. Render.
   final bool readyToRender;
 
+  /// Content builder.
+  final WidgetBuilder builder;
+
   /// Show the modal.
-  static Future<T?> show<T>(BuildContext context) async {
+  static Future<T?> show<T>(BuildContext context, WidgetBuilder builder) async {
     return await showGeneralDialog(
       context: context,
-      transitionDuration: const Duration(milliseconds: 300),
+      barrierDismissible: true,
+      barrierLabel: '',
+      transitionDuration: const Duration(milliseconds: 550),
       pageBuilder: (
         BuildContext context,
         Animation<double> animation,
         Animation<double> secondaryAnimation,
+      ) {
+        return FocusModal._(
+          readyToRender: animation.isCompleted,
+          builder: builder,
+        );
+      },
+      transitionBuilder: (
+        BuildContext context,
+        Animation<double> animation,
+        Animation<double> secondaryAnimation,
+        Widget? child,
       ) {
         const firstHalf = Interval(0.0, 0.5, curve: Curves.easeOut);
         return FadeTransition(
@@ -44,7 +61,7 @@ class FocusModal extends StatelessWidget {
                   curve: const Interval(0.5, 1.0, curve: Curves.easeOut),
                 ),
               ),
-              child: FocusModal._(readyToRender: animation.isCompleted),
+              child: child,
             ),
           ),
         );
@@ -69,12 +86,11 @@ class FocusModal extends StatelessWidget {
                   color: Colors.white,
                   width: 2.0,
                 ),
+                color: Colors.black,
               ),
-              child: readyToRender
+              child: readyToRender //
                   ? const SizedBox.expand()
-                  : const Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                    ),
+                  : builder(context),
             ),
           ),
         ),
