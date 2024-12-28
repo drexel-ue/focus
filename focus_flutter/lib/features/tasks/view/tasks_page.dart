@@ -4,6 +4,7 @@ import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/tasks/repository/tasks_repository.dart';
 import 'package:focus_flutter/features/widget/focus_button.dart';
+import 'package:focus_flutter/features/widget/focus_modal.dart';
 
 /// Tasks Page.
 @immutable
@@ -19,7 +20,7 @@ class TasksPage extends ConsumerWidget {
         child: SizedBox(
           width: 200.0,
           child: FocusButton(
-            onTap: () {},
+            onTap: () => FocusModal.show(context),
             child: const Text('Create task'),
           ),
         ),
