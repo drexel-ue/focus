@@ -5,6 +5,12 @@ import 'package:focus_flutter/features/home/repository/home_state.dart';
 
 export 'package:focus_flutter/features/home/repository/home_state.dart';
 
+/// A mixin that provides access to the [HomeRepository] instance.
+mixin HomeRepoRef<T> on AsyncNotifier<T> {
+  /// [HomeRepository].
+  HomeRepository get homeRepo => ref.read(homeRepositoryProvider.notifier);
+}
+
 /// Provides access to the [HomeRepository].
 final homeRepositoryProvider = NotifierProvider<HomeRepository, HomeState>(() => HomeRepository());
 
