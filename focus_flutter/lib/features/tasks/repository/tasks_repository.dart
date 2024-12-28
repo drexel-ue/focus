@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:clerk_flutter/logging.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/api/api_client.dart';
@@ -24,9 +25,20 @@ class TasksRepository extends AsyncNotifier<TaskState> with ApiClientRef, Loggin
       final tasks = await refreshIfNeeded((api) async {
         return await api.task.getTasks(currentState.requireValue.page);
       });
+      final newTasks = <Task>[];
+      for (final task in currentState.requireValue.tasks) {
+        if (newTasks.none((element) => element.id == task.id)) {
+          newTasks.add(task);
+        }
+      }
+      for (final task in tasks!) {
+        if (newTasks.none((element) => element.id == task.id)) {
+          newTasks.add(task);
+        }
+      }
       state = AsyncData(
         TaskState(
-          tasks: [...currentState.requireValue.tasks, ...tasks!],
+          tasks: newTasks,
           page: currentState.requireValue.page + (tasks.length == 25 ? 1 : 0),
         ),
       );
