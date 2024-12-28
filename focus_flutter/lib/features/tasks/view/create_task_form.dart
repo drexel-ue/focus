@@ -1,8 +1,10 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart';
+import 'package:focus_flutter/features/widget/digits_only_input_formatter.dart';
 import 'package:focus_flutter/features/widget/focus_button.dart';
 
 /// Form for creating [Task]s.
@@ -16,19 +18,37 @@ class CreateTaskForm extends ConsumerStatefulWidget {
 }
 
 class _CreateTaskFormState extends ConsumerState<CreateTaskForm> {
-  final _titleController = TextEditingController();
-  final _descriptionController = TextEditingController();
+  late final _titleController = TextEditingController()..addListener(_listener);
+  late final _descriptionController = TextEditingController();
   late final _abilityExpValues = <Ability, TextEditingController>{
     for (final ability in Ability.values) //
-      ability: TextEditingController(text: '0'),
+      ability: TextEditingController(text: '0')..addListener(_listener),
   };
+
+  void _listener() => setState(() {});
+
+  bool get _createEnabled {
+    if (_titleController.text.isEmpty) {
+      return false;
+    }
+    if (_abilityExpValues.values.none((controller) => int.parse(controller.text) > 0)) {
+      return false;
+    }
+    return true;
+  }
 
   @override
   void dispose() {
-    _titleController.dispose();
-    _descriptionController.dispose();
+    _titleController
+      ..removeListener(_listener)
+      ..dispose();
+    _descriptionController
+      ..removeListener(_listener)
+      ..dispose();
     for (final controller in _abilityExpValues.values) {
-      controller.dispose();
+      controller
+        ..removeListener(_listener)
+        ..dispose();
     }
     super.dispose();
   }
@@ -70,7 +90,10 @@ class _CreateTaskFormState extends ConsumerState<CreateTaskForm> {
                       textAlign: TextAlign.center,
                       textAlignVertical: TextAlignVertical.center,
                       keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      inputFormatters: [
+                        DigitOnlyInputFormatter(),
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
                     ),
                   ),
                 ],
@@ -94,7 +117,7 @@ class _CreateTaskFormState extends ConsumerState<CreateTaskForm> {
             children: [
               Expanded(
                 child: FocusButton(
-                  onTap: () {},
+                  onTap: () => Navigator.of(context).pop(),
                   child: const Text('Cancel'),
                 ),
               ),
@@ -103,6 +126,7 @@ class _CreateTaskFormState extends ConsumerState<CreateTaskForm> {
                 child: FocusButton(
                   onTap: () {},
                   filled: true,
+                  enabled: _createEnabled,
                   child: const Text('Create'),
                 ),
               ),
