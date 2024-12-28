@@ -72,6 +72,35 @@ Future<AuthenticationInfo?> _validateClerkToken(Session session, String token) a
 }
 
 Future<AuthenticationInfo?> _validateFocusToken(Session session, String token) async {
-  // FIXME(drexel-ue): implement.
-  return null;
+  try {
+    // FIXME(drexel-ue): replace with actual key.
+    final secretKey = SecretKey('secret');
+    final jwt = JWT.verify(token, secretKey);
+    final userId = int.parse(jwt.subject!);
+    // FIXME(drexel): replace with extension.
+    final user = await User.db.findById(session, userId);
+    if (user != null) {
+      final scopes = jwt.payload['scopes'] //
+          .split(', ')
+          .map<CustomScope>(CustomScope.parse);
+      return AuthenticationInfo(
+        user.id!,
+        Set<Scope>.from(scopes),
+      );
+    }
+    return AuthenticationInfo(
+      jwt.subject.hashCode,
+      <Scope>{Scope.none},
+    );
+  } on JWTExpiredException catch (_) {
+    throw ExpiredJWTException();
+  } catch (error, stackTrace) {
+    session.log(
+      'error in _validateFocusToken',
+      level: LogLevel.error,
+      exception: error,
+      stackTrace: stackTrace,
+    );
+    return null;
+  }
 }
