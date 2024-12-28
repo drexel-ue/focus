@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_flutter/features/home/repository/home_state.dart';
 
@@ -27,23 +28,35 @@ class HomeRepository extends Notifier<HomeState> {
   void closeMenu() => state = state.copyWith(menuOpen: false);
 
   /// Show a neutral [Snack].
-  Future<void> showSnack(String message) async {
+  Future<void> showSnack(String message, [VoidCallback? callback]) async {
     _snackTimer?.cancel();
-    state = state.copyWith(snack: Snack(message: message));
+    state = state.copyWith(snack: Snack(message: message, onTap: callback));
     _snackTimer = Timer(const Duration(seconds: 10), () => clearSnack());
   }
 
   /// Show a positive [Snack].
-  Future<void> showPositiveSnack(String message) async {
+  Future<void> showPositiveSnack(String message, [VoidCallback? callback]) async {
     _snackTimer?.cancel();
-    state = state.copyWith(snack: Snack(message: message, type: SnackType.positive));
+    state = state.copyWith(
+      snack: Snack(
+        message: message,
+        type: SnackType.positive,
+        onTap: callback,
+      ),
+    );
     _snackTimer = Timer(const Duration(seconds: 10), () => clearSnack());
   }
 
   /// Show a negative [Snack].
-  Future<void> showNegativeSnack(String message) async {
+  Future<void> showNegativeSnack(String message, [VoidCallback? callback]) async {
     _snackTimer?.cancel();
-    state = state.copyWith(snack: Snack(message: message, type: SnackType.negative));
+    state = state.copyWith(
+      snack: Snack(
+        message: message,
+        type: SnackType.negative,
+        onTap: callback,
+      ),
+    );
     _snackTimer = Timer(const Duration(seconds: 10), () => clearSnack());
   }
 

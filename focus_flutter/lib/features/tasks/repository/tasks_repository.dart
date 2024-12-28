@@ -33,7 +33,7 @@ class TasksRepository extends AsyncNotifier<TaskState> with ApiClientRef, Loggin
     } catch (error, stackTrace) {
       logSevere('error in loadTasks', error, stackTrace);
       state = AsyncError<TaskState>(error, stackTrace).copyWithPrevious(currentState);
-      homeRepo.showNegativeSnack('Failed to load tasks');
+      homeRepo.showNegativeSnack('Failed to load tasks. Tap to retry.', _retryLoad);
     }
   }
 
@@ -67,6 +67,11 @@ class TasksRepository extends AsyncNotifier<TaskState> with ApiClientRef, Loggin
     }
   }
 
+  Future<void> _retryLoad() async {
+    homeRepo.showSnack('Attempting to load tasks');
+    await loadTasks();
+  }
+
   @override
   Future<TaskState> build() async {
     try {
@@ -79,7 +84,7 @@ class TasksRepository extends AsyncNotifier<TaskState> with ApiClientRef, Loggin
       );
     } catch (error, stackTrace) {
       logSevere('error in build', error, stackTrace);
-      homeRepo.showNegativeSnack('Failed to load tasks');
+      homeRepo.showNegativeSnack('Failed to load tasks. Tap to retry.', _retryLoad);
       return const TaskState();
     }
   }
