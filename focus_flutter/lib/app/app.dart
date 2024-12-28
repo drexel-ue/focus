@@ -36,6 +36,7 @@ class FocusApp extends ConsumerWidget {
               title: 'Focus',
               routerConfig: ref.read(goRouterProvider),
               theme: ThemeData(
+                iconTheme: const IconThemeData(color: Colors.white),
                 textTheme: GoogleFonts.robotoTextTheme().apply(
                   bodyColor: Colors.white,
                   displayColor: Colors.white,
@@ -43,6 +44,7 @@ class FocusApp extends ConsumerWidget {
                 colorScheme: ColorScheme.fromSeed(
                   seedColor: Colors.black,
                   surface: Colors.black,
+                  primary: Colors.white,
                 ),
                 inputDecorationTheme: const InputDecorationTheme(
                   contentPadding: allPadding8,
