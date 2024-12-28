@@ -1,42 +1,17 @@
 import 'dart:async';
 
 import 'package:clerk_flutter/logging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/api/api_client.dart';
+import 'package:focus_flutter/features/tasks/repository/task_state.dart';
+
+export 'package:focus_flutter/features/tasks/repository/task_state.dart';
 
 /// Proivdes access to [TasksRepository].
 final taskRepositoryProvider = AsyncNotifierProvider<TasksRepository, TaskState>(() {
   return TasksRepository();
 });
-
-/// State of [TaskRepository].
-@immutable
-class TaskState {
-  /// Constructs a new [TaskState].
-  const TaskState({
-    this.tasks = const [],
-    this.page = 0,
-  });
-
-  /// [Task]s for the authenticated [User].
-  final List<Task> tasks;
-
-  /// Pagination key.
-  final int page;
-
-  /// Creates a new [TaskState] while preserving data.
-  TaskState copyWith({
-    List<Task>? tasks,
-    int? page,
-  }) {
-    return TaskState(
-      tasks: tasks ?? this.tasks,
-      page: page ?? this.page,
-    );
-  }
-}
 
 /// Manages [Task]s.
 class TasksRepository extends AsyncNotifier<TaskState> with ApiClientRef, Logging {
