@@ -9,7 +9,7 @@ class Snack {
   /// Constructs a const [Snack].
   const Snack({
     required this.message,
-    required this.type,
+    this.type = SnackType.neutral,
     this.onTap,
   });
 
