@@ -26,10 +26,24 @@ class HomeRepository extends Notifier<HomeState> {
   /// Close overlay menu.
   void closeMenu() => state = state.copyWith(menuOpen: false);
 
-  /// Show a [Snack].
-  Future<void> showSnack(Snack snack) async {
+  /// Show a neutral [Snack].
+  Future<void> showSnack(String message) async {
     _snackTimer?.cancel();
-    state = state.copyWith(snack: snack);
+    state = state.copyWith(snack: Snack(message: message));
+    _snackTimer = Timer(const Duration(seconds: 10), () => clearSnack());
+  }
+
+  /// Show a positive [Snack].
+  Future<void> showPositiveSnack(String message) async {
+    _snackTimer?.cancel();
+    state = state.copyWith(snack: Snack(message: message, type: SnackType.positive));
+    _snackTimer = Timer(const Duration(seconds: 10), () => clearSnack());
+  }
+
+  /// Show a negative [Snack].
+  Future<void> showNegativeSnack(String message) async {
+    _snackTimer?.cancel();
+    state = state.copyWith(snack: Snack(message: message, type: SnackType.negative));
     _snackTimer = Timer(const Duration(seconds: 10), () => clearSnack());
   }
 
