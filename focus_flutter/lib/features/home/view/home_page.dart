@@ -14,6 +14,7 @@ import 'package:focus_flutter/features/stats/view/stats_page.dart';
 import 'package:focus_flutter/features/tasks/view/tasks_page.dart';
 import 'package:focus_flutter/features/widget/focus_button.dart';
 import 'package:focus_flutter/features/widget/focus_painter.dart';
+import 'package:focus_flutter/features/widget/marquee_text.dart';
 import 'package:go_router/go_router.dart';
 
 /// Home Page.
@@ -65,8 +66,6 @@ class _HomePageState extends ConsumerState<HomePage> {
     }
   }
 
-  void _toggleOverlay() => ref.read(homeRepositoryProvider.notifier).toggleMenu();
-
   @override
   void dispose() {
     _pageController.dispose();
@@ -75,7 +74,18 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final homeState = ref.watch(homeRepositoryProvider);
+    final notifier = ref.read(homeRepositoryProvider.notifier);
+    final snack = homeState.snack;
+    final text = snack?.message ?? homeState.tab.label;
+    final color = switch (homeState.snack?.type) {
+      SnackType.neutral => Colors.white,
+      SnackType.positive => Colors.green,
+      SnackType.negative => Colors.red,
+      _ => null,
+    };
     ref.listen(homeRepositoryProvider, _homeRepositoryListener);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -101,20 +111,43 @@ class _HomePageState extends ConsumerState<HomePage> {
         ),
         verticalMargin16,
         Row(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            spacer,
-            SizedBox(
-              height: 46.0,
-              child: CustomPaint(
-                painter: const FocusPainter(),
-                child: Center(
-                  child: Padding(
-                    padding: horizontalPadding16,
-                    child: Text(
-                      ref.watch(homeRepositoryProvider).tab.label,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontWeight: FontWeight.w600),
+            // FIXME(drexel-ue): can this me made to stick to the right?
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: SizedBox(
+                  height: 46.0,
+                  child: AnimatedSize(
+                    duration: const Duration(milliseconds: 550),
+                    child: IntrinsicWidth(
+                      child: CustomPaint(
+                        painter: FocusPainter(
+                          color: color,
+                        ),
+                        child: InkWell(
+                          onTap: homeState.snack?.onTap,
+                          onLongPress: homeState.snack != null ? () => notifier.clearSnack() : null,
+                          child: Center(
+                            child: Padding(
+                              padding: horizontalPadding16,
+                              child: MarqueeText(
+                                text,
+                                style: homeState.snack != null //
+                                    ? TextStyle(
+                                        fontWeight: switch (homeState.snack!.type) {
+                                          SnackType.neutral => FontWeight.w600,
+                                          _ => FontWeight.w700,
+                                        },
+                                        color: color,
+                                      )
+                                    : null,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -124,7 +157,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             CompositedTransformTarget(
               link: _layerLink,
               child: FocusButton(
-                onTap: () => _toggleOverlay(),
+                onTap: () => notifier.toggleMenu(),
                 square: true,
                 selected: _overlayController.isShowing,
                 child: OverlayPortal(

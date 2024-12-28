@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 @immutable
 class FocusPainter extends CustomPainter {
   /// Constructs a const [FocusPainter].
-  const FocusPainter();
+  FocusPainter({
+    Color? color,
+  }) : _paint = Paint()
+          ..color = color ?? Colors.white
+          ..strokeWidth = 2.0;
 
   static const _lineLength = 8.0;
 
-  static final _paint = Paint()
-    ..color = Colors.white
-    ..strokeWidth = 2.0;
+  final Paint _paint;
 
   @override
   void paint(Canvas canvas, Size size) {

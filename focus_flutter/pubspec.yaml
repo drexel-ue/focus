@@ -30,6 +30,7 @@ dependencies:
   flutter_svg: ^2.0.16
   path_provider: ^2.1.5
   cached_network_image: ^3.4.1
+  flutter_lorem: ^2.0.0
 
 dependency_overrides:
   clerk_auth:
