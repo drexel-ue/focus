@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:focus_flutter/app/layout.dart';
 
+/// Callback for rendering the content of the model. Provides a callback for closing the modal.
+typedef ModalBuilder = Widget Function(BuildContext context, VoidCallback closeModel);
+
 /// Focus themed modal.
 @immutable
 class FocusModal extends StatefulWidget {
@@ -9,10 +12,10 @@ class FocusModal extends StatefulWidget {
   });
 
   /// Content builder.
-  final WidgetBuilder builder;
+  final ModalBuilder builder;
 
   /// Show the modal.
-  static Future<T?> show<T>(BuildContext context, WidgetBuilder builder) async {
+  static Future<T?> show<T>(BuildContext context, ModalBuilder builder) async {
     return await showGeneralDialog(
       context: context,
       barrierDismissible: true,
@@ -87,23 +90,25 @@ class _FocusModalState extends State<FocusModal> with SingleTickerProviderStateM
                   ),
                 )
                 .value,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: 500.0,
-                maxHeight: 700.0,
-              ),
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 2.0,
-                  ),
-                  color: Colors.black,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.white,
+                  width: 2.0,
                 ),
-                child: _animationController.isCompleted //
-                    ? widget.builder(context)
-                    : const SizedBox.expand(),
+                color: Colors.black,
               ),
+              child: _animationController.isCompleted //
+                  ? widget.builder(
+                      context,
+                      () async {
+                        await _animationController.reverse();
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
+                      },
+                    )
+                  : const SizedBox.expand(),
             ),
           ),
         ),

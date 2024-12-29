@@ -16,7 +16,7 @@ class TasksPage extends ConsumerWidget {
 
   void _showCreateTaskForm(BuildContext context) => FocusModal.show(
         context,
-        (BuildContext context) => const TaskForm(),
+        (BuildContext context, VoidCallback closeModal) => TaskForm(close: closeModal),
       );
 
   @override
@@ -52,8 +52,11 @@ class TasksPage extends ConsumerWidget {
               return Padding(
                 padding: bottomPadding16,
                 child: InkWell(
-                  onTap: () => FocusModal.show(context, (BuildContext context) {
-                    return TaskForm(task: task);
+                  onTap: () => FocusModal.show(context, (
+                    BuildContext context,
+                    VoidCallback closeModal,
+                  ) {
+                    return TaskForm(close: closeModal, task: task);
                   }),
                   child: Row(
                     children: [
