@@ -8,3 +8,4 @@ task:
   - createTask:
   - toggleTaskComplete:
   - updateTask:
+  - deleteTask:

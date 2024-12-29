@@ -115,6 +115,14 @@ class EndpointTask extends _i1.EndpointRef {
           'abilityExpValues': abilityExpValues,
         },
       );
+
+  /// Deletes a [Task].
+  _i2.Future<_i5.Task> deleteTask(int taskId) =>
+      caller.callServerEndpoint<_i5.Task>(
+        'task',
+        'deleteTask',
+        {'taskId': taskId},
+      );
 }
 
 class Client extends _i1.ServerpodClientShared {

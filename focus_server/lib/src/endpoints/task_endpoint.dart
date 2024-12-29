@@ -124,4 +124,25 @@ class TaskEndpoint extends Endpoint {
       }
     });
   }
+
+  /// Deletes a [Task].
+  Future<Task> deleteTask(Session session, int taskId) async {
+    return session.db.transaction((Transaction transaction) async {
+      try {
+        final task = await Task.db.findById(session, taskId, transaction: transaction);
+        if (task == null) {
+          throw TaskNotFoundException(message: 'task not found.');
+        }
+        return await Task.db.deleteRow(session, task, transaction: transaction);
+      } catch (error, stackTrace) {
+        session.log(
+          'error in deleteTask',
+          level: LogLevel.error,
+          exception: error,
+          stackTrace: stackTrace,
+        );
+        throw TaskDeletionException(message: 'failed to delete task.');
+      }
+    });
+  }
 }

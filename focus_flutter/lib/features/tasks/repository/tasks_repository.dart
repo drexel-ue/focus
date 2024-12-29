@@ -105,7 +105,7 @@ class TasksRepository extends AsyncNotifier<TaskState> with ApiClientRef, Loggin
     }
   }
 
-  /// Updates a new [Task].
+  /// Updates a [Task].
   Future<void> updateTask({
     required int taskId,
     required String title,
@@ -138,6 +138,24 @@ class TasksRepository extends AsyncNotifier<TaskState> with ApiClientRef, Loggin
           description: description,
           abilityExpValues: abilityExpValues,
         );
+      });
+    }
+  }
+
+  /// Deletes a [Task].
+  Future<void> deleteTask(int taskId) async {
+    final currentState = state;
+    try {
+      state = const AsyncLoading<TaskState>().copyWithPrevious(currentState);
+      final task = await refreshIfNeeded((api) async => await api.task.deleteTask(taskId));
+      final tasks = currentState.requireValue.tasks..removeWhere((element) => element.id == taskId);
+      state = AsyncData(currentState.requireValue.copyWith(tasks: tasks));
+      homeRepo.showPositiveSnack('Deleted task: ${task!.title}');
+    } catch (error, stackTrace) {
+      logSevere('error in deleteTask', error, stackTrace);
+      state = AsyncError<TaskState>(error, stackTrace).copyWithPrevious(currentState);
+      homeRepo.showNegativeSnack('Failed to delete task. Tap to retry.', () async {
+        await deleteTask(taskId);
       });
     }
   }
