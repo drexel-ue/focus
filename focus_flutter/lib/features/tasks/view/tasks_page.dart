@@ -54,7 +54,7 @@ class TasksPage extends ConsumerWidget {
                   children: [
                     FocusCheckbox(
                       onTap: () {},
-                      selected: true,
+                      selected: task.completed,
                     ),
                     horizontalMargin16,
                     Expanded(
