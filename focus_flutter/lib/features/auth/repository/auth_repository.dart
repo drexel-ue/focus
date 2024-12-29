@@ -61,11 +61,13 @@ class AuthRepository extends AsyncNotifier<AuthSession>
   /// Remove stored [AuthSession].
   Future<void> logout() async {
     try {
-      await _file.delete();
+      if (await _file.exists()) {
+        await _file.delete();
+      }
       state = AsyncData(AuthSession());
     } catch (error, stackTrace) {
       logSevere('error in logout', error, stackTrace);
-      await _file.delete();
+      state = AsyncData(AuthSession());
     }
   }
 
@@ -76,7 +78,9 @@ class AuthRepository extends AsyncNotifier<AuthSession>
       if (await _file.exists()) {
         final content = await _file.readAsString();
         final jsonSerialization = json.decode(content);
-        return AuthSession.fromJson(jsonSerialization);
+        final session = AuthSession.fromJson(jsonSerialization);
+        api.authenticationKeyManager!.put(session.token!.accessToken);
+        return session;
       } else {
         final jsonSerialization = json.encode(AuthSession().toJson());
         await _file.writeAsString(jsonSerialization);
@@ -84,12 +88,15 @@ class AuthRepository extends AsyncNotifier<AuthSession>
       }
     } catch (error, stackTrace) {
       logSevere('error in _maybeRestoreSession', error, stackTrace);
+      if (await _file.exists()) {
+        await _file.delete();
+      }
       return AuthSession();
     }
   }
 
   Future<void> _storeAuthSession() async {
-    final jsonSerialization = json.encode(state.requireValue);
+    final jsonSerialization = json.encode(state.requireValue.toJson());
     await _file.writeAsString(jsonSerialization);
   }
 
