@@ -23,12 +23,13 @@ import 'task_creation_exception.dart' as _i11;
 import 'task_deletion_exception.dart' as _i12;
 import 'task_exception.dart' as _i13;
 import 'task_fetch_exception.dart' as _i14;
-import 'task_update_exception.dart' as _i15;
-import 'token_mismatch_exception.dart' as _i16;
-import 'user.dart' as _i17;
-import 'package:focus_client/src/protocol/task.dart' as _i18;
+import 'task_not_found_exception.dart' as _i15;
+import 'task_update_exception.dart' as _i16;
+import 'token_mismatch_exception.dart' as _i17;
+import 'user.dart' as _i18;
+import 'package:focus_client/src/protocol/task.dart' as _i19;
 import 'package:focus_client/src/protocol/ability_experience_value.dart'
-    as _i19;
+    as _i20;
 export 'ability.dart';
 export 'ability_experience_value.dart';
 export 'auth_exception.dart';
@@ -42,6 +43,7 @@ export 'task_creation_exception.dart';
 export 'task_deletion_exception.dart';
 export 'task_exception.dart';
 export 'task_fetch_exception.dart';
+export 'task_not_found_exception.dart';
 export 'task_update_exception.dart';
 export 'token_mismatch_exception.dart';
 export 'user.dart';
@@ -99,14 +101,17 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i14.TaskFetchException) {
       return _i14.TaskFetchException.fromJson(data) as T;
     }
-    if (t == _i15.TaskUpdateException) {
-      return _i15.TaskUpdateException.fromJson(data) as T;
+    if (t == _i15.TaskNotFoundException) {
+      return _i15.TaskNotFoundException.fromJson(data) as T;
     }
-    if (t == _i16.TokenMismatchException) {
-      return _i16.TokenMismatchException.fromJson(data) as T;
+    if (t == _i16.TaskUpdateException) {
+      return _i16.TaskUpdateException.fromJson(data) as T;
     }
-    if (t == _i17.User) {
-      return _i17.User.fromJson(data) as T;
+    if (t == _i17.TokenMismatchException) {
+      return _i17.TokenMismatchException.fromJson(data) as T;
+    }
+    if (t == _i18.User) {
+      return _i18.User.fromJson(data) as T;
     }
     if (t == _i1.getType<_i2.Ability?>()) {
       return (data != null ? _i2.Ability.fromJson(data) : null) as T;
@@ -153,29 +158,33 @@ class Protocol extends _i1.SerializationManager {
       return (data != null ? _i14.TaskFetchException.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i15.TaskUpdateException?>()) {
-      return (data != null ? _i15.TaskUpdateException.fromJson(data) : null)
+    if (t == _i1.getType<_i15.TaskNotFoundException?>()) {
+      return (data != null ? _i15.TaskNotFoundException.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i16.TokenMismatchException?>()) {
-      return (data != null ? _i16.TokenMismatchException.fromJson(data) : null)
+    if (t == _i1.getType<_i16.TaskUpdateException?>()) {
+      return (data != null ? _i16.TaskUpdateException.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i17.User?>()) {
-      return (data != null ? _i17.User.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i17.TokenMismatchException?>()) {
+      return (data != null ? _i17.TokenMismatchException.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i18.User?>()) {
+      return (data != null ? _i18.User.fromJson(data) : null) as T;
     }
     if (t == List<_i3.AbilityExperienceValue>) {
       return (data as List)
           .map((e) => deserialize<_i3.AbilityExperienceValue>(e))
           .toList() as dynamic;
     }
-    if (t == List<_i18.Task>) {
-      return (data as List).map((e) => deserialize<_i18.Task>(e)).toList()
+    if (t == List<_i19.Task>) {
+      return (data as List).map((e) => deserialize<_i19.Task>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i19.AbilityExperienceValue>) {
+    if (t == List<_i20.AbilityExperienceValue>) {
       return (data as List)
-          .map((e) => deserialize<_i19.AbilityExperienceValue>(e))
+          .map((e) => deserialize<_i20.AbilityExperienceValue>(e))
           .toList() as dynamic;
     }
     return super.deserialize<T>(data, t);
@@ -224,13 +233,16 @@ class Protocol extends _i1.SerializationManager {
     if (data is _i14.TaskFetchException) {
       return 'TaskFetchException';
     }
-    if (data is _i15.TaskUpdateException) {
+    if (data is _i15.TaskNotFoundException) {
+      return 'TaskNotFoundException';
+    }
+    if (data is _i16.TaskUpdateException) {
       return 'TaskUpdateException';
     }
-    if (data is _i16.TokenMismatchException) {
+    if (data is _i17.TokenMismatchException) {
       return 'TokenMismatchException';
     }
-    if (data is _i17.User) {
+    if (data is _i18.User) {
       return 'User';
     }
     return null;
@@ -281,14 +293,17 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName == 'TaskFetchException') {
       return deserialize<_i14.TaskFetchException>(data['data']);
     }
+    if (dataClassName == 'TaskNotFoundException') {
+      return deserialize<_i15.TaskNotFoundException>(data['data']);
+    }
     if (dataClassName == 'TaskUpdateException') {
-      return deserialize<_i15.TaskUpdateException>(data['data']);
+      return deserialize<_i16.TaskUpdateException>(data['data']);
     }
     if (dataClassName == 'TokenMismatchException') {
-      return deserialize<_i16.TokenMismatchException>(data['data']);
+      return deserialize<_i17.TokenMismatchException>(data['data']);
     }
     if (dataClassName == 'User') {
-      return deserialize<_i17.User>(data['data']);
+      return deserialize<_i18.User>(data['data']);
     }
     return super.deserializeByClassName(data);
   }

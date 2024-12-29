@@ -76,11 +76,31 @@ class TasksRepository extends AsyncNotifier<TaskState> with ApiClientRef, Loggin
       logSevere('error in createTask', error, stackTrace);
       state = AsyncError<TaskState>(error, stackTrace).copyWithPrevious(currentState);
       homeRepo.showNegativeSnack('Failed to create task: $title. Tap to retry.', () async {
-        createTask(
+        await createTask(
           title: title,
           description: description,
           abilityExpValues: abilityExpValues,
         );
+      });
+    }
+  }
+
+  /// Toggles the complete status of a [Task].
+  Future<void> toggleTaskComplete(int taskId) async {
+    final currentState = state;
+    try {
+      state = const AsyncLoading<TaskState>().copyWithPrevious(currentState);
+      final task = await refreshIfNeeded((api) async => await api.task.toggleTaskComplete(taskId));
+      final index = currentState.requireValue.tasks.indexWhere((element) => element.id == taskId);
+      final tasks = currentState.requireValue.tasks;
+      tasks[index] = task!;
+      state = AsyncData(currentState.requireValue.copyWith(tasks: tasks));
+      homeRepo.showPositiveSnack('Updated task: ${task.title}');
+    } catch (error, stackTrace) {
+      logSevere('error in toggleTaskComplete', error, stackTrace);
+      state = AsyncError<TaskState>(error, stackTrace).copyWithPrevious(currentState);
+      homeRepo.showNegativeSnack('Failed to update task. Tap to retry.', () async {
+        await toggleTaskComplete(taskId);
       });
     }
   }

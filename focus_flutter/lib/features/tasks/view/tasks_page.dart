@@ -22,6 +22,7 @@ class TasksPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tasks = ref.watch(taskRepositoryProvider).value?.tasks ?? const <Task>[];
+    final provider = ref.read(taskRepositoryProvider.notifier);
     if (tasks.isEmpty) {
       return Center(
         child: SizedBox(
@@ -53,7 +54,7 @@ class TasksPage extends ConsumerWidget {
                 child: Row(
                   children: [
                     FocusCheckbox(
-                      onTap: () {},
+                      onTap: () => provider.toggleTaskComplete(task.id!),
                       selected: task.completed,
                     ),
                     horizontalMargin16,

@@ -6,3 +6,4 @@ example:
 task:
   - getTasks:
   - createTask:
+  - toggleTaskComplete:

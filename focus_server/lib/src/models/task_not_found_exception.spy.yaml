@@ -1,0 +1,5 @@
+### To be thrown if there is an exception when querying the database for a specific [Task].
+exception: TaskNotFoundException
+fields:
+  ### Message to be shown client side.
+  message: String

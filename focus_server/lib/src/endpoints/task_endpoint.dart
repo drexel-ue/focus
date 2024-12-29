@@ -55,8 +55,6 @@ class TaskEndpoint extends Endpoint {
           abilityExpValues: abilityExpValues,
         );
         return await Task.db.insertRow(session, task, transaction: transaction);
-      } on TaskCreationException catch (_) {
-        rethrow;
       } catch (error, stackTrace) {
         session.log(
           'error in createTask',
@@ -65,6 +63,30 @@ class TaskEndpoint extends Endpoint {
           stackTrace: stackTrace,
         );
         throw TaskCreationException(message: 'failed to create task.');
+      }
+    });
+  }
+
+  /// Toggles the completion state of a [Task].
+  Future<Task> toggleTaskComplete(Session session, int taskId) async {
+    return await session.db.transaction((Transaction transaction) async {
+      try {
+        final task = await Task.db.findById(session, taskId, transaction: transaction);
+        if (task == null) {
+          throw TaskNotFoundException(message: 'task not found');
+        }
+        task.completed = !task.completed;
+        return await Task.db.updateRow(session, task, transaction: transaction);
+      } on TaskNotFoundException catch (_) {
+        rethrow;
+      } catch (error, stackTrace) {
+        session.log(
+          'error in toggleTaskComplete',
+          level: LogLevel.error,
+          exception: error,
+          stackTrace: stackTrace,
+        );
+        throw TaskUpdateException(message: 'failed to update task.');
       }
     });
   }
