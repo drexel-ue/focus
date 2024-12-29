@@ -23,7 +23,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       if (authenticated) {
         return HomePage.path;
       }
-      return null;
+      return AuthPage.path;
     },
   );
 });
