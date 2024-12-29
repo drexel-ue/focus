@@ -191,7 +191,7 @@ class _TaskFormState extends ConsumerState<TaskForm> {
         ),
         if (ref.watch(taskRepositoryProvider).isLoading) //
           const Material(
-            color: Colors.white54,
+            color: Colors.white10,
             child: Center(
               child: CircularProgressIndicator(),
             ),
