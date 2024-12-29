@@ -16,9 +16,24 @@ class TasksPage extends ConsumerWidget {
   /// Construcs a const [TasksPage].
   const TasksPage({super.key});
 
-  void _showCreateTaskForm(BuildContext context) => FocusModal.show(
+  static const _formConstraints = BoxConstraints(
+    maxWidth: 500.0,
+    maxHeight: 700.0,
+  );
+
+  void _showTaskForm(BuildContext context, [Task? task]) => FocusModal.show(
         context,
-        (BuildContext context, VoidCallback closeModal) => TaskForm(close: closeModal),
+        (BuildContext context, VoidCallback closeModal) => TaskForm(close: closeModal, task: task),
+        constraints: _formConstraints,
+      );
+
+  void _showDeleteModal(BuildContext context, Task task) => FocusModal.show(
+        context,
+        (_, VoidCallback close) => DeleteTaskModal(task: task, close: close),
+        constraints: const BoxConstraints(
+          maxWidth: 500.0,
+          maxHeight: 400.0,
+        ),
       );
 
   @override
@@ -30,7 +45,7 @@ class TasksPage extends ConsumerWidget {
         child: SizedBox(
           width: 200.0,
           child: FocusButton(
-            onTap: () => _showCreateTaskForm(context),
+            onTap: () => _showTaskForm(context),
             child: const Text('Create task'),
           ),
         ),
@@ -58,10 +73,7 @@ class TasksPage extends ConsumerWidget {
                     motion: const BehindMotion(),
                     children: [
                       SlidableAction(
-                        onPressed: (_) => FocusModal.show(
-                          context,
-                          (_, VoidCallback close) => DeleteTaskModal(task: task, close: close),
-                        ),
+                        onPressed: (_) => _showDeleteModal(context, task),
                         icon: Icons.delete_forever_sharp,
                         backgroundColor: Colors.red,
                         foregroundColor: Colors.white,
@@ -70,12 +82,7 @@ class TasksPage extends ConsumerWidget {
                   ),
                   child: InkWell(
                     splashColor: Colors.transparent,
-                    onTap: () => FocusModal.show(context, (
-                      BuildContext context,
-                      VoidCallback closeModal,
-                    ) {
-                      return TaskForm(close: closeModal, task: task);
-                    }),
+                    onTap: () => _showTaskForm(context, task),
                     child: Row(
                       children: [
                         FocusCheckbox(

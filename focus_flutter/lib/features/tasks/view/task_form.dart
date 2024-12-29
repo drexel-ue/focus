@@ -115,92 +115,86 @@ class _TaskFormState extends ConsumerState<TaskForm> {
 
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(
-        maxWidth: 500.0,
-        maxHeight: 700.0,
-      ),
-      child: LoadingCover(
-        loading: ref.watch(taskRepositoryProvider).isLoading,
-        child: Padding(
-          padding: allPadding16,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextField(
-                controller: _titleController,
-                cursorColor: Colors.white,
-                decoration: const InputDecoration(
-                  hintText: 'Title',
-                ),
+    return LoadingCover(
+      loading: ref.watch(taskRepositoryProvider).isLoading,
+      child: Padding(
+        padding: allPadding16,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
+              controller: _titleController,
+              cursorColor: Colors.white,
+              decoration: const InputDecoration(
+                hintText: 'Title',
               ),
-              verticalMargin16,
-              GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 200.0,
-                  mainAxisExtent: 48.0,
-                  mainAxisSpacing: 16.0,
-                  crossAxisSpacing: 16.0,
-                ),
-                itemCount: Ability.values.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final ability = Ability.values[index];
-                  return Row(
-                    children: [
-                      Expanded(child: Text(ability.name.substring(0, 3).toUpperCase())),
-                      horizontalMargin8,
-                      Expanded(
-                        child: TextField(
-                          controller: _abilityExpValues[ability],
-                          textAlign: TextAlign.center,
-                          textAlignVertical: TextAlignVertical.center,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            DigitOnlyInputFormatter(),
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
-                        ),
+            ),
+            verticalMargin16,
+            GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 200.0,
+                mainAxisExtent: 48.0,
+                mainAxisSpacing: 16.0,
+                crossAxisSpacing: 16.0,
+              ),
+              itemCount: Ability.values.length,
+              itemBuilder: (BuildContext context, int index) {
+                final ability = Ability.values[index];
+                return Row(
+                  children: [
+                    Expanded(child: Text(ability.name.substring(0, 3).toUpperCase())),
+                    horizontalMargin8,
+                    Expanded(
+                      child: TextField(
+                        controller: _abilityExpValues[ability],
+                        textAlign: TextAlign.center,
+                        textAlignVertical: TextAlignVertical.center,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          DigitOnlyInputFormatter(),
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
                       ),
-                    ],
-                  );
-                },
-              ),
-              verticalMargin16,
-              Expanded(
-                child: TextField(
-                  controller: _descriptionController,
-                  expands: true,
-                  maxLines: null,
-                  textAlignVertical: TextAlignVertical.top,
-                  decoration: const InputDecoration(
-                    hintText: 'Description',
-                  ),
+                    ),
+                  ],
+                );
+              },
+            ),
+            verticalMargin16,
+            Expanded(
+              child: TextField(
+                controller: _descriptionController,
+                expands: true,
+                maxLines: null,
+                textAlignVertical: TextAlignVertical.top,
+                decoration: const InputDecoration(
+                  hintText: 'Description',
                 ),
               ),
-              verticalMargin16,
-              Row(
-                children: [
-                  Expanded(
-                    child: FocusButton(
-                      onTap: () => widget.close(),
-                      child: const Text('Cancel'),
-                    ),
+            ),
+            verticalMargin16,
+            Row(
+              children: [
+                Expanded(
+                  child: FocusButton(
+                    onTap: () => widget.close(),
+                    child: const Text('Cancel'),
                   ),
-                  horizontalMargin16,
-                  Expanded(
-                    child: FocusButton(
-                      onTap: () => _submit(),
-                      filled: true,
-                      enabled: _createEnabled,
-                      child: Text(widget.task != null ? 'Update' : 'Create'),
-                    ),
+                ),
+                horizontalMargin16,
+                Expanded(
+                  child: FocusButton(
+                    onTap: () => _submit(),
+                    filled: true,
+                    enabled: _createEnabled,
+                    child: Text(widget.task != null ? 'Update' : 'Create'),
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

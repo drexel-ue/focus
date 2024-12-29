@@ -9,13 +9,21 @@ typedef ModalBuilder = Widget Function(BuildContext context, VoidCallback closeM
 class FocusModal extends StatefulWidget {
   const FocusModal._({
     required this.builder,
+    this.constraints = const BoxConstraints(),
   });
 
   /// Content builder.
   final ModalBuilder builder;
 
+  /// Constraints for the modal.
+  final BoxConstraints constraints;
+
   /// Show the modal.
-  static Future<T?> show<T>(BuildContext context, ModalBuilder builder) async {
+  static Future<T?> show<T>(
+    BuildContext context,
+    ModalBuilder builder, {
+    BoxConstraints constraints = const BoxConstraints(),
+  }) async {
     return await showGeneralDialog(
       context: context,
       barrierDismissible: true,
@@ -28,6 +36,7 @@ class FocusModal extends StatefulWidget {
       ) {
         return FocusModal._(
           builder: builder,
+          constraints: constraints,
         );
       },
       transitionBuilder: (
@@ -73,42 +82,45 @@ class _FocusModalState extends State<FocusModal> with SingleTickerProviderStateM
       child: Center(
         child: Padding(
           padding: allPadding32,
-          child: FractionallySizedBox(
-            widthFactor: Tween<double>(begin: 0.0, end: 1.0)
-                .animate(
-                  CurvedAnimation(
-                    parent: _animationController,
-                    curve: const Interval(0.0, 0.5, curve: Curves.easeOut),
+          child: ConstrainedBox(
+            constraints: widget.constraints,
+            child: FractionallySizedBox(
+              widthFactor: Tween<double>(begin: 0.0, end: 1.0)
+                  .animate(
+                    CurvedAnimation(
+                      parent: _animationController,
+                      curve: const Interval(0.0, 0.5, curve: Curves.easeOut),
+                    ),
+                  )
+                  .value,
+              heightFactor: Tween<double>(begin: 0.0, end: 1.0)
+                  .animate(
+                    CurvedAnimation(
+                      parent: _animationController,
+                      curve: const Interval(0.5, 1.0, curve: Curves.easeOut),
+                    ),
+                  )
+                  .value,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 2.0,
                   ),
-                )
-                .value,
-            heightFactor: Tween<double>(begin: 0.0, end: 1.0)
-                .animate(
-                  CurvedAnimation(
-                    parent: _animationController,
-                    curve: const Interval(0.5, 1.0, curve: Curves.easeOut),
-                  ),
-                )
-                .value,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.white,
-                  width: 2.0,
+                  color: Colors.black,
                 ),
-                color: Colors.black,
+                child: _animationController.isCompleted //
+                    ? widget.builder(
+                        context,
+                        () async {
+                          await _animationController.reverse();
+                          if (context.mounted) {
+                            Navigator.of(context).pop();
+                          }
+                        },
+                      )
+                    : const SizedBox.expand(),
               ),
-              child: _animationController.isCompleted //
-                  ? widget.builder(
-                      context,
-                      () async {
-                        await _animationController.reverse();
-                        if (context.mounted) {
-                          Navigator.of(context).pop();
-                        }
-                      },
-                    )
-                  : const SizedBox.expand(),
             ),
           ),
         ),
