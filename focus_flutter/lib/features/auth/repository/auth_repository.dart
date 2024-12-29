@@ -67,6 +67,7 @@ class AuthRepository extends AsyncNotifier<AuthSession>
       }
       state = AsyncData(AuthSession());
       ref.read(homeRepositoryProvider.notifier).tab = HomeTab.stats;
+      api.authenticationKeyManager!.remove();
     } catch (error, stackTrace) {
       logSevere('error in logout', error, stackTrace);
       state = AsyncData(AuthSession());
