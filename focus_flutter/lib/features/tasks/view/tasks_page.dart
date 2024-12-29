@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/tasks/repository/tasks_repository.dart';
-import 'package:focus_flutter/features/tasks/view/create_task_form.dart';
+import 'package:focus_flutter/features/tasks/view/task_form.dart';
 import 'package:focus_flutter/features/widget/focus_button.dart';
 import 'package:focus_flutter/features/widget/focus_checkbox.dart';
 import 'package:focus_flutter/features/widget/focus_modal.dart';
@@ -16,7 +16,7 @@ class TasksPage extends ConsumerWidget {
 
   void _showCreateTaskForm(BuildContext context) => FocusModal.show(
         context,
-        (BuildContext context) => const CreateTaskForm(),
+        (BuildContext context) => const TaskForm(),
       );
 
   @override
@@ -51,36 +51,41 @@ class TasksPage extends ConsumerWidget {
               final task = tasks[index];
               return Padding(
                 padding: bottomPadding16,
-                child: Row(
-                  children: [
-                    FocusCheckbox(
-                      onTap: () => provider.toggleTaskComplete(task.id!),
-                      selected: task.completed,
-                    ),
-                    horizontalMargin16,
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            task.title,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextTheme.of(context).titleMedium,
-                          ),
-                          if (task.description case String description) ...[
-                            // verticalMargin4,
-                            Text(
-                              description,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ],
+                child: InkWell(
+                  onTap: () => FocusModal.show(context, (BuildContext context) {
+                    return TaskForm(task: task);
+                  }),
+                  child: Row(
+                    children: [
+                      FocusCheckbox(
+                        onTap: () => provider.toggleTaskComplete(task.id!),
+                        selected: task.completed,
                       ),
-                    ),
-                  ],
+                      horizontalMargin16,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              task.title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextTheme.of(context).titleMedium,
+                            ),
+                            if (task.description case String description) ...[
+                              // verticalMargin4,
+                              Text(
+                                description,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               );
             },

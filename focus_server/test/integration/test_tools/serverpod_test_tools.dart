@@ -277,7 +277,7 @@ class _TaskEndpoint {
   _i3.Future<_i6.Task> createTask(
     _i1.TestSessionBuilder sessionBuilder, {
     required String title,
-    String? desription,
+    String? description,
     required List<_i7.AbilityExperienceValue> abilityExpValues,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
@@ -293,7 +293,7 @@ class _TaskEndpoint {
           methodName: 'createTask',
           parameters: _i1.testObjectToJson({
             'title': title,
-            'desription': desription,
+            'description': description,
             'abilityExpValues': abilityExpValues,
           }),
           serializationManager: _serializationManager,
@@ -325,6 +325,43 @@ class _TaskEndpoint {
           endpointPath: 'task',
           methodName: 'toggleTaskComplete',
           parameters: _i1.testObjectToJson({'taskId': taskId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i6.Task>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i6.Task> updateTask(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required int taskId,
+    required String title,
+    String? description,
+    required List<_i7.AbilityExperienceValue> abilityExpValues,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'task',
+        method: 'updateTask',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'task',
+          methodName: 'updateTask',
+          parameters: _i1.testObjectToJson({
+            'taskId': taskId,
+            'title': title,
+            'description': description,
+            'abilityExpValues': abilityExpValues,
+          }),
           serializationManager: _serializationManager,
         );
         var _localReturnValue = await (_localCallContext.method.call(

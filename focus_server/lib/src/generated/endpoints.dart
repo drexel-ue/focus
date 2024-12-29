@@ -127,8 +127,8 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<String>(),
               nullable: false,
             ),
-            'desription': _i1.ParameterDescription(
-              name: 'desription',
+            'description': _i1.ParameterDescription(
+              name: 'description',
               type: _i1.getType<String?>(),
               nullable: true,
             ),
@@ -145,7 +145,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (endpoints['task'] as _i4.TaskEndpoint).createTask(
             session,
             title: params['title'],
-            desription: params['desription'],
+            description: params['description'],
             abilityExpValues: params['abilityExpValues'],
           ),
         ),
@@ -165,6 +165,42 @@ class Endpoints extends _i1.EndpointDispatch {
               (endpoints['task'] as _i4.TaskEndpoint).toggleTaskComplete(
             session,
             params['taskId'],
+          ),
+        ),
+        'updateTask': _i1.MethodConnector(
+          name: 'updateTask',
+          params: {
+            'taskId': _i1.ParameterDescription(
+              name: 'taskId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'title': _i1.ParameterDescription(
+              name: 'title',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'description': _i1.ParameterDescription(
+              name: 'description',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+            'abilityExpValues': _i1.ParameterDescription(
+              name: 'abilityExpValues',
+              type: _i1.getType<List<_i6.AbilityExperienceValue>>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['task'] as _i4.TaskEndpoint).updateTask(
+            session,
+            taskId: params['taskId'],
+            title: params['title'],
+            description: params['description'],
+            abilityExpValues: params['abilityExpValues'],
           ),
         ),
       },

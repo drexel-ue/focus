@@ -77,7 +77,7 @@ class EndpointTask extends _i1.EndpointRef {
   /// Create a [Task].
   _i2.Future<_i5.Task> createTask({
     required String title,
-    String? desription,
+    String? description,
     required List<_i6.AbilityExperienceValue> abilityExpValues,
   }) =>
       caller.callServerEndpoint<_i5.Task>(
@@ -85,7 +85,7 @@ class EndpointTask extends _i1.EndpointRef {
         'createTask',
         {
           'title': title,
-          'desription': desription,
+          'description': description,
           'abilityExpValues': abilityExpValues,
         },
       );
@@ -96,6 +96,24 @@ class EndpointTask extends _i1.EndpointRef {
         'task',
         'toggleTaskComplete',
         {'taskId': taskId},
+      );
+
+  /// Update a [Task].
+  _i2.Future<_i5.Task> updateTask({
+    required int taskId,
+    required String title,
+    String? description,
+    required List<_i6.AbilityExperienceValue> abilityExpValues,
+  }) =>
+      caller.callServerEndpoint<_i5.Task>(
+        'task',
+        'updateTask',
+        {
+          'taskId': taskId,
+          'title': title,
+          'description': description,
+          'abilityExpValues': abilityExpValues,
+        },
       );
 }
 

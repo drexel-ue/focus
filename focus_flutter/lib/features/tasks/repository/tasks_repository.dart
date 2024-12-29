@@ -62,7 +62,7 @@ class TasksRepository extends AsyncNotifier<TaskState> with ApiClientRef, Loggin
       final task = await refreshIfNeeded((api) async {
         return await api.task.createTask(
           title: title,
-          desription: description,
+          description: description,
           abilityExpValues: abilityExpValues,
         );
       });
@@ -101,6 +101,43 @@ class TasksRepository extends AsyncNotifier<TaskState> with ApiClientRef, Loggin
       state = AsyncError<TaskState>(error, stackTrace).copyWithPrevious(currentState);
       homeRepo.showNegativeSnack('Failed to update task. Tap to retry.', () async {
         await toggleTaskComplete(taskId);
+      });
+    }
+  }
+
+  /// Updates a new [Task].
+  Future<void> updateTask({
+    required int taskId,
+    required String title,
+    String? description,
+    required List<AbilityExperienceValue> abilityExpValues,
+  }) async {
+    final currentState = state;
+    try {
+      state = const AsyncLoading<TaskState>().copyWithPrevious(currentState);
+      homeRepo.showSnack('Updating task: $title...');
+      final task = await refreshIfNeeded((api) async {
+        return await api.task.updateTask(
+          taskId: taskId,
+          title: title,
+          description: description,
+          abilityExpValues: abilityExpValues,
+        );
+      });
+      final index = currentState.requireValue.tasks.indexWhere((element) => element.id == taskId);
+      final tasks = currentState.requireValue.tasks;
+      tasks[index] = task!;
+      state = AsyncData(currentState.requireValue.copyWith(tasks: tasks));
+      homeRepo.showPositiveSnack('Updated task: ${task.title}');
+    } catch (error, stackTrace) {
+      logSevere('error in createTask', error, stackTrace);
+      state = AsyncError<TaskState>(error, stackTrace).copyWithPrevious(currentState);
+      homeRepo.showNegativeSnack('Failed to update task: $title. Tap to retry.', () async {
+        await createTask(
+          title: title,
+          description: description,
+          abilityExpValues: abilityExpValues,
+        );
       });
     }
   }

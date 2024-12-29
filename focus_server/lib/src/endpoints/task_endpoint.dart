@@ -39,7 +39,7 @@ class TaskEndpoint extends Endpoint {
   Future<Task> createTask(
     Session session, {
     required String title,
-    String? desription,
+    String? description,
     required List<AbilityExperienceValue> abilityExpValues,
   }) async {
     return session.db.transaction((Transaction transaction) async {
@@ -51,7 +51,7 @@ class TaskEndpoint extends Endpoint {
           lastModifiedAt: now,
           userId: user.id!,
           title: title,
-          description: desription,
+          description: description,
           abilityExpValues: abilityExpValues,
         );
         return await Task.db.insertRow(session, task, transaction: transaction);
@@ -87,6 +87,40 @@ class TaskEndpoint extends Endpoint {
           stackTrace: stackTrace,
         );
         throw TaskUpdateException(message: 'failed to update task.');
+      }
+    });
+  }
+
+  /// Update a [Task].
+  Future<Task> updateTask(
+    Session session, {
+    required int taskId,
+    required String title,
+    String? description,
+    required List<AbilityExperienceValue> abilityExpValues,
+  }) async {
+    return session.db.transaction((Transaction transaction) async {
+      try {
+        final task = await Task.db.findById(session, taskId, transaction: transaction);
+        if (task == null) {
+          throw TaskNotFoundException(message: 'task not found.');
+        }
+        task
+          ..lastModifiedAt = DateTime.timestamp()
+          ..title = title
+          ..description = description
+          ..abilityExpValues = abilityExpValues;
+        return await Task.db.updateRow(session, task, transaction: transaction);
+      } on TaskNotFoundException catch (_) {
+        rethrow;
+      } catch (error, stackTrace) {
+        session.log(
+          'error in updateTask',
+          level: LogLevel.error,
+          exception: error,
+          stackTrace: stackTrace,
+        );
+        throw TaskCreationException(message: 'failed to update task.');
       }
     });
   }

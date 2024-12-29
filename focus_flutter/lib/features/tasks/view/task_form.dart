@@ -8,47 +8,82 @@ import 'package:focus_flutter/features/tasks/repository/tasks_repository.dart';
 import 'package:focus_flutter/features/widget/digits_only_input_formatter.dart';
 import 'package:focus_flutter/features/widget/focus_button.dart';
 
-/// Form for creating [Task]s.
+/// Form for creating/editing a [Task].
 @immutable
-class CreateTaskForm extends ConsumerStatefulWidget {
-  /// Constructs a const [CreateTaskForm].
-  const CreateTaskForm({super.key});
+class TaskForm extends ConsumerStatefulWidget {
+  /// Constructs a const [TaskForm].
+  const TaskForm({super.key, this.task});
+
+  /// [Task] to edit.
+  final Task? task;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _CreateTaskFormState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _TaskFormState();
 }
 
-class _CreateTaskFormState extends ConsumerState<CreateTaskForm> {
-  late final _titleController = TextEditingController()..addListener(_listener);
-  late final _descriptionController = TextEditingController();
+class _TaskFormState extends ConsumerState<TaskForm> {
+  late final _titleController = TextEditingController(text: widget.task?.title)
+    ..addListener(_listener);
+  late final _descriptionController = TextEditingController(text: widget.task?.description);
   late final _abilityExpValues = <Ability, TextEditingController>{
     for (final ability in Ability.values) //
-      ability: TextEditingController(text: '0')..addListener(_listener),
+      ability: TextEditingController(
+        text: widget.task?.abilityExpValues
+                .firstWhere((el) => el.ability == ability)
+                .exp
+                .toString() ??
+            '0',
+      )..addListener(_listener),
   };
 
   void _listener() => setState(() {});
 
   bool get _createEnabled {
-    if (_titleController.text.isEmpty) {
-      return false;
+    if (widget.task case Task task) {
+      final titleChanged = _titleController.text != task.title;
+      final descriptionChanged = _descriptionController.text != task.description;
+      final expValuesChanged = _abilityExpValues.entries.any((entry) {
+        final expValue = int.parse(entry.value.text);
+        final taskExpValue = task.abilityExpValues.firstWhere((el) => el.ability == entry.key).exp;
+        return expValue != taskExpValue;
+      });
+      return titleChanged || descriptionChanged || expValuesChanged;
+    } else {
+      if (_titleController.text.isEmpty) {
+        return false;
+      }
+      if (_abilityExpValues.values.none((controller) => int.parse(controller.text) > 0)) {
+        return false;
+      }
+      return true;
     }
-    if (_abilityExpValues.values.none((controller) => int.parse(controller.text) > 0)) {
-      return false;
-    }
-    return true;
   }
 
-  Future<void> _createTask() async {
-    await ref.read(taskRepositoryProvider.notifier).createTask(
-          title: _titleController.text.trim(),
-          description: _descriptionController.text.trim(),
-          abilityExpValues: _abilityExpValues.entries.map<AbilityExperienceValue>((entry) {
-            return AbilityExperienceValue(
-              ability: entry.key,
-              exp: int.parse(entry.value.text),
-            );
-          }).toList(),
-        );
+  Future<void> _submit() async {
+    if (widget.task case Task task) {
+      await ref.read(taskRepositoryProvider.notifier).updateTask(
+            taskId: task.id!,
+            title: _titleController.text.trim(),
+            description: _descriptionController.text.trim(),
+            abilityExpValues: _abilityExpValues.entries.map<AbilityExperienceValue>((entry) {
+              return AbilityExperienceValue(
+                ability: entry.key,
+                exp: int.parse(entry.value.text),
+              );
+            }).toList(),
+          );
+    } else {
+      await ref.read(taskRepositoryProvider.notifier).createTask(
+            title: _titleController.text.trim(),
+            description: _descriptionController.text.trim(),
+            abilityExpValues: _abilityExpValues.entries.map<AbilityExperienceValue>((entry) {
+              return AbilityExperienceValue(
+                ability: entry.key,
+                exp: int.parse(entry.value.text),
+              );
+            }).toList(),
+          );
+    }
     if (mounted) {
       Navigator.of(context).pop();
     }
@@ -143,10 +178,10 @@ class _CreateTaskFormState extends ConsumerState<CreateTaskForm> {
                   horizontalMargin16,
                   Expanded(
                     child: FocusButton(
-                      onTap: () => _createTask(),
+                      onTap: () => _submit(),
                       filled: true,
                       enabled: _createEnabled,
-                      child: const Text('Create'),
+                      child: Text(widget.task != null ? 'Update' : 'Create'),
                     ),
                   ),
                 ],
