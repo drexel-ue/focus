@@ -69,6 +69,7 @@ class TasksPage extends ConsumerWidget {
                     ],
                   ),
                   child: InkWell(
+                    splashColor: Colors.transparent,
                     onTap: () => FocusModal.show(context, (
                       BuildContext context,
                       VoidCallback closeModal,
