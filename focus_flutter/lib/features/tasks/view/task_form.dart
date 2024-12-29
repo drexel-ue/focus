@@ -93,7 +93,7 @@ class _TaskFormState extends ConsumerState<TaskForm> {
           );
     }
     if (mounted) {
-      Navigator.of(context).pop();
+      widget.close();
     }
   }
 
