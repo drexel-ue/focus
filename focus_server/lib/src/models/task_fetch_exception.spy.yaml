@@ -1,5 +1,0 @@
-### To be thrown if there is an exception when fetching tasks.
-exception: TaskFetchException
-fields:
-  ### Message to be shown client side.
-  message: String

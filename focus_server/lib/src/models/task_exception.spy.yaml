@@ -1,5 +1,0 @@
-### Default exception when working with the [TaskEndpoint].
-exception: TaskException
-fields:
-  ### Message to be shown client side.
-  message: String

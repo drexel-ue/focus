@@ -11,27 +11,24 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 
-/// To be thrown if there is an exception during the task creation process.
-abstract class TaskCreationException
+/// To be thrown if there is an exception when adding a new row to the database.
+abstract class CreationException
     implements
         _i1.SerializableException,
         _i1.SerializableModel,
         _i1.ProtocolSerialization {
-  TaskCreationException._({required this.message});
+  CreationException._({required this.message});
 
-  factory TaskCreationException({required String message}) =
-      _TaskCreationExceptionImpl;
+  factory CreationException({required String message}) = _CreationExceptionImpl;
 
-  factory TaskCreationException.fromJson(
-      Map<String, dynamic> jsonSerialization) {
-    return TaskCreationException(
-        message: jsonSerialization['message'] as String);
+  factory CreationException.fromJson(Map<String, dynamic> jsonSerialization) {
+    return CreationException(message: jsonSerialization['message'] as String);
   }
 
   /// Message to be shown client side.
   String message;
 
-  TaskCreationException copyWith({String? message});
+  CreationException copyWith({String? message});
   @override
   Map<String, dynamic> toJson() {
     return {'message': message};
@@ -48,12 +45,11 @@ abstract class TaskCreationException
   }
 }
 
-class _TaskCreationExceptionImpl extends TaskCreationException {
-  _TaskCreationExceptionImpl({required String message})
-      : super._(message: message);
+class _CreationExceptionImpl extends CreationException {
+  _CreationExceptionImpl({required String message}) : super._(message: message);
 
   @override
-  TaskCreationException copyWith({String? message}) {
-    return TaskCreationException(message: message ?? this.message);
+  CreationException copyWith({String? message}) {
+    return CreationException(message: message ?? this.message);
   }
 }

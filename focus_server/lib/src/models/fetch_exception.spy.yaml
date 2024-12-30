@@ -1,0 +1,5 @@
+### To be thrown if there is an exception when fetching a row from the database.
+exception: FetchException
+fields:
+  ### Message to be shown client side.
+  message: String

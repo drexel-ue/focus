@@ -1,0 +1,5 @@
+### To be thrown if there is an exception when updating a row in the database.
+exception: UpdateException
+fields:
+  ### Message to be shown client side.
+  message: String

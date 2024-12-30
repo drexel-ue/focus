@@ -3,6 +3,10 @@ auth:
   - refresh:
 example:
   - hello:
+routine:
+  - getRoutines:
+  - createRoutine:
+  - updateRoutine:
 task:
   - getTasks:
   - createTask:

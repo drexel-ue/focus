@@ -10,46 +10,36 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import 'ability_experience_value.dart' as _i2;
+import 'routine_step.dart' as _i2;
 
-/// A one-off task to be completed.
-abstract class Task implements _i1.SerializableModel {
-  Task._({
+/// A collection of [Step]s in a [Routine].
+abstract class RoutineSegment implements _i1.SerializableModel {
+  RoutineSegment._({
     this.id,
     required this.createdAt,
     required this.lastModifiedAt,
-    required this.userId,
     required this.title,
-    this.description,
-    bool? completed,
-    required this.abilityExpValues,
-  }) : completed = completed ?? false;
+    this.steps,
+  });
 
-  factory Task({
+  factory RoutineSegment({
     int? id,
     required DateTime createdAt,
     required DateTime lastModifiedAt,
-    required int userId,
     required String title,
-    String? description,
-    bool? completed,
-    required List<_i2.AbilityExperienceValue> abilityExpValues,
-  }) = _TaskImpl;
+    List<_i2.RoutineStep>? steps,
+  }) = _RoutineSegmentImpl;
 
-  factory Task.fromJson(Map<String, dynamic> jsonSerialization) {
-    return Task(
+  factory RoutineSegment.fromJson(Map<String, dynamic> jsonSerialization) {
+    return RoutineSegment(
       id: jsonSerialization['id'] as int?,
       createdAt:
           _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
       lastModifiedAt: _i1.DateTimeJsonExtension.fromJson(
           jsonSerialization['lastModifiedAt']),
-      userId: jsonSerialization['userId'] as int,
       title: jsonSerialization['title'] as String,
-      description: jsonSerialization['description'] as String?,
-      completed: jsonSerialization['completed'] as bool,
-      abilityExpValues: (jsonSerialization['abilityExpValues'] as List)
-          .map((e) =>
-              _i2.AbilityExperienceValue.fromJson((e as Map<String, dynamic>)))
+      steps: (jsonSerialization['steps'] as List?)
+          ?.map((e) => _i2.RoutineStep.fromJson((e as Map<String, dynamic>)))
           .toList(),
     );
   }
@@ -65,30 +55,18 @@ abstract class Task implements _i1.SerializableModel {
   /// Timestamp of last update to database entry.
   DateTime lastModifiedAt;
 
-  /// [User] that created this task.
-  int userId;
-
   /// Title.
   String title;
 
-  /// Description.
-  String? description;
+  /// [Step]s of this segment.
+  List<_i2.RoutineStep>? steps;
 
-  /// Is the task completed?
-  bool completed;
-
-  /// Collection of [ExperiencePointValue]s to be rewarded upon completion of this task.
-  List<_i2.AbilityExperienceValue> abilityExpValues;
-
-  Task copyWith({
+  RoutineSegment copyWith({
     int? id,
     DateTime? createdAt,
     DateTime? lastModifiedAt,
-    int? userId,
     String? title,
-    String? description,
-    bool? completed,
-    List<_i2.AbilityExperienceValue>? abilityExpValues,
+    List<_i2.RoutineStep>? steps,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -96,12 +74,8 @@ abstract class Task implements _i1.SerializableModel {
       if (id != null) 'id': id,
       'createdAt': createdAt.toJson(),
       'lastModifiedAt': lastModifiedAt.toJson(),
-      'userId': userId,
       'title': title,
-      if (description != null) 'description': description,
-      'completed': completed,
-      'abilityExpValues':
-          abilityExpValues.toJson(valueToJson: (v) => v.toJson()),
+      if (steps != null) 'steps': steps?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -113,48 +87,37 @@ abstract class Task implements _i1.SerializableModel {
 
 class _Undefined {}
 
-class _TaskImpl extends Task {
-  _TaskImpl({
+class _RoutineSegmentImpl extends RoutineSegment {
+  _RoutineSegmentImpl({
     int? id,
     required DateTime createdAt,
     required DateTime lastModifiedAt,
-    required int userId,
     required String title,
-    String? description,
-    bool? completed,
-    required List<_i2.AbilityExperienceValue> abilityExpValues,
+    List<_i2.RoutineStep>? steps,
   }) : super._(
           id: id,
           createdAt: createdAt,
           lastModifiedAt: lastModifiedAt,
-          userId: userId,
           title: title,
-          description: description,
-          completed: completed,
-          abilityExpValues: abilityExpValues,
+          steps: steps,
         );
 
   @override
-  Task copyWith({
+  RoutineSegment copyWith({
     Object? id = _Undefined,
     DateTime? createdAt,
     DateTime? lastModifiedAt,
-    int? userId,
     String? title,
-    Object? description = _Undefined,
-    bool? completed,
-    List<_i2.AbilityExperienceValue>? abilityExpValues,
+    Object? steps = _Undefined,
   }) {
-    return Task(
+    return RoutineSegment(
       id: id is int? ? id : this.id,
       createdAt: createdAt ?? this.createdAt,
       lastModifiedAt: lastModifiedAt ?? this.lastModifiedAt,
-      userId: userId ?? this.userId,
       title: title ?? this.title,
-      description: description is String? ? description : this.description,
-      completed: completed ?? this.completed,
-      abilityExpValues: abilityExpValues ??
-          this.abilityExpValues.map((e0) => e0.copyWith()).toList(),
+      steps: steps is List<_i2.RoutineStep>?
+          ? steps
+          : this.steps?.map((e0) => e0.copyWith()).toList(),
     );
   }
 }

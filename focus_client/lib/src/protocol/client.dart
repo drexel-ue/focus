@@ -13,9 +13,12 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
 import 'package:focus_client/src/protocol/auth_session.dart' as _i3;
 import 'package:focus_client/src/protocol/auth_token.dart' as _i4;
-import 'package:focus_client/src/protocol/task.dart' as _i5;
-import 'package:focus_client/src/protocol/ability_experience_value.dart' as _i6;
-import 'protocol.dart' as _i7;
+import 'package:focus_client/src/protocol/routine.dart' as _i5;
+import 'package:focus_client/src/protocol/routine_step.dart' as _i6;
+import 'package:focus_client/src/protocol/routine_segment.dart' as _i7;
+import 'package:focus_client/src/protocol/task.dart' as _i8;
+import 'package:focus_client/src/protocol/ability_experience_value.dart' as _i9;
+import 'protocol.dart' as _i10;
 
 /// Handles [AuthSession] creation.
 /// {@category Endpoint}
@@ -58,6 +61,61 @@ class EndpointExample extends _i1.EndpointRef {
       );
 }
 
+/// Handles work related to [Routine]s.
+/// {@category Endpoint}
+class EndpointRoutine extends _i1.EndpointRef {
+  EndpointRoutine(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'routine';
+
+  /// Get routines for a [User].
+  _i2.Future<List<_i5.Routine>> getRoutines(int page) =>
+      caller.callServerEndpoint<List<_i5.Routine>>(
+        'routine',
+        'getRoutines',
+        {'page': page},
+      );
+
+  /// Creates and returns a new [Routine].
+  _i2.Future<_i5.Routine> createRoutine({
+    required String title,
+    required bool active,
+    List<_i6.RoutineStep>? steps,
+    List<_i7.RoutineSegment>? segments,
+  }) =>
+      caller.callServerEndpoint<_i5.Routine>(
+        'routine',
+        'createRoutine',
+        {
+          'title': title,
+          'active': active,
+          'steps': steps,
+          'segments': segments,
+        },
+      );
+
+  /// Updates an existing [Routine].
+  _i2.Future<_i5.Routine> updateRoutine({
+    required int routineId,
+    required String title,
+    required bool active,
+    List<_i6.RoutineStep>? steps,
+    List<_i7.RoutineSegment>? segments,
+  }) =>
+      caller.callServerEndpoint<_i5.Routine>(
+        'routine',
+        'updateRoutine',
+        {
+          'routineId': routineId,
+          'title': title,
+          'active': active,
+          'steps': steps,
+          'segments': segments,
+        },
+      );
+}
+
 /// Handles work related to [Task]s.
 /// {@category Endpoint}
 class EndpointTask extends _i1.EndpointRef {
@@ -66,21 +124,21 @@ class EndpointTask extends _i1.EndpointRef {
   @override
   String get name => 'task';
 
-  /// Get all tasks for a [User].
-  _i2.Future<List<_i5.Task>> getTasks(int page) =>
-      caller.callServerEndpoint<List<_i5.Task>>(
+  /// Get tasks for a [User].
+  _i2.Future<List<_i8.Task>> getTasks(int page) =>
+      caller.callServerEndpoint<List<_i8.Task>>(
         'task',
         'getTasks',
         {'page': page},
       );
 
   /// Create a [Task].
-  _i2.Future<_i5.Task> createTask({
+  _i2.Future<_i8.Task> createTask({
     required String title,
     String? description,
-    required List<_i6.AbilityExperienceValue> abilityExpValues,
+    required List<_i9.AbilityExperienceValue> abilityExpValues,
   }) =>
-      caller.callServerEndpoint<_i5.Task>(
+      caller.callServerEndpoint<_i8.Task>(
         'task',
         'createTask',
         {
@@ -91,21 +149,21 @@ class EndpointTask extends _i1.EndpointRef {
       );
 
   /// Toggles the completion state of a [Task].
-  _i2.Future<_i5.Task> toggleTaskComplete(int taskId) =>
-      caller.callServerEndpoint<_i5.Task>(
+  _i2.Future<_i8.Task> toggleTaskComplete(int taskId) =>
+      caller.callServerEndpoint<_i8.Task>(
         'task',
         'toggleTaskComplete',
         {'taskId': taskId},
       );
 
   /// Update a [Task].
-  _i2.Future<_i5.Task> updateTask({
+  _i2.Future<_i8.Task> updateTask({
     required int taskId,
     required String title,
     String? description,
-    required List<_i6.AbilityExperienceValue> abilityExpValues,
+    required List<_i9.AbilityExperienceValue> abilityExpValues,
   }) =>
-      caller.callServerEndpoint<_i5.Task>(
+      caller.callServerEndpoint<_i8.Task>(
         'task',
         'updateTask',
         {
@@ -117,8 +175,8 @@ class EndpointTask extends _i1.EndpointRef {
       );
 
   /// Deletes a [Task].
-  _i2.Future<_i5.Task> deleteTask(int taskId) =>
-      caller.callServerEndpoint<_i5.Task>(
+  _i2.Future<_i8.Task> deleteTask(int taskId) =>
+      caller.callServerEndpoint<_i8.Task>(
         'task',
         'deleteTask',
         {'taskId': taskId},
@@ -141,7 +199,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
           host,
-          _i7.Protocol(),
+          _i10.Protocol(),
           securityContext: securityContext,
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,
@@ -153,6 +211,7 @@ class Client extends _i1.ServerpodClientShared {
         ) {
     auth = EndpointAuth(this);
     example = EndpointExample(this);
+    routine = EndpointRoutine(this);
     task = EndpointTask(this);
   }
 
@@ -160,12 +219,15 @@ class Client extends _i1.ServerpodClientShared {
 
   late final EndpointExample example;
 
+  late final EndpointRoutine routine;
+
   late final EndpointTask task;
 
   @override
   Map<String, _i1.EndpointRef> get endpointRefLookup => {
         'auth': auth,
         'example': example,
+        'routine': routine,
         'task': task,
       };
 

@@ -12,41 +12,35 @@
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'ability_experience_value.dart' as _i2;
 
-/// A one-off task to be completed.
-abstract class Task implements _i1.SerializableModel {
-  Task._({
+/// A par of a [Routine].
+abstract class RoutineStep implements _i1.SerializableModel {
+  RoutineStep._({
     this.id,
     required this.createdAt,
     required this.lastModifiedAt,
-    required this.userId,
     required this.title,
     this.description,
-    bool? completed,
     required this.abilityExpValues,
-  }) : completed = completed ?? false;
+  });
 
-  factory Task({
+  factory RoutineStep({
     int? id,
     required DateTime createdAt,
     required DateTime lastModifiedAt,
-    required int userId,
     required String title,
     String? description,
-    bool? completed,
     required List<_i2.AbilityExperienceValue> abilityExpValues,
-  }) = _TaskImpl;
+  }) = _RoutineStepImpl;
 
-  factory Task.fromJson(Map<String, dynamic> jsonSerialization) {
-    return Task(
+  factory RoutineStep.fromJson(Map<String, dynamic> jsonSerialization) {
+    return RoutineStep(
       id: jsonSerialization['id'] as int?,
       createdAt:
           _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
       lastModifiedAt: _i1.DateTimeJsonExtension.fromJson(
           jsonSerialization['lastModifiedAt']),
-      userId: jsonSerialization['userId'] as int,
       title: jsonSerialization['title'] as String,
       description: jsonSerialization['description'] as String?,
-      completed: jsonSerialization['completed'] as bool,
       abilityExpValues: (jsonSerialization['abilityExpValues'] as List)
           .map((e) =>
               _i2.AbilityExperienceValue.fromJson((e as Map<String, dynamic>)))
@@ -65,29 +59,21 @@ abstract class Task implements _i1.SerializableModel {
   /// Timestamp of last update to database entry.
   DateTime lastModifiedAt;
 
-  /// [User] that created this task.
-  int userId;
-
   /// Title.
   String title;
 
   /// Description.
   String? description;
 
-  /// Is the task completed?
-  bool completed;
-
   /// Collection of [ExperiencePointValue]s to be rewarded upon completion of this task.
   List<_i2.AbilityExperienceValue> abilityExpValues;
 
-  Task copyWith({
+  RoutineStep copyWith({
     int? id,
     DateTime? createdAt,
     DateTime? lastModifiedAt,
-    int? userId,
     String? title,
     String? description,
-    bool? completed,
     List<_i2.AbilityExperienceValue>? abilityExpValues,
   });
   @override
@@ -96,10 +82,8 @@ abstract class Task implements _i1.SerializableModel {
       if (id != null) 'id': id,
       'createdAt': createdAt.toJson(),
       'lastModifiedAt': lastModifiedAt.toJson(),
-      'userId': userId,
       'title': title,
       if (description != null) 'description': description,
-      'completed': completed,
       'abilityExpValues':
           abilityExpValues.toJson(valueToJson: (v) => v.toJson()),
     };
@@ -113,46 +97,38 @@ abstract class Task implements _i1.SerializableModel {
 
 class _Undefined {}
 
-class _TaskImpl extends Task {
-  _TaskImpl({
+class _RoutineStepImpl extends RoutineStep {
+  _RoutineStepImpl({
     int? id,
     required DateTime createdAt,
     required DateTime lastModifiedAt,
-    required int userId,
     required String title,
     String? description,
-    bool? completed,
     required List<_i2.AbilityExperienceValue> abilityExpValues,
   }) : super._(
           id: id,
           createdAt: createdAt,
           lastModifiedAt: lastModifiedAt,
-          userId: userId,
           title: title,
           description: description,
-          completed: completed,
           abilityExpValues: abilityExpValues,
         );
 
   @override
-  Task copyWith({
+  RoutineStep copyWith({
     Object? id = _Undefined,
     DateTime? createdAt,
     DateTime? lastModifiedAt,
-    int? userId,
     String? title,
     Object? description = _Undefined,
-    bool? completed,
     List<_i2.AbilityExperienceValue>? abilityExpValues,
   }) {
-    return Task(
+    return RoutineStep(
       id: id is int? ? id : this.id,
       createdAt: createdAt ?? this.createdAt,
       lastModifiedAt: lastModifiedAt ?? this.lastModifiedAt,
-      userId: userId ?? this.userId,
       title: title ?? this.title,
       description: description is String? ? description : this.description,
-      completed: completed ?? this.completed,
       abilityExpValues: abilityExpValues ??
           this.abilityExpValues.map((e0) => e0.copyWith()).toList(),
     );

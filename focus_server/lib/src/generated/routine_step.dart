@@ -12,41 +12,35 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import 'ability_experience_value.dart' as _i2;
 
-/// A one-off task to be completed.
-abstract class Task implements _i1.TableRow, _i1.ProtocolSerialization {
-  Task._({
+/// A par of a [Routine].
+abstract class RoutineStep implements _i1.TableRow, _i1.ProtocolSerialization {
+  RoutineStep._({
     this.id,
     required this.createdAt,
     required this.lastModifiedAt,
-    required this.userId,
     required this.title,
     this.description,
-    bool? completed,
     required this.abilityExpValues,
-  }) : completed = completed ?? false;
+  });
 
-  factory Task({
+  factory RoutineStep({
     int? id,
     required DateTime createdAt,
     required DateTime lastModifiedAt,
-    required int userId,
     required String title,
     String? description,
-    bool? completed,
     required List<_i2.AbilityExperienceValue> abilityExpValues,
-  }) = _TaskImpl;
+  }) = _RoutineStepImpl;
 
-  factory Task.fromJson(Map<String, dynamic> jsonSerialization) {
-    return Task(
+  factory RoutineStep.fromJson(Map<String, dynamic> jsonSerialization) {
+    return RoutineStep(
       id: jsonSerialization['id'] as int?,
       createdAt:
           _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
       lastModifiedAt: _i1.DateTimeJsonExtension.fromJson(
           jsonSerialization['lastModifiedAt']),
-      userId: jsonSerialization['userId'] as int,
       title: jsonSerialization['title'] as String,
       description: jsonSerialization['description'] as String?,
-      completed: jsonSerialization['completed'] as bool,
       abilityExpValues: (jsonSerialization['abilityExpValues'] as List)
           .map((e) =>
               _i2.AbilityExperienceValue.fromJson((e as Map<String, dynamic>)))
@@ -54,9 +48,9 @@ abstract class Task implements _i1.TableRow, _i1.ProtocolSerialization {
     );
   }
 
-  static final t = TaskTable();
+  static final t = RoutineStepTable();
 
-  static const db = TaskRepository._();
+  static const db = RoutineStepRepository._();
 
   @override
   int? id;
@@ -67,32 +61,28 @@ abstract class Task implements _i1.TableRow, _i1.ProtocolSerialization {
   /// Timestamp of last update to database entry.
   DateTime lastModifiedAt;
 
-  /// [User] that created this task.
-  int userId;
-
   /// Title.
   String title;
 
   /// Description.
   String? description;
 
-  /// Is the task completed?
-  bool completed;
-
   /// Collection of [ExperiencePointValue]s to be rewarded upon completion of this task.
   List<_i2.AbilityExperienceValue> abilityExpValues;
+
+  int? _routinesStepsRoutinesId;
+
+  int? _routineSegmentsStepsRoutineSegmentsId;
 
   @override
   _i1.Table get table => t;
 
-  Task copyWith({
+  RoutineStep copyWith({
     int? id,
     DateTime? createdAt,
     DateTime? lastModifiedAt,
-    int? userId,
     String? title,
     String? description,
-    bool? completed,
     List<_i2.AbilityExperienceValue>? abilityExpValues,
   });
   @override
@@ -101,12 +91,15 @@ abstract class Task implements _i1.TableRow, _i1.ProtocolSerialization {
       if (id != null) 'id': id,
       'createdAt': createdAt.toJson(),
       'lastModifiedAt': lastModifiedAt.toJson(),
-      'userId': userId,
       'title': title,
       if (description != null) 'description': description,
-      'completed': completed,
       'abilityExpValues':
           abilityExpValues.toJson(valueToJson: (v) => v.toJson()),
+      if (_routinesStepsRoutinesId != null)
+        '_routinesStepsRoutinesId': _routinesStepsRoutinesId,
+      if (_routineSegmentsStepsRoutineSegmentsId != null)
+        '_routineSegmentsStepsRoutineSegmentsId':
+            _routineSegmentsStepsRoutineSegmentsId,
     };
   }
 
@@ -116,35 +109,33 @@ abstract class Task implements _i1.TableRow, _i1.ProtocolSerialization {
       if (id != null) 'id': id,
       'createdAt': createdAt.toJson(),
       'lastModifiedAt': lastModifiedAt.toJson(),
-      'userId': userId,
       'title': title,
       if (description != null) 'description': description,
-      'completed': completed,
       'abilityExpValues':
           abilityExpValues.toJson(valueToJson: (v) => v.toJsonForProtocol()),
     };
   }
 
-  static TaskInclude include() {
-    return TaskInclude._();
+  static RoutineStepInclude include() {
+    return RoutineStepInclude._();
   }
 
-  static TaskIncludeList includeList({
-    _i1.WhereExpressionBuilder<TaskTable>? where,
+  static RoutineStepIncludeList includeList({
+    _i1.WhereExpressionBuilder<RoutineStepTable>? where,
     int? limit,
     int? offset,
-    _i1.OrderByBuilder<TaskTable>? orderBy,
+    _i1.OrderByBuilder<RoutineStepTable>? orderBy,
     bool orderDescending = false,
-    _i1.OrderByListBuilder<TaskTable>? orderByList,
-    TaskInclude? include,
+    _i1.OrderByListBuilder<RoutineStepTable>? orderByList,
+    RoutineStepInclude? include,
   }) {
-    return TaskIncludeList._(
+    return RoutineStepIncludeList._(
       where: where,
       limit: limit,
       offset: offset,
-      orderBy: orderBy?.call(Task.t),
+      orderBy: orderBy?.call(RoutineStep.t),
       orderDescending: orderDescending,
-      orderByList: orderByList?.call(Task.t),
+      orderByList: orderByList?.call(RoutineStep.t),
       include: include,
     );
   }
@@ -157,64 +148,105 @@ abstract class Task implements _i1.TableRow, _i1.ProtocolSerialization {
 
 class _Undefined {}
 
-class _TaskImpl extends Task {
-  _TaskImpl({
+class _RoutineStepImpl extends RoutineStep {
+  _RoutineStepImpl({
     int? id,
     required DateTime createdAt,
     required DateTime lastModifiedAt,
-    required int userId,
     required String title,
     String? description,
-    bool? completed,
     required List<_i2.AbilityExperienceValue> abilityExpValues,
   }) : super._(
           id: id,
           createdAt: createdAt,
           lastModifiedAt: lastModifiedAt,
-          userId: userId,
           title: title,
           description: description,
-          completed: completed,
           abilityExpValues: abilityExpValues,
         );
 
   @override
-  Task copyWith({
+  RoutineStep copyWith({
     Object? id = _Undefined,
     DateTime? createdAt,
     DateTime? lastModifiedAt,
-    int? userId,
     String? title,
     Object? description = _Undefined,
-    bool? completed,
     List<_i2.AbilityExperienceValue>? abilityExpValues,
   }) {
-    return Task(
+    return RoutineStep(
       id: id is int? ? id : this.id,
       createdAt: createdAt ?? this.createdAt,
       lastModifiedAt: lastModifiedAt ?? this.lastModifiedAt,
-      userId: userId ?? this.userId,
       title: title ?? this.title,
       description: description is String? ? description : this.description,
-      completed: completed ?? this.completed,
       abilityExpValues: abilityExpValues ??
           this.abilityExpValues.map((e0) => e0.copyWith()).toList(),
     );
   }
 }
 
-class TaskTable extends _i1.Table {
-  TaskTable({super.tableRelation}) : super(tableName: 'tasks') {
+class RoutineStepImplicit extends _RoutineStepImpl {
+  RoutineStepImplicit._({
+    int? id,
+    required DateTime createdAt,
+    required DateTime lastModifiedAt,
+    required String title,
+    String? description,
+    required List<_i2.AbilityExperienceValue> abilityExpValues,
+    this.$_routinesStepsRoutinesId,
+    this.$_routineSegmentsStepsRoutineSegmentsId,
+  }) : super(
+          id: id,
+          createdAt: createdAt,
+          lastModifiedAt: lastModifiedAt,
+          title: title,
+          description: description,
+          abilityExpValues: abilityExpValues,
+        );
+
+  factory RoutineStepImplicit(
+    RoutineStep routineStep, {
+    int? $_routinesStepsRoutinesId,
+    int? $_routineSegmentsStepsRoutineSegmentsId,
+  }) {
+    return RoutineStepImplicit._(
+      id: routineStep.id,
+      createdAt: routineStep.createdAt,
+      lastModifiedAt: routineStep.lastModifiedAt,
+      title: routineStep.title,
+      description: routineStep.description,
+      abilityExpValues: routineStep.abilityExpValues,
+      $_routinesStepsRoutinesId: $_routinesStepsRoutinesId,
+      $_routineSegmentsStepsRoutineSegmentsId:
+          $_routineSegmentsStepsRoutineSegmentsId,
+    );
+  }
+
+  int? $_routinesStepsRoutinesId;
+
+  int? $_routineSegmentsStepsRoutineSegmentsId;
+
+  @override
+  Map<String, dynamic> toJson() {
+    var jsonMap = super.toJson();
+    jsonMap.addAll({
+      '_routinesStepsRoutinesId': $_routinesStepsRoutinesId,
+      '_routineSegmentsStepsRoutineSegmentsId':
+          $_routineSegmentsStepsRoutineSegmentsId
+    });
+    return jsonMap;
+  }
+}
+
+class RoutineStepTable extends _i1.Table {
+  RoutineStepTable({super.tableRelation}) : super(tableName: 'routine_steps') {
     createdAt = _i1.ColumnDateTime(
       'createdAt',
       this,
     );
     lastModifiedAt = _i1.ColumnDateTime(
       'lastModifiedAt',
-      this,
-    );
-    userId = _i1.ColumnInt(
-      'userId',
       this,
     );
     title = _i1.ColumnString(
@@ -225,13 +257,16 @@ class TaskTable extends _i1.Table {
       'description',
       this,
     );
-    completed = _i1.ColumnBool(
-      'completed',
-      this,
-      hasDefault: true,
-    );
     abilityExpValues = _i1.ColumnSerializable(
       'abilityExpValues',
+      this,
+    );
+    $_routinesStepsRoutinesId = _i1.ColumnInt(
+      '_routinesStepsRoutinesId',
+      this,
+    );
+    $_routineSegmentsStepsRoutineSegmentsId = _i1.ColumnInt(
+      '_routineSegmentsStepsRoutineSegmentsId',
       this,
     );
   }
@@ -242,47 +277,45 @@ class TaskTable extends _i1.Table {
   /// Timestamp of last update to database entry.
   late final _i1.ColumnDateTime lastModifiedAt;
 
-  /// [User] that created this task.
-  late final _i1.ColumnInt userId;
-
   /// Title.
   late final _i1.ColumnString title;
 
   /// Description.
   late final _i1.ColumnString description;
 
-  /// Is the task completed?
-  late final _i1.ColumnBool completed;
-
   /// Collection of [ExperiencePointValue]s to be rewarded upon completion of this task.
   late final _i1.ColumnSerializable abilityExpValues;
+
+  late final _i1.ColumnInt $_routinesStepsRoutinesId;
+
+  late final _i1.ColumnInt $_routineSegmentsStepsRoutineSegmentsId;
 
   @override
   List<_i1.Column> get columns => [
         id,
         createdAt,
         lastModifiedAt,
-        userId,
         title,
         description,
-        completed,
         abilityExpValues,
+        $_routinesStepsRoutinesId,
+        $_routineSegmentsStepsRoutineSegmentsId,
       ];
 }
 
-class TaskInclude extends _i1.IncludeObject {
-  TaskInclude._();
+class RoutineStepInclude extends _i1.IncludeObject {
+  RoutineStepInclude._();
 
   @override
   Map<String, _i1.Include?> get includes => {};
 
   @override
-  _i1.Table get table => Task.t;
+  _i1.Table get table => RoutineStep.t;
 }
 
-class TaskIncludeList extends _i1.IncludeList {
-  TaskIncludeList._({
-    _i1.WhereExpressionBuilder<TaskTable>? where,
+class RoutineStepIncludeList extends _i1.IncludeList {
+  RoutineStepIncludeList._({
+    _i1.WhereExpressionBuilder<RoutineStepTable>? where,
     super.limit,
     super.offset,
     super.orderBy,
@@ -290,33 +323,33 @@ class TaskIncludeList extends _i1.IncludeList {
     super.orderByList,
     super.include,
   }) {
-    super.where = where?.call(Task.t);
+    super.where = where?.call(RoutineStep.t);
   }
 
   @override
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table get table => Task.t;
+  _i1.Table get table => RoutineStep.t;
 }
 
-class TaskRepository {
-  const TaskRepository._();
+class RoutineStepRepository {
+  const RoutineStepRepository._();
 
-  Future<List<Task>> find(
+  Future<List<RoutineStep>> find(
     _i1.Session session, {
-    _i1.WhereExpressionBuilder<TaskTable>? where,
+    _i1.WhereExpressionBuilder<RoutineStepTable>? where,
     int? limit,
     int? offset,
-    _i1.OrderByBuilder<TaskTable>? orderBy,
+    _i1.OrderByBuilder<RoutineStepTable>? orderBy,
     bool orderDescending = false,
-    _i1.OrderByListBuilder<TaskTable>? orderByList,
+    _i1.OrderByListBuilder<RoutineStepTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
-    return session.db.find<Task>(
-      where: where?.call(Task.t),
-      orderBy: orderBy?.call(Task.t),
-      orderByList: orderByList?.call(Task.t),
+    return session.db.find<RoutineStep>(
+      where: where?.call(RoutineStep.t),
+      orderBy: orderBy?.call(RoutineStep.t),
+      orderByList: orderByList?.call(RoutineStep.t),
       orderDescending: orderDescending,
       limit: limit,
       offset: offset,
@@ -324,125 +357,125 @@ class TaskRepository {
     );
   }
 
-  Future<Task?> findFirstRow(
+  Future<RoutineStep?> findFirstRow(
     _i1.Session session, {
-    _i1.WhereExpressionBuilder<TaskTable>? where,
+    _i1.WhereExpressionBuilder<RoutineStepTable>? where,
     int? offset,
-    _i1.OrderByBuilder<TaskTable>? orderBy,
+    _i1.OrderByBuilder<RoutineStepTable>? orderBy,
     bool orderDescending = false,
-    _i1.OrderByListBuilder<TaskTable>? orderByList,
+    _i1.OrderByListBuilder<RoutineStepTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
-    return session.db.findFirstRow<Task>(
-      where: where?.call(Task.t),
-      orderBy: orderBy?.call(Task.t),
-      orderByList: orderByList?.call(Task.t),
+    return session.db.findFirstRow<RoutineStep>(
+      where: where?.call(RoutineStep.t),
+      orderBy: orderBy?.call(RoutineStep.t),
+      orderByList: orderByList?.call(RoutineStep.t),
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
     );
   }
 
-  Future<Task?> findById(
+  Future<RoutineStep?> findById(
     _i1.Session session,
     int id, {
     _i1.Transaction? transaction,
   }) async {
-    return session.db.findById<Task>(
+    return session.db.findById<RoutineStep>(
       id,
       transaction: transaction,
     );
   }
 
-  Future<List<Task>> insert(
+  Future<List<RoutineStep>> insert(
     _i1.Session session,
-    List<Task> rows, {
+    List<RoutineStep> rows, {
     _i1.Transaction? transaction,
   }) async {
-    return session.db.insert<Task>(
+    return session.db.insert<RoutineStep>(
       rows,
       transaction: transaction,
     );
   }
 
-  Future<Task> insertRow(
+  Future<RoutineStep> insertRow(
     _i1.Session session,
-    Task row, {
+    RoutineStep row, {
     _i1.Transaction? transaction,
   }) async {
-    return session.db.insertRow<Task>(
+    return session.db.insertRow<RoutineStep>(
       row,
       transaction: transaction,
     );
   }
 
-  Future<List<Task>> update(
+  Future<List<RoutineStep>> update(
     _i1.Session session,
-    List<Task> rows, {
-    _i1.ColumnSelections<TaskTable>? columns,
+    List<RoutineStep> rows, {
+    _i1.ColumnSelections<RoutineStepTable>? columns,
     _i1.Transaction? transaction,
   }) async {
-    return session.db.update<Task>(
+    return session.db.update<RoutineStep>(
       rows,
-      columns: columns?.call(Task.t),
+      columns: columns?.call(RoutineStep.t),
       transaction: transaction,
     );
   }
 
-  Future<Task> updateRow(
+  Future<RoutineStep> updateRow(
     _i1.Session session,
-    Task row, {
-    _i1.ColumnSelections<TaskTable>? columns,
+    RoutineStep row, {
+    _i1.ColumnSelections<RoutineStepTable>? columns,
     _i1.Transaction? transaction,
   }) async {
-    return session.db.updateRow<Task>(
+    return session.db.updateRow<RoutineStep>(
       row,
-      columns: columns?.call(Task.t),
+      columns: columns?.call(RoutineStep.t),
       transaction: transaction,
     );
   }
 
-  Future<List<Task>> delete(
+  Future<List<RoutineStep>> delete(
     _i1.Session session,
-    List<Task> rows, {
+    List<RoutineStep> rows, {
     _i1.Transaction? transaction,
   }) async {
-    return session.db.delete<Task>(
+    return session.db.delete<RoutineStep>(
       rows,
       transaction: transaction,
     );
   }
 
-  Future<Task> deleteRow(
+  Future<RoutineStep> deleteRow(
     _i1.Session session,
-    Task row, {
+    RoutineStep row, {
     _i1.Transaction? transaction,
   }) async {
-    return session.db.deleteRow<Task>(
+    return session.db.deleteRow<RoutineStep>(
       row,
       transaction: transaction,
     );
   }
 
-  Future<List<Task>> deleteWhere(
+  Future<List<RoutineStep>> deleteWhere(
     _i1.Session session, {
-    required _i1.WhereExpressionBuilder<TaskTable> where,
+    required _i1.WhereExpressionBuilder<RoutineStepTable> where,
     _i1.Transaction? transaction,
   }) async {
-    return session.db.deleteWhere<Task>(
-      where: where(Task.t),
+    return session.db.deleteWhere<RoutineStep>(
+      where: where(RoutineStep.t),
       transaction: transaction,
     );
   }
 
   Future<int> count(
     _i1.Session session, {
-    _i1.WhereExpressionBuilder<TaskTable>? where,
+    _i1.WhereExpressionBuilder<RoutineStepTable>? where,
     int? limit,
     _i1.Transaction? transaction,
   }) async {
-    return session.db.count<Task>(
-      where: where?.call(Task.t),
+    return session.db.count<RoutineStep>(
+      where: where?.call(RoutineStep.t),
       limit: limit,
       transaction: transaction,
     );

@@ -11,24 +11,21 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 
-/// To be thrown if there is an exception when querying the database for a specific [Task].
-abstract class TaskNotFoundException
+/// To be thrown if there is an exception when deleting a row from the database.
+abstract class DeletionException
     implements _i1.SerializableException, _i1.SerializableModel {
-  TaskNotFoundException._({required this.message});
+  DeletionException._({required this.message});
 
-  factory TaskNotFoundException({required String message}) =
-      _TaskNotFoundExceptionImpl;
+  factory DeletionException({required String message}) = _DeletionExceptionImpl;
 
-  factory TaskNotFoundException.fromJson(
-      Map<String, dynamic> jsonSerialization) {
-    return TaskNotFoundException(
-        message: jsonSerialization['message'] as String);
+  factory DeletionException.fromJson(Map<String, dynamic> jsonSerialization) {
+    return DeletionException(message: jsonSerialization['message'] as String);
   }
 
   /// Message to be shown client side.
   String message;
 
-  TaskNotFoundException copyWith({String? message});
+  DeletionException copyWith({String? message});
   @override
   Map<String, dynamic> toJson() {
     return {'message': message};
@@ -40,12 +37,11 @@ abstract class TaskNotFoundException
   }
 }
 
-class _TaskNotFoundExceptionImpl extends TaskNotFoundException {
-  _TaskNotFoundExceptionImpl({required String message})
-      : super._(message: message);
+class _DeletionExceptionImpl extends DeletionException {
+  _DeletionExceptionImpl({required String message}) : super._(message: message);
 
   @override
-  TaskNotFoundException copyWith({String? message}) {
-    return TaskNotFoundException(message: message ?? this.message);
+  DeletionException copyWith({String? message}) {
+    return DeletionException(message: message ?? this.message);
   }
 }

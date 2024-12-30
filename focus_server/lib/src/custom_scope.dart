@@ -14,11 +14,15 @@ class CustomScope extends Scope {
   /// May access [TaskEndpoint].
   static const task = CustomScope('task');
 
+  /// May access [RoutineEndpoint].
+  static const routine = CustomScope('routine');
+
   /// All values.
   static const values = [
     none,
     auth,
     task,
+    routine,
   ];
 
   /// Parses [value] into a [CustomScope]. Will return [CustomScope.auth] by default.

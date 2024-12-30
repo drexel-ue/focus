@@ -11,24 +11,24 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 
-/// Default exception when working with the [TaskEndpoint].
-abstract class TaskException
+/// To be thrown if there is an exception when querying the database for a specific model.
+abstract class NotFoundException
     implements
         _i1.SerializableException,
         _i1.SerializableModel,
         _i1.ProtocolSerialization {
-  TaskException._({required this.message});
+  NotFoundException._({required this.message});
 
-  factory TaskException({required String message}) = _TaskExceptionImpl;
+  factory NotFoundException({required String message}) = _NotFoundExceptionImpl;
 
-  factory TaskException.fromJson(Map<String, dynamic> jsonSerialization) {
-    return TaskException(message: jsonSerialization['message'] as String);
+  factory NotFoundException.fromJson(Map<String, dynamic> jsonSerialization) {
+    return NotFoundException(message: jsonSerialization['message'] as String);
   }
 
   /// Message to be shown client side.
   String message;
 
-  TaskException copyWith({String? message});
+  NotFoundException copyWith({String? message});
   @override
   Map<String, dynamic> toJson() {
     return {'message': message};
@@ -45,11 +45,11 @@ abstract class TaskException
   }
 }
 
-class _TaskExceptionImpl extends TaskException {
-  _TaskExceptionImpl({required String message}) : super._(message: message);
+class _NotFoundExceptionImpl extends NotFoundException {
+  _NotFoundExceptionImpl({required String message}) : super._(message: message);
 
   @override
-  TaskException copyWith({String? message}) {
-    return TaskException(message: message ?? this.message);
+  NotFoundException copyWith({String? message}) {
+    return NotFoundException(message: message ?? this.message);
   }
 }

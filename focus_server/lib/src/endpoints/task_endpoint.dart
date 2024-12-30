@@ -8,7 +8,7 @@ class TaskEndpoint extends Endpoint {
   @override
   Set<Scope> get requiredScopes => {CustomScope.task};
 
-  /// Get all tasks for a [User].
+  /// Get tasks for a [User].
   Future<List<Task>> getTasks(Session session, int page) async {
     return session.db.transaction((Transaction transaction) async {
       try {
@@ -30,7 +30,7 @@ class TaskEndpoint extends Endpoint {
           exception: error,
           stackTrace: stackTrace,
         );
-        throw TaskFetchException(message: 'failed to fetch tasks');
+        throw FetchException(message: 'failed to fetch tasks.');
       }
     });
   }
@@ -62,7 +62,7 @@ class TaskEndpoint extends Endpoint {
           exception: error,
           stackTrace: stackTrace,
         );
-        throw TaskCreationException(message: 'failed to create task.');
+        throw CreationException(message: 'failed to create task.');
       }
     });
   }
@@ -73,11 +73,11 @@ class TaskEndpoint extends Endpoint {
       try {
         final task = await Task.db.findById(session, taskId, transaction: transaction);
         if (task == null) {
-          throw TaskNotFoundException(message: 'task not found');
+          throw NotFoundException(message: 'task not found');
         }
         task.completed = !task.completed;
         return await Task.db.updateRow(session, task, transaction: transaction);
-      } on TaskNotFoundException catch (_) {
+      } on NotFoundException catch (_) {
         rethrow;
       } catch (error, stackTrace) {
         session.log(
@@ -86,7 +86,7 @@ class TaskEndpoint extends Endpoint {
           exception: error,
           stackTrace: stackTrace,
         );
-        throw TaskUpdateException(message: 'failed to update task.');
+        throw UpdateException(message: 'failed to update task.');
       }
     });
   }
@@ -101,9 +101,14 @@ class TaskEndpoint extends Endpoint {
   }) async {
     return session.db.transaction((Transaction transaction) async {
       try {
-        final task = await Task.db.findById(session, taskId, transaction: transaction);
+        final user = await session.parseUserFromFocusSession(transaction);
+        final task = await Task.db.findFirstRow(
+          session,
+          where: (TaskTable table) => table.id.equals(taskId) && table.userId.equals(user.id!),
+          transaction: transaction,
+        );
         if (task == null) {
-          throw TaskNotFoundException(message: 'task not found.');
+          throw NotFoundException(message: 'task not found.');
         }
         task
           ..lastModifiedAt = DateTime.timestamp()
@@ -111,7 +116,7 @@ class TaskEndpoint extends Endpoint {
           ..description = description
           ..abilityExpValues = abilityExpValues;
         return await Task.db.updateRow(session, task, transaction: transaction);
-      } on TaskNotFoundException catch (_) {
+      } on NotFoundException catch (_) {
         rethrow;
       } catch (error, stackTrace) {
         session.log(
@@ -120,7 +125,7 @@ class TaskEndpoint extends Endpoint {
           exception: error,
           stackTrace: stackTrace,
         );
-        throw TaskCreationException(message: 'failed to update task.');
+        throw CreationException(message: 'failed to update task.');
       }
     });
   }
@@ -131,7 +136,7 @@ class TaskEndpoint extends Endpoint {
       try {
         final task = await Task.db.findById(session, taskId, transaction: transaction);
         if (task == null) {
-          throw TaskNotFoundException(message: 'task not found.');
+          throw NotFoundException(message: 'task not found.');
         }
         return await Task.db.deleteRow(session, task, transaction: transaction);
       } catch (error, stackTrace) {
@@ -141,7 +146,7 @@ class TaskEndpoint extends Endpoint {
           exception: error,
           stackTrace: stackTrace,
         );
-        throw TaskDeletionException(message: 'failed to delete task.');
+        throw DeletionException(message: 'failed to delete task.');
       }
     });
   }

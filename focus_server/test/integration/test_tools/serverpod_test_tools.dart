@@ -16,9 +16,12 @@ import 'package:serverpod/serverpod.dart' as _i2;
 import 'dart:async' as _i3;
 import 'package:focus_server/src/generated/auth_session.dart' as _i4;
 import 'package:focus_server/src/generated/auth_token.dart' as _i5;
-import 'package:focus_server/src/generated/task.dart' as _i6;
+import 'package:focus_server/src/generated/routine.dart' as _i6;
+import 'package:focus_server/src/generated/routine_step.dart' as _i7;
+import 'package:focus_server/src/generated/routine_segment.dart' as _i8;
+import 'package:focus_server/src/generated/task.dart' as _i9;
 import 'package:focus_server/src/generated/ability_experience_value.dart'
-    as _i7;
+    as _i10;
 import 'package:focus_server/src/generated/protocol.dart';
 import 'package:focus_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -103,6 +106,8 @@ class TestEndpoints {
 
   late final _ExampleEndpoint example;
 
+  late final _RoutineEndpoint routine;
+
   late final _TaskEndpoint task;
 }
 
@@ -118,6 +123,10 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
     example = _ExampleEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    routine = _RoutineEndpoint(
       endpoints,
       serializationManager,
     );
@@ -235,6 +244,122 @@ class _ExampleEndpoint {
   }
 }
 
+class _RoutineEndpoint {
+  _RoutineEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _i2.EndpointDispatch _endpointDispatch;
+
+  final _i2.SerializationManager _serializationManager;
+
+  _i3.Future<List<_i6.Routine>> getRoutines(
+    _i1.TestSessionBuilder sessionBuilder,
+    int page,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'routine',
+        method: 'getRoutines',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'routine',
+          methodName: 'getRoutines',
+          parameters: _i1.testObjectToJson({'page': page}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<List<_i6.Routine>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i6.Routine> createRoutine(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required String title,
+    required bool active,
+    List<_i7.RoutineStep>? steps,
+    List<_i8.RoutineSegment>? segments,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'routine',
+        method: 'createRoutine',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'routine',
+          methodName: 'createRoutine',
+          parameters: _i1.testObjectToJson({
+            'title': title,
+            'active': active,
+            'steps': steps,
+            'segments': segments,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i6.Routine>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i6.Routine> updateRoutine(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required int routineId,
+    required String title,
+    required bool active,
+    List<_i7.RoutineStep>? steps,
+    List<_i8.RoutineSegment>? segments,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'routine',
+        method: 'updateRoutine',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'routine',
+          methodName: 'updateRoutine',
+          parameters: _i1.testObjectToJson({
+            'routineId': routineId,
+            'title': title,
+            'active': active,
+            'steps': steps,
+            'segments': segments,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i6.Routine>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
 class _TaskEndpoint {
   _TaskEndpoint(
     this._endpointDispatch,
@@ -245,7 +370,7 @@ class _TaskEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<List<_i6.Task>> getTasks(
+  _i3.Future<List<_i9.Task>> getTasks(
     _i1.TestSessionBuilder sessionBuilder,
     int page,
   ) async {
@@ -266,7 +391,7 @@ class _TaskEndpoint {
         var _localReturnValue = await (_localCallContext.method.call(
           _localUniqueSession,
           _localCallContext.arguments,
-        ) as _i3.Future<List<_i6.Task>>);
+        ) as _i3.Future<List<_i9.Task>>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -274,11 +399,11 @@ class _TaskEndpoint {
     });
   }
 
-  _i3.Future<_i6.Task> createTask(
+  _i3.Future<_i9.Task> createTask(
     _i1.TestSessionBuilder sessionBuilder, {
     required String title,
     String? description,
-    required List<_i7.AbilityExperienceValue> abilityExpValues,
+    required List<_i10.AbilityExperienceValue> abilityExpValues,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -301,7 +426,7 @@ class _TaskEndpoint {
         var _localReturnValue = await (_localCallContext.method.call(
           _localUniqueSession,
           _localCallContext.arguments,
-        ) as _i3.Future<_i6.Task>);
+        ) as _i3.Future<_i9.Task>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -309,7 +434,7 @@ class _TaskEndpoint {
     });
   }
 
-  _i3.Future<_i6.Task> toggleTaskComplete(
+  _i3.Future<_i9.Task> toggleTaskComplete(
     _i1.TestSessionBuilder sessionBuilder,
     int taskId,
   ) async {
@@ -330,7 +455,7 @@ class _TaskEndpoint {
         var _localReturnValue = await (_localCallContext.method.call(
           _localUniqueSession,
           _localCallContext.arguments,
-        ) as _i3.Future<_i6.Task>);
+        ) as _i3.Future<_i9.Task>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -338,12 +463,12 @@ class _TaskEndpoint {
     });
   }
 
-  _i3.Future<_i6.Task> updateTask(
+  _i3.Future<_i9.Task> updateTask(
     _i1.TestSessionBuilder sessionBuilder, {
     required int taskId,
     required String title,
     String? description,
-    required List<_i7.AbilityExperienceValue> abilityExpValues,
+    required List<_i10.AbilityExperienceValue> abilityExpValues,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -367,7 +492,7 @@ class _TaskEndpoint {
         var _localReturnValue = await (_localCallContext.method.call(
           _localUniqueSession,
           _localCallContext.arguments,
-        ) as _i3.Future<_i6.Task>);
+        ) as _i3.Future<_i9.Task>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -375,7 +500,7 @@ class _TaskEndpoint {
     });
   }
 
-  _i3.Future<_i6.Task> deleteTask(
+  _i3.Future<_i9.Task> deleteTask(
     _i1.TestSessionBuilder sessionBuilder,
     int taskId,
   ) async {
@@ -396,7 +521,7 @@ class _TaskEndpoint {
         var _localReturnValue = await (_localCallContext.method.call(
           _localUniqueSession,
           _localCallContext.arguments,
-        ) as _i3.Future<_i6.Task>);
+        ) as _i3.Future<_i9.Task>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

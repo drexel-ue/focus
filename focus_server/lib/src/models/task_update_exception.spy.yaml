@@ -1,5 +1,0 @@
-### To be thrown if there is an exception during the task update process.
-exception: TaskUpdateException
-fields:
-  ### Message to be shown client side.
-  message: String

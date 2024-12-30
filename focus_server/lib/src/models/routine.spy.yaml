@@ -1,0 +1,18 @@
+### Repeatable sequence of [Step]s.
+class: Routine
+table: routines
+fields:
+  ### Timestamp of entry into database.
+  createdAt: DateTime
+  ### Timestamp of last update to database entry.
+  lastModifiedAt: DateTime
+  ### Id of [User] that created this routine.
+  userId: int
+  ### Title.
+  title: String
+  ### Is this routine active?
+  active: bool
+  ### [Step]s of this routine.
+  steps: List<RoutineStep>?, relation
+  ### Collection of steps.
+  segments: List<RoutineSegment>?, relation

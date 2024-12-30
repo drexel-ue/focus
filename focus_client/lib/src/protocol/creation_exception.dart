@@ -11,24 +11,21 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 
-/// To be thrown if there is an exception during a task deletion.
-abstract class TaskDeletionException
+/// To be thrown if there is an exception when adding a new row to the database.
+abstract class CreationException
     implements _i1.SerializableException, _i1.SerializableModel {
-  TaskDeletionException._({required this.message});
+  CreationException._({required this.message});
 
-  factory TaskDeletionException({required String message}) =
-      _TaskDeletionExceptionImpl;
+  factory CreationException({required String message}) = _CreationExceptionImpl;
 
-  factory TaskDeletionException.fromJson(
-      Map<String, dynamic> jsonSerialization) {
-    return TaskDeletionException(
-        message: jsonSerialization['message'] as String);
+  factory CreationException.fromJson(Map<String, dynamic> jsonSerialization) {
+    return CreationException(message: jsonSerialization['message'] as String);
   }
 
   /// Message to be shown client side.
   String message;
 
-  TaskDeletionException copyWith({String? message});
+  CreationException copyWith({String? message});
   @override
   Map<String, dynamic> toJson() {
     return {'message': message};
@@ -40,12 +37,11 @@ abstract class TaskDeletionException
   }
 }
 
-class _TaskDeletionExceptionImpl extends TaskDeletionException {
-  _TaskDeletionExceptionImpl({required String message})
-      : super._(message: message);
+class _CreationExceptionImpl extends CreationException {
+  _CreationExceptionImpl({required String message}) : super._(message: message);
 
   @override
-  TaskDeletionException copyWith({String? message}) {
-    return TaskDeletionException(message: message ?? this.message);
+  CreationException copyWith({String? message}) {
+    return CreationException(message: message ?? this.message);
   }
 }

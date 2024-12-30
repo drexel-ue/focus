@@ -11,21 +11,21 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 
-/// Default exception when working with the [TaskEndpoint].
-abstract class TaskException
+/// To be thrown if there is an exception when fetching a row from the database.
+abstract class FetchException
     implements _i1.SerializableException, _i1.SerializableModel {
-  TaskException._({required this.message});
+  FetchException._({required this.message});
 
-  factory TaskException({required String message}) = _TaskExceptionImpl;
+  factory FetchException({required String message}) = _FetchExceptionImpl;
 
-  factory TaskException.fromJson(Map<String, dynamic> jsonSerialization) {
-    return TaskException(message: jsonSerialization['message'] as String);
+  factory FetchException.fromJson(Map<String, dynamic> jsonSerialization) {
+    return FetchException(message: jsonSerialization['message'] as String);
   }
 
   /// Message to be shown client side.
   String message;
 
-  TaskException copyWith({String? message});
+  FetchException copyWith({String? message});
   @override
   Map<String, dynamic> toJson() {
     return {'message': message};
@@ -37,11 +37,11 @@ abstract class TaskException
   }
 }
 
-class _TaskExceptionImpl extends TaskException {
-  _TaskExceptionImpl({required String message}) : super._(message: message);
+class _FetchExceptionImpl extends FetchException {
+  _FetchExceptionImpl({required String message}) : super._(message: message);
 
   @override
-  TaskException copyWith({String? message}) {
-    return TaskException(message: message ?? this.message);
+  FetchException copyWith({String? message}) {
+    return FetchException(message: message ?? this.message);
   }
 }

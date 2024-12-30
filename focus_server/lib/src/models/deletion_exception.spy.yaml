@@ -1,0 +1,5 @@
+### To be thrown if there is an exception when deleting a row from the database.
+exception: DeletionException
+fields:
+  ### Message to be shown client side.
+  message: String

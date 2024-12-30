@@ -1,0 +1,5 @@
+### To be thrown if there is an exception when adding a new row to the database.
+exception: CreationException
+fields:
+  ### Message to be shown client side.
+  message: String

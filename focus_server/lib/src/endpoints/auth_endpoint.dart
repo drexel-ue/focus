@@ -63,12 +63,12 @@ class AuthEndpoint extends Endpoint {
       rethrow;
     } catch (error, stackTrace) {
       session.log(
-        'errro in refresh',
+        'error in refresh',
         level: LogLevel.error,
         exception: error,
         stackTrace: stackTrace,
       );
-      rethrow;
+      throw AuthException(message: 'failed to refresh token.');
     }
   }
 
@@ -76,7 +76,7 @@ class AuthEndpoint extends Endpoint {
   /// The refresh token is keyed to the access token.
   AuthToken _generateAuthToken(Session session, User user) {
     const issuer = 'focus_server';
-    final scopes = <CustomScope>{CustomScope.task};
+    final scopes = <CustomScope>{CustomScope.task, CustomScope.routine};
     final scopeString = scopes.map((CustomScope scope) => scope.name).join(', ');
     final accessTokenJwt = JWT(
       // FIXME(drexel-ue): what data should we bake into this token?

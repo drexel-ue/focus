@@ -11,24 +11,21 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 
-/// To be thrown if there is an exception during the task creation process.
-abstract class TaskCreationException
+/// To be thrown if there is an exception when querying the database for a specific model.
+abstract class NotFoundException
     implements _i1.SerializableException, _i1.SerializableModel {
-  TaskCreationException._({required this.message});
+  NotFoundException._({required this.message});
 
-  factory TaskCreationException({required String message}) =
-      _TaskCreationExceptionImpl;
+  factory NotFoundException({required String message}) = _NotFoundExceptionImpl;
 
-  factory TaskCreationException.fromJson(
-      Map<String, dynamic> jsonSerialization) {
-    return TaskCreationException(
-        message: jsonSerialization['message'] as String);
+  factory NotFoundException.fromJson(Map<String, dynamic> jsonSerialization) {
+    return NotFoundException(message: jsonSerialization['message'] as String);
   }
 
   /// Message to be shown client side.
   String message;
 
-  TaskCreationException copyWith({String? message});
+  NotFoundException copyWith({String? message});
   @override
   Map<String, dynamic> toJson() {
     return {'message': message};
@@ -40,12 +37,11 @@ abstract class TaskCreationException
   }
 }
 
-class _TaskCreationExceptionImpl extends TaskCreationException {
-  _TaskCreationExceptionImpl({required String message})
-      : super._(message: message);
+class _NotFoundExceptionImpl extends NotFoundException {
+  _NotFoundExceptionImpl({required String message}) : super._(message: message);
 
   @override
-  TaskCreationException copyWith({String? message}) {
-    return TaskCreationException(message: message ?? this.message);
+  NotFoundException copyWith({String? message}) {
+    return NotFoundException(message: message ?? this.message);
   }
 }
