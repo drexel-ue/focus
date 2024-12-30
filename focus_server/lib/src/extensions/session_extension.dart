@@ -29,4 +29,24 @@ extension SessionX on Session {
     }
     return user;
   }
+
+  /// Queries for [Task] matching [taskId] and [userId].
+  Future<Task?> findUserTask({
+    required int taskId,
+    required int userId,
+    Transaction? transaction,
+  }) async {
+    final result = await db.unsafeQuery(
+      '''
+          select * from tasks
+          where id = @id and user_id = @userId
+          ''',
+      parameters: QueryParameters.named({'id': taskId, 'userId': userId}),
+      transaction: transaction,
+    );
+    if (result.isEmpty) {
+      return null;
+    }
+    return Task.fromJson(result.first.toColumnMap());
+  }
 }

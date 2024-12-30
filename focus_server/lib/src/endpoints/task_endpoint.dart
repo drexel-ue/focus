@@ -71,7 +71,12 @@ class TaskEndpoint extends Endpoint {
   Future<Task> toggleTaskComplete(Session session, int taskId) async {
     return await session.db.transaction((Transaction transaction) async {
       try {
-        final task = await Task.db.findById(session, taskId, transaction: transaction);
+        final user = await session.parseUserFromFocusSession(transaction);
+        final task = await session.findUserTask(
+          taskId: taskId,
+          userId: user.id!,
+          transaction: transaction,
+        );
         if (task == null) {
           throw NotFoundException(message: 'task not found');
         }
@@ -102,9 +107,9 @@ class TaskEndpoint extends Endpoint {
     return session.db.transaction((Transaction transaction) async {
       try {
         final user = await session.parseUserFromFocusSession(transaction);
-        final task = await Task.db.findFirstRow(
-          session,
-          where: (TaskTable table) => table.id.equals(taskId) && table.userId.equals(user.id!),
+        final task = await session.findUserTask(
+          taskId: taskId,
+          userId: user.id!,
           transaction: transaction,
         );
         if (task == null) {
@@ -134,7 +139,12 @@ class TaskEndpoint extends Endpoint {
   Future<Task> deleteTask(Session session, int taskId) async {
     return session.db.transaction((Transaction transaction) async {
       try {
-        final task = await Task.db.findById(session, taskId, transaction: transaction);
+        final user = await session.parseUserFromFocusSession(transaction);
+        final task = await session.findUserTask(
+          taskId: taskId,
+          userId: user.id!,
+          transaction: transaction,
+        );
         if (task == null) {
           throw NotFoundException(message: 'task not found.');
         }
