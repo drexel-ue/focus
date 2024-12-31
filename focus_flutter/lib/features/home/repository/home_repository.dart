@@ -66,6 +66,12 @@ class HomeRepository extends Notifier<HomeState> {
     state = state.copyWith();
   }
 
+  /// Reset state.
+  void logout() => state = const HomeState(
+        tab: HomeTab.stats,
+        menuOpen: false,
+      );
+
   @override
   HomeState build() {
     // FIXME(drexel-ue): should we remember the last visited tab on start? maybe the most frequently visited?

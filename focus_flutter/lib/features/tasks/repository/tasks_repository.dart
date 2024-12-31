@@ -160,6 +160,9 @@ class TasksRepository extends AsyncNotifier<TaskState> with ApiClientRef, Loggin
     }
   }
 
+  /// Reset state.
+  void logout() => state = const AsyncData(TaskState());
+
   Future<void> _retryLoad() async {
     homeRepo.showSnack('Attempting to load tasks');
     await loadTasks();

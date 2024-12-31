@@ -9,6 +9,7 @@ import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/api/api_client.dart';
 import 'package:focus_flutter/features/auth/repository/clerk_auth_provider.dart';
 import 'package:focus_flutter/features/home/repository/home_repository.dart';
+import 'package:focus_flutter/features/tasks/repository/tasks_repository.dart';
 import 'package:path_provider/path_provider.dart';
 
 /// Provides acccess to [AuthRepository].
@@ -66,11 +67,13 @@ class AuthRepository extends AsyncNotifier<AuthSession>
         await _file.delete();
       }
       state = AsyncData(AuthSession());
-      ref.read(homeRepositoryProvider.notifier).tab = HomeTab.stats;
+      ref.read(homeRepositoryProvider.notifier).logout();
+      ref.read(taskRepositoryProvider.notifier).logout();
       api.authenticationKeyManager!.remove();
     } catch (error, stackTrace) {
       logSevere('error in logout', error, stackTrace);
       state = AsyncData(AuthSession());
+      api.authenticationKeyManager!.remove();
     }
   }
 
