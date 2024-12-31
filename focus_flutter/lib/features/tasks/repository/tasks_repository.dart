@@ -26,7 +26,7 @@ class TasksRepository extends AsyncNotifier<TaskState> with ApiClientRef, Loggin
         return await api.task.getTasks(currentState.requireValue.page);
       });
       final newTasks = <Task>[];
-      for (final task in currentState.requireValue.tasks) {
+      for (final task in currentState.value?.tasks ?? const <Task>[]) {
         if (newTasks.none((element) => element.id == task.id)) {
           newTasks.add(task);
         }
@@ -169,19 +169,5 @@ class TasksRepository extends AsyncNotifier<TaskState> with ApiClientRef, Loggin
   }
 
   @override
-  Future<TaskState> build() async {
-    try {
-      final tasks = await refreshIfNeeded((api) async {
-        return await api.task.getTasks(0);
-      });
-      return TaskState(
-        tasks: tasks!,
-        page: tasks.length == 25 ? 1 : 0,
-      );
-    } catch (error, stackTrace) {
-      logSevere('error in build', error, stackTrace);
-      homeRepo.showNegativeSnack('Failed to load tasks. Tap to retry.', _retryLoad);
-      return const TaskState();
-    }
-  }
+  Future<TaskState> build() async => const TaskState();
 }

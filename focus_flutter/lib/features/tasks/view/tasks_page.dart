@@ -12,7 +12,7 @@ import 'package:focus_flutter/features/widget/focus_modal.dart';
 
 /// Tasks Page.
 @immutable
-class TasksPage extends ConsumerWidget {
+class TasksPage extends ConsumerStatefulWidget {
   /// Construcs a const [TasksPage].
   const TasksPage({super.key});
 
@@ -21,10 +21,22 @@ class TasksPage extends ConsumerWidget {
     maxHeight: 700.0,
   );
 
+  @override
+  ConsumerState<TasksPage> createState() => _TasksPageState();
+}
+
+class _TasksPageState extends ConsumerState<TasksPage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => ref.read(taskRepositoryProvider.notifier).loadTasks());
+  }
+
   void _showTaskForm(BuildContext context, [Task? task]) => FocusModal.show(
         context,
         (BuildContext context, VoidCallback closeModal) => TaskForm(close: closeModal, task: task),
-        constraints: _formConstraints,
+        constraints: TasksPage._formConstraints,
       );
 
   void _showDeleteModal(BuildContext context, Task task) => FocusModal.show(
@@ -37,7 +49,7 @@ class TasksPage extends ConsumerWidget {
       );
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final tasks = ref.watch(taskRepositoryProvider).value?.tasks ?? const <Task>[];
     final notifier = ref.read(taskRepositoryProvider.notifier);
     if (tasks.isEmpty) {
