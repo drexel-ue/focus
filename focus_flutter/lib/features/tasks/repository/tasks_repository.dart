@@ -166,6 +166,7 @@ class TasksRepository extends AsyncNotifier<TaskState> with ApiClientRef, Loggin
   Future<void> _retryLoad() async {
     homeRepo.showSnack('Attempting to load tasks');
     await loadTasks();
+    homeRepo.showPositiveSnack('Tasks loaded!');
   }
 
   @override

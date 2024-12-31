@@ -52,7 +52,7 @@ class AuthRepository extends AsyncNotifier<AuthSession>
         state = AsyncData(AuthSession());
       }
     } catch (error, stackTrace) {
-      logSevere('error in _authenticate:\nerror: $error\nstackTrace: $stackTrace');
+      logSevere('error in authenticate:\nerror: $error\nstackTrace: $stackTrace');
       if (clerkSession != null) {
         await clerkAuth.signOutOf(clerkSession);
       }

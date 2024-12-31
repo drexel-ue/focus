@@ -23,8 +23,10 @@ mixin ApiClientRef<T> on AsyncNotifier<T> {
       ref.read(authRepositoryProvider.notifier).session = newSession;
       await api.authenticationKeyManager!.put(newSession.token!.accessToken);
       return await method(api);
-    } catch (_) {
+    } on TokenMismatchException catch (_) {
       await ref.read(authRepositoryProvider.notifier).logout();
+      return null;
+    } catch (_) {
       return null;
     }
   }
