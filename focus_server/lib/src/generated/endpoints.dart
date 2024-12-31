@@ -206,6 +206,24 @@ class Endpoints extends _i1.EndpointDispatch {
             segments: params['segments'],
           ),
         ),
+        'deleteRoutine': _i1.MethodConnector(
+          name: 'deleteRoutine',
+          params: {
+            'routineId': _i1.ParameterDescription(
+              name: 'routineId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['routine'] as _i4.RoutineEndpoint).deleteRoutine(
+            session,
+            params['routineId'],
+          ),
+        ),
       },
     );
     connectors['task'] = _i1.EndpointConnector(

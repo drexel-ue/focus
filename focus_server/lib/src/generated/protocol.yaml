@@ -7,6 +7,7 @@ routine:
   - getRoutines:
   - createRoutine:
   - updateRoutine:
+  - deleteRoutine:
 task:
   - getTasks:
   - createTask:

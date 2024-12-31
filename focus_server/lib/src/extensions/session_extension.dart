@@ -36,18 +36,11 @@ extension SessionX on Session {
     required int userId,
     Transaction? transaction,
   }) async {
-    final result = await db.unsafeQuery(
-      '''
-          select * from tasks
-          where id = @id and user_id = @userId
-          ''',
-      parameters: QueryParameters.named({'id': taskId, 'userId': userId}),
-      transaction: transaction,
-    );
-    if (result.isEmpty) {
+    final task = await Task.db.findById(this, taskId, transaction: transaction);
+    if (task == null || task.userId != userId) {
       return null;
     }
-    return Task.fromJson(result.first.toColumnMap());
+    return task;
   }
 
   /// Queries for [Routine] matching [routineId] and [userId].
@@ -56,17 +49,10 @@ extension SessionX on Session {
     required int userId,
     Transaction? transaction,
   }) async {
-    final result = await db.unsafeQuery(
-      '''
-          select * from routines
-          where id = @id and user_id = @userId
-          ''',
-      parameters: QueryParameters.named({'id': routineId, 'userId': userId}),
-      transaction: transaction,
-    );
-    if (result.isEmpty) {
+    final routine = await Routine.db.findById(this, routineId, transaction: transaction);
+    if (routine == null || routine.userId != userId) {
       return null;
     }
-    return Routine.fromJson(result.first.toColumnMap());
+    return routine;
   }
 }

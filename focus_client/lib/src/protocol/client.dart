@@ -114,6 +114,14 @@ class EndpointRoutine extends _i1.EndpointRef {
           'segments': segments,
         },
       );
+
+  /// Deletes a [Routine].
+  _i2.Future<_i5.Routine> deleteRoutine(int routineId) =>
+      caller.callServerEndpoint<_i5.Routine>(
+        'routine',
+        'deleteRoutine',
+        {'routineId': routineId},
+      );
 }
 
 /// Handles work related to [Task]s.
