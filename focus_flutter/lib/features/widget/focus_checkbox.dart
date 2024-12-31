@@ -25,6 +25,7 @@ class FocusCheckbox extends StatelessWidget {
       dimension: 48.0,
       child: InkWell(
         onTap: onTap,
+        splashColor: Colors.transparent,
         child: Center(
           child: SizedBox.square(
             dimension: 18.0,
