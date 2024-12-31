@@ -81,25 +81,52 @@ class RoutineEndpoint extends Endpoint {
     return await session.db.transaction((Transaction transaction) async {
       try {
         final user = await session.parseUserFromFocusSession(transaction);
+        final routine = await session.findUserRoutine(routineId: routineId, userId: user.id!);
+        if (routine == null) {
+          throw NotFoundException(message: 'routine not found.');
+        }
         final now = DateTime.timestamp();
-        final routine = Routine(
-          createdAt: now,
-          lastModifiedAt: now,
-          userId: user.id!,
-          title: title,
-          active: active,
-          steps: steps,
-          segments: segments,
-        );
-        return await Routine.db.insertRow(session, routine, transaction: transaction);
+        routine
+          ..lastModifiedAt = now
+          ..title = title
+          ..active = active
+          ..steps = steps
+          ..segments = segments;
+        return await Routine.db.updateRow(session, routine, transaction: transaction);
       } catch (error, stackTrace) {
         session.log(
-          'error in createRoutine',
+          'error in updateRoutine',
           level: LogLevel.error,
           exception: error,
           stackTrace: stackTrace,
         );
-        throw CreationException(message: 'failed to create routine.');
+        throw CreationException(message: 'failed to update routine.');
+      }
+    });
+  }
+
+  /// Deletes a [Routine].
+  Future<Routine> deleteRoutine(Session session, int routineId) async {
+    return session.db.transaction((Transaction transaction) async {
+      try {
+        final user = await session.parseUserFromFocusSession(transaction);
+        final routine = await session.findUserRoutine(
+          routineId: routineId,
+          userId: user.id!,
+          transaction: transaction,
+        );
+        if (routine == null) {
+          throw NotFoundException(message: 'routine not found.');
+        }
+        return await Routine.db.deleteRow(session, routine, transaction: transaction);
+      } catch (error, stackTrace) {
+        session.log(
+          'error in deleteRoutine',
+          level: LogLevel.error,
+          exception: error,
+          stackTrace: stackTrace,
+        );
+        throw DeletionException(message: 'failed to delete routine.');
       }
     });
   }

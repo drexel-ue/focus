@@ -49,4 +49,24 @@ extension SessionX on Session {
     }
     return Task.fromJson(result.first.toColumnMap());
   }
+
+  /// Queries for [Routine] matching [routineId] and [userId].
+  Future<Routine?> findUserRoutine({
+    required int routineId,
+    required int userId,
+    Transaction? transaction,
+  }) async {
+    final result = await db.unsafeQuery(
+      '''
+          select * from routines
+          where id = @id and user_id = @userId
+          ''',
+      parameters: QueryParameters.named({'id': routineId, 'userId': userId}),
+      transaction: transaction,
+    );
+    if (result.isEmpty) {
+      return null;
+    }
+    return Routine.fromJson(result.first.toColumnMap());
+  }
 }
