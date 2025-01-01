@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:focus_flutter/app/assets.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/app/routing.dart';
-import 'package:focus_flutter/features/games/view/games_page.dart';
+import 'package:focus_flutter/features/tools/view/tools_page.dart';
 import 'package:focus_flutter/features/goals/view/goals_page.dart';
 import 'package:focus_flutter/features/home/repository/home_repository.dart';
 import 'package:focus_flutter/features/home/view/home_overlay_menu.dart';
@@ -103,7 +103,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 GoalsPage(),
                 RoutinesPage(),
                 TasksPage(),
-                GamesPage(),
+                ToolsPage(),
                 SettingsPage(),
               ],
             ),
