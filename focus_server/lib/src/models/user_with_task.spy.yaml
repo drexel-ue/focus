@@ -1,0 +1,7 @@
+### Wrapper for a [User] and a [Task].
+class: UserWithTask
+fields:
+  ### [User].
+  user: User
+  ### [Task].
+  task: Task

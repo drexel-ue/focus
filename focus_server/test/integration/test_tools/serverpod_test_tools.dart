@@ -21,6 +21,7 @@ import 'package:focus_server/src/generated/routine_step.dart' as _i7;
 import 'package:focus_server/src/generated/routine_segment.dart' as _i8;
 import 'package:focus_server/src/generated/task.dart' as _i9;
 import 'package:focus_server/src/generated/user_ability_stats.dart' as _i10;
+import 'package:focus_server/src/generated/user_with_task.dart' as _i11;
 import 'package:focus_server/src/generated/protocol.dart';
 import 'package:focus_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -462,7 +463,7 @@ class _TaskEndpoint {
     });
   }
 
-  _i3.Future<_i9.Task> toggleTaskComplete(
+  _i3.Future<_i11.UserWithTask> toggleTaskComplete(
     _i1.TestSessionBuilder sessionBuilder,
     int taskId,
   ) async {
@@ -483,7 +484,7 @@ class _TaskEndpoint {
         var _localReturnValue = await (_localCallContext.method.call(
           _localUniqueSession,
           _localCallContext.arguments,
-        ) as _i3.Future<_i9.Task>);
+        ) as _i3.Future<_i11.UserWithTask>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

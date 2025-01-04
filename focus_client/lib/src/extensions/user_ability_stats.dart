@@ -50,4 +50,24 @@ extension UserAbilityStatsX on UserAbilityStats {
         Ability.intelligence => intelligenceExp,
         Ability.perception => perceptionExp,
       };
+
+  UserAbilityStats operator +(UserAbilityStats other) {
+    return UserAbilityStats(
+      strengthExp: strengthExp + other.strengthExp,
+      vitalityExp: vitalityExp + other.vitalityExp,
+      agilityExp: agilityExp + other.agilityExp,
+      intelligenceExp: intelligenceExp + other.intelligenceExp,
+      perceptionExp: perceptionExp + other.perceptionExp,
+    );
+  }
+
+  UserAbilityStats operator -(UserAbilityStats other) {
+    return UserAbilityStats(
+      strengthExp: strengthExp - other.strengthExp,
+      vitalityExp: vitalityExp - other.vitalityExp,
+      agilityExp: agilityExp - other.agilityExp,
+      intelligenceExp: intelligenceExp - other.intelligenceExp,
+      perceptionExp: perceptionExp - other.perceptionExp,
+    );
+  }
 }

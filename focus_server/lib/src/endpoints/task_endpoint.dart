@@ -68,7 +68,7 @@ class TaskEndpoint extends Endpoint {
   }
 
   /// Toggles the completion state of a [Task].
-  Future<Task> toggleTaskComplete(Session session, int taskId) async {
+  Future<UserWithTask> toggleTaskComplete(Session session, int taskId) async {
     return await session.db.transaction((Transaction transaction) async {
       try {
         final user = await session.parseUserFromFocusSession(transaction);
@@ -81,7 +81,12 @@ class TaskEndpoint extends Endpoint {
           throw NotFoundException(message: 'task not found');
         }
         task.completed = !task.completed;
-        return await Task.db.updateRow(session, task, transaction: transaction);
+        user.abilityStats = task.completed
+            ? _addStats(user.abilityStats, task.abilityExpValues)
+            : _substractStats(user.abilityStats, task.abilityExpValues);
+        final updatedUser = await User.db.updateRow(session, user);
+        final updatedTask = await Task.db.updateRow(session, task, transaction: transaction);
+        return UserWithTask(user: updatedUser, task: updatedTask);
       } on NotFoundException catch (_) {
         rethrow;
       } catch (error, stackTrace) {
@@ -159,5 +164,25 @@ class TaskEndpoint extends Endpoint {
         throw DeletionException(message: 'failed to delete task.');
       }
     });
+  }
+
+  UserAbilityStats _addStats(UserAbilityStats a, UserAbilityStats b) {
+    return UserAbilityStats(
+      strengthExp: a.strengthExp + b.strengthExp,
+      vitalityExp: a.vitalityExp + b.vitalityExp,
+      agilityExp: a.agilityExp + b.agilityExp,
+      intelligenceExp: a.intelligenceExp + b.intelligenceExp,
+      perceptionExp: a.perceptionExp + b.perceptionExp,
+    );
+  }
+
+  UserAbilityStats _substractStats(UserAbilityStats a, UserAbilityStats b) {
+    return UserAbilityStats(
+      strengthExp: a.strengthExp - b.strengthExp,
+      vitalityExp: a.vitalityExp - b.vitalityExp,
+      agilityExp: a.agilityExp - b.agilityExp,
+      intelligenceExp: a.intelligenceExp - b.intelligenceExp,
+      perceptionExp: a.perceptionExp - b.perceptionExp,
+    );
   }
 }

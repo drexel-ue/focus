@@ -32,10 +32,11 @@ import 'user.dart' as _i20;
 import 'user_ability_stats.dart' as _i21;
 import 'user_buff.dart' as _i22;
 import 'user_debuff.dart' as _i23;
-import 'package:focus_client/src/protocol/routine.dart' as _i24;
-import 'package:focus_client/src/protocol/routine_step.dart' as _i25;
-import 'package:focus_client/src/protocol/routine_segment.dart' as _i26;
-import 'package:focus_client/src/protocol/task.dart' as _i27;
+import 'user_with_task.dart' as _i24;
+import 'package:focus_client/src/protocol/routine.dart' as _i25;
+import 'package:focus_client/src/protocol/routine_step.dart' as _i26;
+import 'package:focus_client/src/protocol/routine_segment.dart' as _i27;
+import 'package:focus_client/src/protocol/task.dart' as _i28;
 export 'ability.dart';
 export 'ability_experience_value.dart';
 export 'auth_exception.dart';
@@ -58,6 +59,7 @@ export 'user.dart';
 export 'user_ability_stats.dart';
 export 'user_buff.dart';
 export 'user_debuff.dart';
+export 'user_with_task.dart';
 export 'client.dart';
 
 class Protocol extends _i1.SerializationManager {
@@ -139,6 +141,9 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i23.UserDebuff) {
       return _i23.UserDebuff.fromJson(data) as T;
     }
+    if (t == _i24.UserWithTask) {
+      return _i24.UserWithTask.fromJson(data) as T;
+    }
     if (t == _i1.getType<_i2.Ability?>()) {
       return (data != null ? _i2.Ability.fromJson(data) : null) as T;
     }
@@ -209,6 +214,9 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i23.UserDebuff?>()) {
       return (data != null ? _i23.UserDebuff.fromJson(data) : null) as T;
     }
+    if (t == _i1.getType<_i24.UserWithTask?>()) {
+      return (data != null ? _i24.UserWithTask.fromJson(data) : null) as T;
+    }
     if (t == _i1.getType<List<_i16.RoutineStep>?>()) {
       return (data != null
           ? (data as List).map((e) => deserialize<_i16.RoutineStep>(e)).toList()
@@ -239,36 +247,36 @@ class Protocol extends _i1.SerializationManager {
       return (data as List).map((e) => deserialize<_i23.UserDebuff>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i24.Routine>) {
-      return (data as List).map((e) => deserialize<_i24.Routine>(e)).toList()
+    if (t == List<_i25.Routine>) {
+      return (data as List).map((e) => deserialize<_i25.Routine>(e)).toList()
           as dynamic;
     }
-    if (t == _i1.getType<List<_i25.RoutineStep>?>()) {
+    if (t == _i1.getType<List<_i26.RoutineStep>?>()) {
       return (data != null
-          ? (data as List).map((e) => deserialize<_i25.RoutineStep>(e)).toList()
+          ? (data as List).map((e) => deserialize<_i26.RoutineStep>(e)).toList()
           : null) as dynamic;
     }
-    if (t == _i1.getType<List<_i26.RoutineSegment>?>()) {
+    if (t == _i1.getType<List<_i27.RoutineSegment>?>()) {
       return (data != null
           ? (data as List)
-              .map((e) => deserialize<_i26.RoutineSegment>(e))
+              .map((e) => deserialize<_i27.RoutineSegment>(e))
               .toList()
           : null) as dynamic;
     }
-    if (t == _i1.getType<List<_i25.RoutineStep>?>()) {
+    if (t == _i1.getType<List<_i26.RoutineStep>?>()) {
       return (data != null
-          ? (data as List).map((e) => deserialize<_i25.RoutineStep>(e)).toList()
+          ? (data as List).map((e) => deserialize<_i26.RoutineStep>(e)).toList()
           : null) as dynamic;
     }
-    if (t == _i1.getType<List<_i26.RoutineSegment>?>()) {
+    if (t == _i1.getType<List<_i27.RoutineSegment>?>()) {
       return (data != null
           ? (data as List)
-              .map((e) => deserialize<_i26.RoutineSegment>(e))
+              .map((e) => deserialize<_i27.RoutineSegment>(e))
               .toList()
           : null) as dynamic;
     }
-    if (t == List<_i27.Task>) {
-      return (data as List).map((e) => deserialize<_i27.Task>(e)).toList()
+    if (t == List<_i28.Task>) {
+      return (data as List).map((e) => deserialize<_i28.Task>(e)).toList()
           as dynamic;
     }
     return super.deserialize<T>(data, t);
@@ -344,6 +352,9 @@ class Protocol extends _i1.SerializationManager {
     if (data is _i23.UserDebuff) {
       return 'UserDebuff';
     }
+    if (data is _i24.UserWithTask) {
+      return 'UserWithTask';
+    }
     return null;
   }
 
@@ -418,6 +429,9 @@ class Protocol extends _i1.SerializationManager {
     }
     if (dataClassName == 'UserDebuff') {
       return deserialize<_i23.UserDebuff>(data['data']);
+    }
+    if (dataClassName == 'UserWithTask') {
+      return deserialize<_i24.UserWithTask>(data['data']);
     }
     return super.deserializeByClassName(data);
   }

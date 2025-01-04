@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:clerk_auth/clerk_auth.dart';
+import 'package:clerk_auth/clerk_auth.dart' hide User;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
@@ -11,6 +11,12 @@ import 'package:focus_flutter/features/auth/repository/clerk_auth_provider.dart'
 import 'package:focus_flutter/features/home/repository/home_repository.dart';
 import 'package:focus_flutter/features/tasks/repository/tasks_repository.dart';
 import 'package:path_provider/path_provider.dart';
+
+/// A mixin that provides access to the [AuthRepository] instance.
+mixin AuthRepoRef<T> on AsyncNotifier<T> {
+  /// [AuthRepository].
+  AuthRepository get authRepo => ref.read(authRepositoryProvider.notifier);
+}
 
 /// Provides acccess to [AuthRepository].
 final authRepositoryProvider = AsyncNotifierProvider<AuthRepository, AuthSession>(() {
@@ -29,6 +35,8 @@ class AuthRepository extends AsyncNotifier<AuthSession>
   }
 
   set session(AuthSession session) => state = AsyncData(session);
+
+  set user(User value) => state = AsyncData(state.requireValue.copyWith(user: value));
 
   /// Requests a new [AuthSession].
   Future<void> authenticate(BuildContext context) async {

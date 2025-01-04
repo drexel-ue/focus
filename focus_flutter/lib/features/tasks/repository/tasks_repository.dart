@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/api/api_client.dart';
+import 'package:focus_flutter/features/auth/repository/auth_repository.dart';
 import 'package:focus_flutter/features/home/repository/home_repository.dart';
 import 'package:focus_flutter/features/tasks/repository/task_state.dart';
 
@@ -16,7 +17,8 @@ final taskRepositoryProvider = AsyncNotifierProvider<TasksRepository, TaskState>
 });
 
 /// Manages [Task]s.
-class TasksRepository extends AsyncNotifier<TaskState> with ApiClientRef, Logging, HomeRepoRef {
+class TasksRepository extends AsyncNotifier<TaskState>
+    with ApiClientRef, Logging, HomeRepoRef, AuthRepoRef {
   /// Loads tasks into memory with pagination.
   Future<void> loadTasks() async {
     final currentState = state;
@@ -90,12 +92,14 @@ class TasksRepository extends AsyncNotifier<TaskState> with ApiClientRef, Loggin
     final currentState = state;
     try {
       state = const AsyncLoading<TaskState>().copyWithPrevious(currentState);
-      final task = await refreshIfNeeded((api) async => await api.task.toggleTaskComplete(taskId));
+      final userWithTask =
+          await refreshIfNeeded((api) async => await api.task.toggleTaskComplete(taskId));
       final index = currentState.requireValue.tasks.indexWhere((element) => element.id == taskId);
       final tasks = currentState.requireValue.tasks;
-      tasks[index] = task!;
+      tasks[index] = userWithTask!.task;
+      authRepo.user = userWithTask.user;
       state = AsyncData(currentState.requireValue.copyWith(tasks: tasks));
-      homeRepo.showPositiveSnack('Updated task: ${task.title}');
+      homeRepo.showPositiveSnack('Updated task: ${userWithTask.task.title}');
     } catch (error, stackTrace) {
       logSevere('error in toggleTaskComplete', error, stackTrace);
       state = AsyncError<TaskState>(error, stackTrace).copyWithPrevious(currentState);

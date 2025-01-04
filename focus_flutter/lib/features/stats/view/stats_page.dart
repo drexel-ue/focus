@@ -27,7 +27,14 @@ class StatsPage extends ConsumerWidget {
               const _UserAvatar(),
               horizontalMargin16,
               Expanded(
-                child: Text(user.fullName),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(user.fullName),
+                    Text('Lv. ${user.abilityStats.userLevel}'),
+                  ],
+                ),
               ),
             ],
           ),

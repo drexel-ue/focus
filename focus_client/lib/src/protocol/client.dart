@@ -18,7 +18,8 @@ import 'package:focus_client/src/protocol/routine_step.dart' as _i6;
 import 'package:focus_client/src/protocol/routine_segment.dart' as _i7;
 import 'package:focus_client/src/protocol/task.dart' as _i8;
 import 'package:focus_client/src/protocol/user_ability_stats.dart' as _i9;
-import 'protocol.dart' as _i10;
+import 'package:focus_client/src/protocol/user_with_task.dart' as _i10;
+import 'protocol.dart' as _i11;
 
 /// Handles [AuthSession] creation.
 /// {@category Endpoint}
@@ -157,8 +158,8 @@ class EndpointTask extends _i1.EndpointRef {
       );
 
   /// Toggles the completion state of a [Task].
-  _i2.Future<_i8.Task> toggleTaskComplete(int taskId) =>
-      caller.callServerEndpoint<_i8.Task>(
+  _i2.Future<_i10.UserWithTask> toggleTaskComplete(int taskId) =>
+      caller.callServerEndpoint<_i10.UserWithTask>(
         'task',
         'toggleTaskComplete',
         {'taskId': taskId},
@@ -207,7 +208,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
           host,
-          _i10.Protocol(),
+          _i11.Protocol(),
           securityContext: securityContext,
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,
