@@ -1,0 +1,5 @@
+### Negative modifiers for [Ability] exp gained.
+enum: UserDebuff
+values:
+  ### The [User] is sleep deprived.
+  - fatigued

@@ -17,8 +17,7 @@ import '../endpoints/task_endpoint.dart' as _i5;
 import 'package:focus_server/src/generated/auth_token.dart' as _i6;
 import 'package:focus_server/src/generated/routine_step.dart' as _i7;
 import 'package:focus_server/src/generated/routine_segment.dart' as _i8;
-import 'package:focus_server/src/generated/ability_experience_value.dart'
-    as _i9;
+import 'package:focus_server/src/generated/user_ability_stats.dart' as _i9;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -263,7 +262,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'abilityExpValues': _i1.ParameterDescription(
               name: 'abilityExpValues',
-              type: _i1.getType<List<_i9.AbilityExperienceValue>>(),
+              type: _i1.getType<_i9.UserAbilityStats>(),
               nullable: false,
             ),
           },
@@ -316,7 +315,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'abilityExpValues': _i1.ParameterDescription(
               name: 'abilityExpValues',
-              type: _i1.getType<List<_i9.AbilityExperienceValue>>(),
+              type: _i1.getType<_i9.UserAbilityStats>(),
               nullable: false,
             ),
           },

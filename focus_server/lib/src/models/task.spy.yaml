@@ -14,5 +14,5 @@ fields:
   description: String?
   ### Is the task completed?
   completed: bool, default=false
-  ### Collection of [ExperiencePointValue]s to be rewarded upon completion of this task.
-  abilityExpValues: List<AbilityExperienceValue>
+  ### Collection of exp to be rewarded upon completion of this task.
+  abilityExpValues: UserAbilityStats

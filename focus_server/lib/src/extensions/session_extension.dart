@@ -16,6 +16,15 @@ extension SessionX on Session {
       firstName: jwt.payload['first_name'],
       lastName: jwt.payload['last_name'],
       profileImageUrl: jwt.payload['image_url'],
+      abilityStats: UserAbilityStats(
+        strengthExp: 0,
+        vitalityExp: 0,
+        agilityExp: 0,
+        intelligenceExp: 0,
+        perceptionExp: 0,
+      ),
+      buffs: const [],
+      debuffs: const [],
     );
   }
 

@@ -53,7 +53,7 @@ class TasksRepository extends AsyncNotifier<TaskState> with ApiClientRef, Loggin
   Future<void> createTask({
     required String title,
     String? description,
-    required List<AbilityExperienceValue> abilityExpValues,
+    required UserAbilityStats abilityExpValues,
   }) async {
     final currentState = state;
     try {
@@ -110,7 +110,7 @@ class TasksRepository extends AsyncNotifier<TaskState> with ApiClientRef, Loggin
     required int taskId,
     required String title,
     String? description,
-    required List<AbilityExperienceValue> abilityExpValues,
+    required UserAbilityStats abilityExpValues,
   }) async {
     final currentState = state;
     try {

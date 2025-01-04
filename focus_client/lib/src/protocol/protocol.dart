@@ -29,12 +29,13 @@ import 'task.dart' as _i17;
 import 'token_mismatch_exception.dart' as _i18;
 import 'update_exception.dart' as _i19;
 import 'user.dart' as _i20;
-import 'package:focus_client/src/protocol/routine.dart' as _i21;
-import 'package:focus_client/src/protocol/routine_step.dart' as _i22;
-import 'package:focus_client/src/protocol/routine_segment.dart' as _i23;
-import 'package:focus_client/src/protocol/task.dart' as _i24;
-import 'package:focus_client/src/protocol/ability_experience_value.dart'
-    as _i25;
+import 'user_ability_stats.dart' as _i21;
+import 'user_buff.dart' as _i22;
+import 'user_debuff.dart' as _i23;
+import 'package:focus_client/src/protocol/routine.dart' as _i24;
+import 'package:focus_client/src/protocol/routine_step.dart' as _i25;
+import 'package:focus_client/src/protocol/routine_segment.dart' as _i26;
+import 'package:focus_client/src/protocol/task.dart' as _i27;
 export 'ability.dart';
 export 'ability_experience_value.dart';
 export 'auth_exception.dart';
@@ -54,6 +55,9 @@ export 'task.dart';
 export 'token_mismatch_exception.dart';
 export 'update_exception.dart';
 export 'user.dart';
+export 'user_ability_stats.dart';
+export 'user_buff.dart';
+export 'user_debuff.dart';
 export 'client.dart';
 
 class Protocol extends _i1.SerializationManager {
@@ -126,6 +130,15 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i20.User) {
       return _i20.User.fromJson(data) as T;
     }
+    if (t == _i21.UserAbilityStats) {
+      return _i21.UserAbilityStats.fromJson(data) as T;
+    }
+    if (t == _i22.UserBuff) {
+      return _i22.UserBuff.fromJson(data) as T;
+    }
+    if (t == _i23.UserDebuff) {
+      return _i23.UserDebuff.fromJson(data) as T;
+    }
     if (t == _i1.getType<_i2.Ability?>()) {
       return (data != null ? _i2.Ability.fromJson(data) : null) as T;
     }
@@ -187,6 +200,15 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i20.User?>()) {
       return (data != null ? _i20.User.fromJson(data) : null) as T;
     }
+    if (t == _i1.getType<_i21.UserAbilityStats?>()) {
+      return (data != null ? _i21.UserAbilityStats.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i22.UserBuff?>()) {
+      return (data != null ? _i22.UserBuff.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i23.UserDebuff?>()) {
+      return (data != null ? _i23.UserDebuff.fromJson(data) : null) as T;
+    }
     if (t == _i1.getType<List<_i16.RoutineStep>?>()) {
       return (data != null
           ? (data as List).map((e) => deserialize<_i16.RoutineStep>(e)).toList()
@@ -209,42 +231,45 @@ class Protocol extends _i1.SerializationManager {
           .map((e) => deserialize<_i3.AbilityExperienceValue>(e))
           .toList() as dynamic;
     }
-    if (t == List<_i21.Routine>) {
-      return (data as List).map((e) => deserialize<_i21.Routine>(e)).toList()
+    if (t == List<_i22.UserBuff>) {
+      return (data as List).map((e) => deserialize<_i22.UserBuff>(e)).toList()
           as dynamic;
     }
-    if (t == _i1.getType<List<_i22.RoutineStep>?>()) {
+    if (t == List<_i23.UserDebuff>) {
+      return (data as List).map((e) => deserialize<_i23.UserDebuff>(e)).toList()
+          as dynamic;
+    }
+    if (t == List<_i24.Routine>) {
+      return (data as List).map((e) => deserialize<_i24.Routine>(e)).toList()
+          as dynamic;
+    }
+    if (t == _i1.getType<List<_i25.RoutineStep>?>()) {
       return (data != null
-          ? (data as List).map((e) => deserialize<_i22.RoutineStep>(e)).toList()
+          ? (data as List).map((e) => deserialize<_i25.RoutineStep>(e)).toList()
           : null) as dynamic;
     }
-    if (t == _i1.getType<List<_i23.RoutineSegment>?>()) {
+    if (t == _i1.getType<List<_i26.RoutineSegment>?>()) {
       return (data != null
           ? (data as List)
-              .map((e) => deserialize<_i23.RoutineSegment>(e))
+              .map((e) => deserialize<_i26.RoutineSegment>(e))
               .toList()
           : null) as dynamic;
     }
-    if (t == _i1.getType<List<_i22.RoutineStep>?>()) {
+    if (t == _i1.getType<List<_i25.RoutineStep>?>()) {
       return (data != null
-          ? (data as List).map((e) => deserialize<_i22.RoutineStep>(e)).toList()
+          ? (data as List).map((e) => deserialize<_i25.RoutineStep>(e)).toList()
           : null) as dynamic;
     }
-    if (t == _i1.getType<List<_i23.RoutineSegment>?>()) {
+    if (t == _i1.getType<List<_i26.RoutineSegment>?>()) {
       return (data != null
           ? (data as List)
-              .map((e) => deserialize<_i23.RoutineSegment>(e))
+              .map((e) => deserialize<_i26.RoutineSegment>(e))
               .toList()
           : null) as dynamic;
     }
-    if (t == List<_i24.Task>) {
-      return (data as List).map((e) => deserialize<_i24.Task>(e)).toList()
+    if (t == List<_i27.Task>) {
+      return (data as List).map((e) => deserialize<_i27.Task>(e)).toList()
           as dynamic;
-    }
-    if (t == List<_i25.AbilityExperienceValue>) {
-      return (data as List)
-          .map((e) => deserialize<_i25.AbilityExperienceValue>(e))
-          .toList() as dynamic;
     }
     return super.deserialize<T>(data, t);
   }
@@ -309,6 +334,15 @@ class Protocol extends _i1.SerializationManager {
     }
     if (data is _i20.User) {
       return 'User';
+    }
+    if (data is _i21.UserAbilityStats) {
+      return 'UserAbilityStats';
+    }
+    if (data is _i22.UserBuff) {
+      return 'UserBuff';
+    }
+    if (data is _i23.UserDebuff) {
+      return 'UserDebuff';
     }
     return null;
   }
@@ -375,6 +409,15 @@ class Protocol extends _i1.SerializationManager {
     }
     if (dataClassName == 'User') {
       return deserialize<_i20.User>(data['data']);
+    }
+    if (dataClassName == 'UserAbilityStats') {
+      return deserialize<_i21.UserAbilityStats>(data['data']);
+    }
+    if (dataClassName == 'UserBuff') {
+      return deserialize<_i22.UserBuff>(data['data']);
+    }
+    if (dataClassName == 'UserDebuff') {
+      return deserialize<_i23.UserDebuff>(data['data']);
     }
     return super.deserializeByClassName(data);
   }

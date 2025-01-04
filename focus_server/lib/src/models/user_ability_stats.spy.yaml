@@ -1,0 +1,13 @@
+### [Ability] stats for a given [User].
+class: UserAbilityStats
+fields:
+  ### Strength [Ability] exp.
+  strengthExp: int
+  ### Vitality [Ability] exp.
+  vitalityExp: int
+  ### Agility [Ability] exp.
+  agilityExp: int
+  ### Intelligence [Ability] exp.
+  intelligenceExp: int
+  ### Perception [Ability] exp.
+  perceptionExp: int

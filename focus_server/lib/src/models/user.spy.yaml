@@ -14,3 +14,9 @@ fields:
   lastName: String?
   ### Profile image url.
   profileImageUrl: String?
+  ### [Ability] stats.
+  abilityStats: UserAbilityStats
+  ### Buffs.
+  buffs: List<UserBuff>
+  ### Debuffs.
+  debuffs: List<UserDebuff>

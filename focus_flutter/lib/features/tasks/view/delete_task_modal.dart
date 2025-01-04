@@ -54,15 +54,21 @@ class DeleteTaskModal extends ConsumerWidget {
                 mainAxisSpacing: 16.0,
                 crossAxisSpacing: 16.0,
               ),
-              itemCount: task.abilityExpValues.length,
+              itemCount: 5,
               itemBuilder: (BuildContext context, int index) {
-                final value = task.abilityExpValues[index];
+                final ability = Ability.values[index];
                 return Row(
                   children: [
-                    Expanded(child: Text(value.ability.name.substring(0, 3).toUpperCase())),
+                    Expanded(
+                      child: Text(
+                        ability.name.substring(0, 3).toUpperCase(),
+                      ),
+                    ),
                     horizontalMargin8,
                     Expanded(
-                      child: Text(value.exp.toString()),
+                      child: Text(
+                        task.abilityExpValues.expFor(ability).toString(),
+                      ),
                     ),
                   ],
                 );

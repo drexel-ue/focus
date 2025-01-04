@@ -1,0 +1,5 @@
+### Positive modifiers for [Ability] exp gained.
+enum: UserBuff
+values:
+  ### The [User] is well rested.
+  - rested

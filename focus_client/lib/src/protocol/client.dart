@@ -17,7 +17,7 @@ import 'package:focus_client/src/protocol/routine.dart' as _i5;
 import 'package:focus_client/src/protocol/routine_step.dart' as _i6;
 import 'package:focus_client/src/protocol/routine_segment.dart' as _i7;
 import 'package:focus_client/src/protocol/task.dart' as _i8;
-import 'package:focus_client/src/protocol/ability_experience_value.dart' as _i9;
+import 'package:focus_client/src/protocol/user_ability_stats.dart' as _i9;
 import 'protocol.dart' as _i10;
 
 /// Handles [AuthSession] creation.
@@ -144,7 +144,7 @@ class EndpointTask extends _i1.EndpointRef {
   _i2.Future<_i8.Task> createTask({
     required String title,
     String? description,
-    required List<_i9.AbilityExperienceValue> abilityExpValues,
+    required _i9.UserAbilityStats abilityExpValues,
   }) =>
       caller.callServerEndpoint<_i8.Task>(
         'task',
@@ -169,7 +169,7 @@ class EndpointTask extends _i1.EndpointRef {
     required int taskId,
     required String title,
     String? description,
-    required List<_i9.AbilityExperienceValue> abilityExpValues,
+    required _i9.UserAbilityStats abilityExpValues,
   }) =>
       caller.callServerEndpoint<_i8.Task>(
         'task',

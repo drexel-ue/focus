@@ -10,7 +10,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import 'ability_experience_value.dart' as _i2;
+import 'user_ability_stats.dart' as _i2;
 
 /// A one-off task to be completed.
 abstract class Task implements _i1.TableRow, _i1.ProtocolSerialization {
@@ -33,7 +33,7 @@ abstract class Task implements _i1.TableRow, _i1.ProtocolSerialization {
     required String title,
     String? description,
     bool? completed,
-    required List<_i2.AbilityExperienceValue> abilityExpValues,
+    required _i2.UserAbilityStats abilityExpValues,
   }) = _TaskImpl;
 
   factory Task.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -47,10 +47,8 @@ abstract class Task implements _i1.TableRow, _i1.ProtocolSerialization {
       title: jsonSerialization['title'] as String,
       description: jsonSerialization['description'] as String?,
       completed: jsonSerialization['completed'] as bool,
-      abilityExpValues: (jsonSerialization['abilityExpValues'] as List)
-          .map((e) =>
-              _i2.AbilityExperienceValue.fromJson((e as Map<String, dynamic>)))
-          .toList(),
+      abilityExpValues: _i2.UserAbilityStats.fromJson(
+          (jsonSerialization['abilityExpValues'] as Map<String, dynamic>)),
     );
   }
 
@@ -79,8 +77,8 @@ abstract class Task implements _i1.TableRow, _i1.ProtocolSerialization {
   /// Is the task completed?
   bool completed;
 
-  /// Collection of [ExperiencePointValue]s to be rewarded upon completion of this task.
-  List<_i2.AbilityExperienceValue> abilityExpValues;
+  /// Collection of exp to be rewarded upon completion of this task.
+  _i2.UserAbilityStats abilityExpValues;
 
   @override
   _i1.Table get table => t;
@@ -93,7 +91,7 @@ abstract class Task implements _i1.TableRow, _i1.ProtocolSerialization {
     String? title,
     String? description,
     bool? completed,
-    List<_i2.AbilityExperienceValue>? abilityExpValues,
+    _i2.UserAbilityStats? abilityExpValues,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -105,8 +103,7 @@ abstract class Task implements _i1.TableRow, _i1.ProtocolSerialization {
       'title': title,
       if (description != null) 'description': description,
       'completed': completed,
-      'abilityExpValues':
-          abilityExpValues.toJson(valueToJson: (v) => v.toJson()),
+      'abilityExpValues': abilityExpValues.toJson(),
     };
   }
 
@@ -120,8 +117,7 @@ abstract class Task implements _i1.TableRow, _i1.ProtocolSerialization {
       'title': title,
       if (description != null) 'description': description,
       'completed': completed,
-      'abilityExpValues':
-          abilityExpValues.toJson(valueToJson: (v) => v.toJsonForProtocol()),
+      'abilityExpValues': abilityExpValues.toJsonForProtocol(),
     };
   }
 
@@ -166,7 +162,7 @@ class _TaskImpl extends Task {
     required String title,
     String? description,
     bool? completed,
-    required List<_i2.AbilityExperienceValue> abilityExpValues,
+    required _i2.UserAbilityStats abilityExpValues,
   }) : super._(
           id: id,
           createdAt: createdAt,
@@ -187,7 +183,7 @@ class _TaskImpl extends Task {
     String? title,
     Object? description = _Undefined,
     bool? completed,
-    List<_i2.AbilityExperienceValue>? abilityExpValues,
+    _i2.UserAbilityStats? abilityExpValues,
   }) {
     return Task(
       id: id is int? ? id : this.id,
@@ -197,8 +193,7 @@ class _TaskImpl extends Task {
       title: title ?? this.title,
       description: description is String? ? description : this.description,
       completed: completed ?? this.completed,
-      abilityExpValues: abilityExpValues ??
-          this.abilityExpValues.map((e0) => e0.copyWith()).toList(),
+      abilityExpValues: abilityExpValues ?? this.abilityExpValues.copyWith(),
     );
   }
 }
@@ -254,7 +249,7 @@ class TaskTable extends _i1.Table {
   /// Is the task completed?
   late final _i1.ColumnBool completed;
 
-  /// Collection of [ExperiencePointValue]s to be rewarded upon completion of this task.
+  /// Collection of exp to be rewarded upon completion of this task.
   late final _i1.ColumnSerializable abilityExpValues;
 
   @override

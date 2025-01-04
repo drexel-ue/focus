@@ -10,6 +10,9 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
+import 'user_ability_stats.dart' as _i2;
+import 'user_buff.dart' as _i3;
+import 'user_debuff.dart' as _i4;
 
 /// User model.
 abstract class User implements _i1.TableRow, _i1.ProtocolSerialization {
@@ -21,6 +24,9 @@ abstract class User implements _i1.TableRow, _i1.ProtocolSerialization {
     this.firstName,
     this.lastName,
     this.profileImageUrl,
+    required this.abilityStats,
+    required this.buffs,
+    required this.debuffs,
   });
 
   factory User({
@@ -31,6 +37,9 @@ abstract class User implements _i1.TableRow, _i1.ProtocolSerialization {
     String? firstName,
     String? lastName,
     String? profileImageUrl,
+    required _i2.UserAbilityStats abilityStats,
+    required List<_i3.UserBuff> buffs,
+    required List<_i4.UserDebuff> debuffs,
   }) = _UserImpl;
 
   factory User.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -47,6 +56,14 @@ abstract class User implements _i1.TableRow, _i1.ProtocolSerialization {
       firstName: jsonSerialization['firstName'] as String?,
       lastName: jsonSerialization['lastName'] as String?,
       profileImageUrl: jsonSerialization['profileImageUrl'] as String?,
+      abilityStats: _i2.UserAbilityStats.fromJson(
+          (jsonSerialization['abilityStats'] as Map<String, dynamic>)),
+      buffs: (jsonSerialization['buffs'] as List)
+          .map((e) => _i3.UserBuff.fromJson((e as int)))
+          .toList(),
+      debuffs: (jsonSerialization['debuffs'] as List)
+          .map((e) => _i4.UserDebuff.fromJson((e as int)))
+          .toList(),
     );
   }
 
@@ -75,6 +92,15 @@ abstract class User implements _i1.TableRow, _i1.ProtocolSerialization {
   /// Profile image url.
   String? profileImageUrl;
 
+  /// [Ability] stats.
+  _i2.UserAbilityStats abilityStats;
+
+  /// Buffs.
+  List<_i3.UserBuff> buffs;
+
+  /// Debuffs.
+  List<_i4.UserDebuff> debuffs;
+
   @override
   _i1.Table get table => t;
 
@@ -86,6 +112,9 @@ abstract class User implements _i1.TableRow, _i1.ProtocolSerialization {
     String? firstName,
     String? lastName,
     String? profileImageUrl,
+    _i2.UserAbilityStats? abilityStats,
+    List<_i3.UserBuff>? buffs,
+    List<_i4.UserDebuff>? debuffs,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -97,6 +126,9 @@ abstract class User implements _i1.TableRow, _i1.ProtocolSerialization {
       if (firstName != null) 'firstName': firstName,
       if (lastName != null) 'lastName': lastName,
       if (profileImageUrl != null) 'profileImageUrl': profileImageUrl,
+      'abilityStats': abilityStats.toJson(),
+      'buffs': buffs.toJson(valueToJson: (v) => v.toJson()),
+      'debuffs': debuffs.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -107,6 +139,9 @@ abstract class User implements _i1.TableRow, _i1.ProtocolSerialization {
       if (firstName != null) 'firstName': firstName,
       if (lastName != null) 'lastName': lastName,
       if (profileImageUrl != null) 'profileImageUrl': profileImageUrl,
+      'abilityStats': abilityStats.toJsonForProtocol(),
+      'buffs': buffs.toJson(valueToJson: (v) => v.toJson()),
+      'debuffs': debuffs.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -151,6 +186,9 @@ class _UserImpl extends User {
     String? firstName,
     String? lastName,
     String? profileImageUrl,
+    required _i2.UserAbilityStats abilityStats,
+    required List<_i3.UserBuff> buffs,
+    required List<_i4.UserDebuff> debuffs,
   }) : super._(
           id: id,
           createdAt: createdAt,
@@ -159,6 +197,9 @@ class _UserImpl extends User {
           firstName: firstName,
           lastName: lastName,
           profileImageUrl: profileImageUrl,
+          abilityStats: abilityStats,
+          buffs: buffs,
+          debuffs: debuffs,
         );
 
   @override
@@ -170,6 +211,9 @@ class _UserImpl extends User {
     Object? firstName = _Undefined,
     Object? lastName = _Undefined,
     Object? profileImageUrl = _Undefined,
+    _i2.UserAbilityStats? abilityStats,
+    List<_i3.UserBuff>? buffs,
+    List<_i4.UserDebuff>? debuffs,
   }) {
     return User(
       id: id is int? ? id : this.id,
@@ -181,6 +225,9 @@ class _UserImpl extends User {
       lastName: lastName is String? ? lastName : this.lastName,
       profileImageUrl:
           profileImageUrl is String? ? profileImageUrl : this.profileImageUrl,
+      abilityStats: abilityStats ?? this.abilityStats.copyWith(),
+      buffs: buffs ?? this.buffs.map((e0) => e0).toList(),
+      debuffs: debuffs ?? this.debuffs.map((e0) => e0).toList(),
     );
   }
 }
@@ -211,6 +258,18 @@ class UserTable extends _i1.Table {
       'profileImageUrl',
       this,
     );
+    abilityStats = _i1.ColumnSerializable(
+      'abilityStats',
+      this,
+    );
+    buffs = _i1.ColumnSerializable(
+      'buffs',
+      this,
+    );
+    debuffs = _i1.ColumnSerializable(
+      'debuffs',
+      this,
+    );
   }
 
   /// Timestamp of entry into database.
@@ -231,6 +290,15 @@ class UserTable extends _i1.Table {
   /// Profile image url.
   late final _i1.ColumnString profileImageUrl;
 
+  /// [Ability] stats.
+  late final _i1.ColumnSerializable abilityStats;
+
+  /// Buffs.
+  late final _i1.ColumnSerializable buffs;
+
+  /// Debuffs.
+  late final _i1.ColumnSerializable debuffs;
+
   @override
   List<_i1.Column> get columns => [
         id,
@@ -240,6 +308,9 @@ class UserTable extends _i1.Table {
         firstName,
         lastName,
         profileImageUrl,
+        abilityStats,
+        buffs,
+        debuffs,
       ];
 }
 

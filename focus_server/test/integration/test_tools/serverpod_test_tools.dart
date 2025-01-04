@@ -20,8 +20,7 @@ import 'package:focus_server/src/generated/routine.dart' as _i6;
 import 'package:focus_server/src/generated/routine_step.dart' as _i7;
 import 'package:focus_server/src/generated/routine_segment.dart' as _i8;
 import 'package:focus_server/src/generated/task.dart' as _i9;
-import 'package:focus_server/src/generated/ability_experience_value.dart'
-    as _i10;
+import 'package:focus_server/src/generated/user_ability_stats.dart' as _i10;
 import 'package:focus_server/src/generated/protocol.dart';
 import 'package:focus_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -432,7 +431,7 @@ class _TaskEndpoint {
     _i1.TestSessionBuilder sessionBuilder, {
     required String title,
     String? description,
-    required List<_i10.AbilityExperienceValue> abilityExpValues,
+    required _i10.UserAbilityStats abilityExpValues,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -497,7 +496,7 @@ class _TaskEndpoint {
     required int taskId,
     required String title,
     String? description,
-    required List<_i10.AbilityExperienceValue> abilityExpValues,
+    required _i10.UserAbilityStats abilityExpValues,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =

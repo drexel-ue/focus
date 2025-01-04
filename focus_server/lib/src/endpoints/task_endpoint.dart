@@ -40,7 +40,7 @@ class TaskEndpoint extends Endpoint {
     Session session, {
     required String title,
     String? description,
-    required List<AbilityExperienceValue> abilityExpValues,
+    required UserAbilityStats abilityExpValues,
   }) async {
     return session.db.transaction((Transaction transaction) async {
       try {
@@ -102,7 +102,7 @@ class TaskEndpoint extends Endpoint {
     required int taskId,
     required String title,
     String? description,
-    required List<AbilityExperienceValue> abilityExpValues,
+    required UserAbilityStats abilityExpValues,
   }) async {
     return session.db.transaction((Transaction transaction) async {
       try {

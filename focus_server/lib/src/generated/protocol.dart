@@ -30,12 +30,13 @@ import 'task.dart' as _i18;
 import 'token_mismatch_exception.dart' as _i19;
 import 'update_exception.dart' as _i20;
 import 'user.dart' as _i21;
-import 'package:focus_server/src/generated/routine.dart' as _i22;
-import 'package:focus_server/src/generated/routine_step.dart' as _i23;
-import 'package:focus_server/src/generated/routine_segment.dart' as _i24;
-import 'package:focus_server/src/generated/task.dart' as _i25;
-import 'package:focus_server/src/generated/ability_experience_value.dart'
-    as _i26;
+import 'user_ability_stats.dart' as _i22;
+import 'user_buff.dart' as _i23;
+import 'user_debuff.dart' as _i24;
+import 'package:focus_server/src/generated/routine.dart' as _i25;
+import 'package:focus_server/src/generated/routine_step.dart' as _i26;
+import 'package:focus_server/src/generated/routine_segment.dart' as _i27;
+import 'package:focus_server/src/generated/task.dart' as _i28;
 export 'ability.dart';
 export 'ability_experience_value.dart';
 export 'auth_exception.dart';
@@ -55,6 +56,9 @@ export 'task.dart';
 export 'token_mismatch_exception.dart';
 export 'update_exception.dart';
 export 'user.dart';
+export 'user_ability_stats.dart';
+export 'user_buff.dart';
+export 'user_debuff.dart';
 
 class Protocol extends _i1.SerializationManagerServer {
   Protocol._();
@@ -342,7 +346,7 @@ class Protocol extends _i1.SerializationManagerServer {
           name: 'abilityExpValues',
           columnType: _i2.ColumnType.json,
           isNullable: false,
-          dartType: 'List<protocol:AbilityExperienceValue>',
+          dartType: 'protocol:UserAbilityStats',
         ),
       ],
       foreignKeys: [],
@@ -411,6 +415,24 @@ class Protocol extends _i1.SerializationManagerServer {
           columnType: _i2.ColumnType.text,
           isNullable: true,
           dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'abilityStats',
+          columnType: _i2.ColumnType.json,
+          isNullable: false,
+          dartType: 'protocol:UserAbilityStats',
+        ),
+        _i2.ColumnDefinition(
+          name: 'buffs',
+          columnType: _i2.ColumnType.json,
+          isNullable: false,
+          dartType: 'List<protocol:UserBuff>',
+        ),
+        _i2.ColumnDefinition(
+          name: 'debuffs',
+          columnType: _i2.ColumnType.json,
+          isNullable: false,
+          dartType: 'List<protocol:UserDebuff>',
         ),
       ],
       foreignKeys: [],
@@ -497,6 +519,15 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i21.User) {
       return _i21.User.fromJson(data) as T;
     }
+    if (t == _i22.UserAbilityStats) {
+      return _i22.UserAbilityStats.fromJson(data) as T;
+    }
+    if (t == _i23.UserBuff) {
+      return _i23.UserBuff.fromJson(data) as T;
+    }
+    if (t == _i24.UserDebuff) {
+      return _i24.UserDebuff.fromJson(data) as T;
+    }
     if (t == _i1.getType<_i3.Ability?>()) {
       return (data != null ? _i3.Ability.fromJson(data) : null) as T;
     }
@@ -558,6 +589,15 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i21.User?>()) {
       return (data != null ? _i21.User.fromJson(data) : null) as T;
     }
+    if (t == _i1.getType<_i22.UserAbilityStats?>()) {
+      return (data != null ? _i22.UserAbilityStats.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i23.UserBuff?>()) {
+      return (data != null ? _i23.UserBuff.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i24.UserDebuff?>()) {
+      return (data != null ? _i24.UserDebuff.fromJson(data) : null) as T;
+    }
     if (t == _i1.getType<List<_i17.RoutineStep>?>()) {
       return (data != null
           ? (data as List).map((e) => deserialize<_i17.RoutineStep>(e)).toList()
@@ -580,42 +620,45 @@ class Protocol extends _i1.SerializationManagerServer {
           .map((e) => deserialize<_i4.AbilityExperienceValue>(e))
           .toList() as dynamic;
     }
-    if (t == List<_i22.Routine>) {
-      return (data as List).map((e) => deserialize<_i22.Routine>(e)).toList()
+    if (t == List<_i23.UserBuff>) {
+      return (data as List).map((e) => deserialize<_i23.UserBuff>(e)).toList()
           as dynamic;
     }
-    if (t == _i1.getType<List<_i23.RoutineStep>?>()) {
+    if (t == List<_i24.UserDebuff>) {
+      return (data as List).map((e) => deserialize<_i24.UserDebuff>(e)).toList()
+          as dynamic;
+    }
+    if (t == List<_i25.Routine>) {
+      return (data as List).map((e) => deserialize<_i25.Routine>(e)).toList()
+          as dynamic;
+    }
+    if (t == _i1.getType<List<_i26.RoutineStep>?>()) {
       return (data != null
-          ? (data as List).map((e) => deserialize<_i23.RoutineStep>(e)).toList()
+          ? (data as List).map((e) => deserialize<_i26.RoutineStep>(e)).toList()
           : null) as dynamic;
     }
-    if (t == _i1.getType<List<_i24.RoutineSegment>?>()) {
+    if (t == _i1.getType<List<_i27.RoutineSegment>?>()) {
       return (data != null
           ? (data as List)
-              .map((e) => deserialize<_i24.RoutineSegment>(e))
+              .map((e) => deserialize<_i27.RoutineSegment>(e))
               .toList()
           : null) as dynamic;
     }
-    if (t == _i1.getType<List<_i23.RoutineStep>?>()) {
+    if (t == _i1.getType<List<_i26.RoutineStep>?>()) {
       return (data != null
-          ? (data as List).map((e) => deserialize<_i23.RoutineStep>(e)).toList()
+          ? (data as List).map((e) => deserialize<_i26.RoutineStep>(e)).toList()
           : null) as dynamic;
     }
-    if (t == _i1.getType<List<_i24.RoutineSegment>?>()) {
+    if (t == _i1.getType<List<_i27.RoutineSegment>?>()) {
       return (data != null
           ? (data as List)
-              .map((e) => deserialize<_i24.RoutineSegment>(e))
+              .map((e) => deserialize<_i27.RoutineSegment>(e))
               .toList()
           : null) as dynamic;
     }
-    if (t == List<_i25.Task>) {
-      return (data as List).map((e) => deserialize<_i25.Task>(e)).toList()
+    if (t == List<_i28.Task>) {
+      return (data as List).map((e) => deserialize<_i28.Task>(e)).toList()
           as dynamic;
-    }
-    if (t == List<_i26.AbilityExperienceValue>) {
-      return (data as List)
-          .map((e) => deserialize<_i26.AbilityExperienceValue>(e))
-          .toList() as dynamic;
     }
     try {
       return _i2.Protocol().deserialize<T>(data, t);
@@ -683,6 +726,15 @@ class Protocol extends _i1.SerializationManagerServer {
     }
     if (data is _i21.User) {
       return 'User';
+    }
+    if (data is _i22.UserAbilityStats) {
+      return 'UserAbilityStats';
+    }
+    if (data is _i23.UserBuff) {
+      return 'UserBuff';
+    }
+    if (data is _i24.UserDebuff) {
+      return 'UserDebuff';
     }
     className = _i2.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -753,6 +805,15 @@ class Protocol extends _i1.SerializationManagerServer {
     }
     if (dataClassName == 'User') {
       return deserialize<_i21.User>(data['data']);
+    }
+    if (dataClassName == 'UserAbilityStats') {
+      return deserialize<_i22.UserAbilityStats>(data['data']);
+    }
+    if (dataClassName == 'UserBuff') {
+      return deserialize<_i23.UserBuff>(data['data']);
+    }
+    if (dataClassName == 'UserDebuff') {
+      return deserialize<_i24.UserDebuff>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);

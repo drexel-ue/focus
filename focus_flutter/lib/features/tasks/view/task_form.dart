@@ -36,11 +36,7 @@ class _TaskFormState extends ConsumerState<TaskForm> {
   late final _abilityExpValues = <Ability, TextEditingController>{
     for (final ability in Ability.values) //
       ability: TextEditingController(
-        text: widget.task?.abilityExpValues
-                .firstWhere((el) => el.ability == ability)
-                .exp
-                .toString() ??
-            '0',
+        text: widget.task?.abilityExpValues.expFor(ability).toString() ?? '0',
       )..addListener(_listener),
   };
 
@@ -52,7 +48,7 @@ class _TaskFormState extends ConsumerState<TaskForm> {
       final descriptionChanged = _descriptionController.text != task.description;
       final expValuesChanged = _abilityExpValues.entries.any((entry) {
         final expValue = int.parse(entry.value.text);
-        final taskExpValue = task.abilityExpValues.firstWhere((el) => el.ability == entry.key).exp;
+        final taskExpValue = task.abilityExpValues.expFor(entry.key);
         return expValue != taskExpValue;
       });
       return titleChanged || descriptionChanged || expValuesChanged;
@@ -68,28 +64,25 @@ class _TaskFormState extends ConsumerState<TaskForm> {
   }
 
   Future<void> _submit() async {
+    final abilityExpValues = UserAbilityStats(
+      strengthExp: int.parse(_abilityExpValues[Ability.strength]!.text),
+      vitalityExp: int.parse(_abilityExpValues[Ability.vitality]!.text),
+      agilityExp: int.parse(_abilityExpValues[Ability.agility]!.text),
+      intelligenceExp: int.parse(_abilityExpValues[Ability.intelligence]!.text),
+      perceptionExp: int.parse(_abilityExpValues[Ability.perception]!.text),
+    );
     if (widget.task case Task task) {
       await ref.read(taskRepositoryProvider.notifier).updateTask(
             taskId: task.id!,
             title: _titleController.text.trim(),
             description: _descriptionController.text.trim(),
-            abilityExpValues: _abilityExpValues.entries.map<AbilityExperienceValue>((entry) {
-              return AbilityExperienceValue(
-                ability: entry.key,
-                exp: int.parse(entry.value.text),
-              );
-            }).toList(),
+            abilityExpValues: abilityExpValues,
           );
     } else {
       await ref.read(taskRepositoryProvider.notifier).createTask(
             title: _titleController.text.trim(),
             description: _descriptionController.text.trim(),
-            abilityExpValues: _abilityExpValues.entries.map<AbilityExperienceValue>((entry) {
-              return AbilityExperienceValue(
-                ability: entry.key,
-                exp: int.parse(entry.value.text),
-              );
-            }).toList(),
+            abilityExpValues: abilityExpValues,
           );
     }
     if (mounted) {
