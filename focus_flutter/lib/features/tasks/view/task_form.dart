@@ -142,6 +142,7 @@ class _TaskFormState extends ConsumerState<TaskForm> {
                     Expanded(
                       child: TextField(
                         controller: _abilityExpValues[ability],
+                        enabled: widget.task == null || !widget.task!.completed,
                         textAlign: TextAlign.center,
                         textAlignVertical: TextAlignVertical.center,
                         keyboardType: TextInputType.number,
