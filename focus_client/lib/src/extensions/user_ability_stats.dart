@@ -43,6 +43,14 @@ extension UserAbilityStatsX on UserAbilityStats {
     return (level: value.floor(), remainder: value - value.floor());
   }
 
+  UserAbilityLevelWithRemainder levelWithRemainderFor(Ability ability) => switch (ability) {
+        Ability.strength => strengthLevelWithRemainger,
+        Ability.vitality => vitalityLevelWithRemainger,
+        Ability.agility => agilityLevelWithRemainger,
+        Ability.intelligence => intelligenceLevelWithRemainger,
+        Ability.perception => perceptionLevelWithRemainger,
+      };
+
   int expFor(Ability ability) => switch (ability) {
         Ability.strength => strengthExp,
         Ability.vitality => vitalityExp,

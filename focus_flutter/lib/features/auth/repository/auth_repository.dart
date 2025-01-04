@@ -27,11 +27,14 @@ final authRepositoryProvider = AsyncNotifierProvider<AuthRepository, AuthSession
 class AuthRepository extends AsyncNotifier<AuthSession>
     with ClerkAuthProviderRef, Logging, ApiClientRef, ChangeNotifier {
   late File _file;
+  Timer? _saveTimer;
 
   @override
   set state(AsyncValue<AuthSession> value) {
     super.state = value;
     notifyListeners();
+    _saveTimer?.cancel();
+    _saveTimer = Timer(const Duration(milliseconds: 400), _storeAuthSession);
   }
 
   set session(AuthSession session) => state = AsyncData(session);
@@ -55,7 +58,6 @@ class AuthRepository extends AsyncNotifier<AuthSession>
         final authResponse = await api.auth.authenticate();
         await api.authenticationKeyManager!.put(authResponse.token!.accessToken);
         state = AsyncData(authResponse);
-        await _storeAuthSession();
       } else {
         state = AsyncData(AuthSession());
       }
