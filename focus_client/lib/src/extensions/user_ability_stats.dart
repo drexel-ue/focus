@@ -25,6 +25,11 @@ extension UserAbilityStatsX on UserAbilityStats {
     return level;
   }
 
+  UserAbilityLevelWithRemainder _calculateLevelWithRemainder(int exp) {
+    final value = _calculateLevel(exp);
+    return (level: value.floor(), remainder: value - value.floor());
+  }
+
   int get userLevel {
     final strengthLevel = strengthLevelWithRemainger.level;
     final vitalityLevel = vitalityLevelWithRemainger.level;
@@ -35,28 +40,23 @@ extension UserAbilityStatsX on UserAbilityStats {
   }
 
   UserAbilityLevelWithRemainder get strengthLevelWithRemainger {
-    final value = _calculateLevel(strengthExp);
-    return (level: value.floor(), remainder: value - value.floor());
+    return _calculateLevelWithRemainder(strengthExp);
   }
 
   UserAbilityLevelWithRemainder get vitalityLevelWithRemainger {
-    final value = _calculateLevel(vitalityExp);
-    return (level: value.floor(), remainder: value - value.floor());
+    return _calculateLevelWithRemainder(vitalityExp);
   }
 
   UserAbilityLevelWithRemainder get agilityLevelWithRemainger {
-    final value = _calculateLevel(agilityExp);
-    return (level: value.floor(), remainder: value - value.floor());
+    return _calculateLevelWithRemainder(agilityExp);
   }
 
   UserAbilityLevelWithRemainder get intelligenceLevelWithRemainger {
-    final value = _calculateLevel(intelligenceExp);
-    return (level: value.floor(), remainder: value - value.floor());
+    return _calculateLevelWithRemainder(intelligenceExp);
   }
 
   UserAbilityLevelWithRemainder get perceptionLevelWithRemainger {
-    final value = _calculateLevel(perceptionExp);
-    return (level: value.floor(), remainder: value - value.floor());
+    return _calculateLevelWithRemainder(perceptionExp);
   }
 
   UserAbilityLevelWithRemainder levelWithRemainderFor(Ability ability) => switch (ability) {
