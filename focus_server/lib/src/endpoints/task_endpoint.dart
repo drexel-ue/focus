@@ -17,6 +17,7 @@ class TaskEndpoint extends Endpoint {
           session,
           where: (TaskTable table) => table.userId.equals(user.id!),
           orderBy: (TaskTable table) => table.createdAt,
+          orderDescending: true,
           limit: 25,
           offset: page * 25,
           transaction: transaction,

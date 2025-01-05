@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -50,7 +51,7 @@ class _TasksPageState extends ConsumerState<TasksPage> {
 
   @override
   Widget build(BuildContext context) {
-    final tasks = ref.watch(taskRepositoryProvider).value?.tasks ?? const <Task>[];
+    var tasks = ref.watch(taskRepositoryProvider).value?.tasks ?? const <Task>[];
     final notifier = ref.read(taskRepositoryProvider.notifier);
     if (tasks.isEmpty) {
       return Center(
@@ -63,15 +64,51 @@ class _TasksPageState extends ConsumerState<TasksPage> {
         ),
       );
     }
+    final stat = tasks.fold(
+      UserAbilityStats(
+        strengthExp: 0,
+        vitalityExp: 0,
+        agilityExp: 0,
+        intelligenceExp: 0,
+        perceptionExp: 0,
+      ),
+      (UserAbilityStats folded, Task task) {
+        if (task.completed) {
+          return folded;
+        }
+        return folded + task.abilityExpValues;
+      },
+    );
     return Padding(
-      padding: allPadding16 - bottomPadding16,
+      padding: horizontalPadding16 + topPadding2,
       child: CustomScrollView(
         slivers: [
-          const SliverAppBar(
+          SliverAppBar(
             pinned: true,
-            expandedHeight: 200.0,
+            actions: [
+              IconButton(
+                onPressed: () => _showTaskForm(context),
+                icon: const Icon(Icons.add, color: Colors.white),
+              ),
+            ],
+            expandedHeight: 160.0,
+            backgroundColor: Colors.black,
             flexibleSpace: FlexibleSpaceBar(
-              stretchModes: [StretchMode.fadeTitle],
+              stretchModes: const [StretchMode.fadeTitle],
+              background: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  verticalMargin16,
+                  Text('Complete: ${tasks.where((task) => task.completed).length}'),
+                  Text('Incomplete: ${tasks.whereNot((task) => task.completed).length}'),
+                  Text('STR avail: ${stat.strengthExp}'),
+                  Text('VIT avail: ${stat.vitalityExp}'),
+                  Text('AGI avail: ${stat.agilityExp}'),
+                  Text('INT avail: ${stat.intelligenceExp}'),
+                  Text('PER avail: ${stat.perceptionExp}'),
+                ],
+              ),
             ),
           ),
           SliverList.builder(

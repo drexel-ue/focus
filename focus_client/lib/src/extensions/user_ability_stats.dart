@@ -7,6 +7,14 @@ typedef UserAbilityLevelWithRemainder = ({int level, double remainder});
 extension UserAbilityStatsX on UserAbilityStats {
   static const _constant = 0.4;
 
+  static final empty = UserAbilityStats(
+    strengthExp: 0,
+    vitalityExp: 0,
+    agilityExp: 0,
+    intelligenceExp: 0,
+    perceptionExp: 0,
+  );
+
   double _levelEquation(int exp) => _constant * math.sqrt(exp);
 
   int get userLevel {

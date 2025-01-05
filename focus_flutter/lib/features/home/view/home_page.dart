@@ -55,11 +55,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 
   void _homeRepositoryListener(HomeState? prev, HomeState next) {
-    _pageController.animateToPage(
-      next.tab.index,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOut,
-    );
+    _pageController.jumpToPage(next.tab.index);
     final menuOpen = next.menuOpen;
     if (menuOpen && !_overlayController.isShowing) {
       _overlayController.show();
