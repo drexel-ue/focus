@@ -5,8 +5,6 @@ import 'package:focus_client/focus_client.dart';
 typedef UserAbilityLevelWithRemainder = ({int level, double remainder});
 
 extension UserAbilityStatsX on UserAbilityStats {
-  static const _constant = 0.4;
-
   static final empty = UserAbilityStats(
     strengthExp: 0,
     vitalityExp: 0,
@@ -15,7 +13,17 @@ extension UserAbilityStatsX on UserAbilityStats {
     perceptionExp: 0,
   );
 
-  double _levelEquation(int exp) => _constant * math.sqrt(exp);
+  // Function to calculate the level based on experience points
+  double _calculateLevel(int experience) {
+    const double baseExp = 100; // Base experience for level 1
+    const double growthFactor = 1.1; // 10% growth per level
+
+    // Calculate level using logarithmic inversion
+    double level =
+        math.log(experience * (1 - growthFactor) / -baseExp + 1) / math.log(growthFactor);
+
+    return level;
+  }
 
   int get userLevel {
     final strengthLevel = strengthLevelWithRemainger.level;
@@ -27,27 +35,27 @@ extension UserAbilityStatsX on UserAbilityStats {
   }
 
   UserAbilityLevelWithRemainder get strengthLevelWithRemainger {
-    final value = _levelEquation(strengthExp);
+    final value = _calculateLevel(strengthExp);
     return (level: value.floor(), remainder: value - value.floor());
   }
 
   UserAbilityLevelWithRemainder get vitalityLevelWithRemainger {
-    final value = _levelEquation(vitalityExp);
+    final value = _calculateLevel(vitalityExp);
     return (level: value.floor(), remainder: value - value.floor());
   }
 
   UserAbilityLevelWithRemainder get agilityLevelWithRemainger {
-    final value = _levelEquation(agilityExp);
+    final value = _calculateLevel(agilityExp);
     return (level: value.floor(), remainder: value - value.floor());
   }
 
   UserAbilityLevelWithRemainder get intelligenceLevelWithRemainger {
-    final value = _levelEquation(intelligenceExp);
+    final value = _calculateLevel(intelligenceExp);
     return (level: value.floor(), remainder: value - value.floor());
   }
 
   UserAbilityLevelWithRemainder get perceptionLevelWithRemainger {
-    final value = _levelEquation(perceptionExp);
+    final value = _calculateLevel(perceptionExp);
     return (level: value.floor(), remainder: value - value.floor());
   }
 
