@@ -23,9 +23,10 @@ class TasksRepository extends AsyncNotifier<TaskState>
   Future<void> loadTasks() async {
     final currentState = state;
     try {
+      final page = currentState.value?.page ?? 0;
       state = const AsyncLoading<TaskState>().copyWithPrevious(currentState);
       final tasks = await refreshIfNeeded((api) async {
-        return await api.task.getTasks(currentState.requireValue.page);
+        return await api.task.getTasks(page);
       });
       final newTasks = <Task>[];
       for (final task in currentState.value?.tasks ?? const <Task>[]) {
@@ -41,7 +42,7 @@ class TasksRepository extends AsyncNotifier<TaskState>
       state = AsyncData(
         TaskState(
           tasks: newTasks,
-          page: currentState.requireValue.page + (tasks.length == 25 ? 1 : 0),
+          page: page + (tasks.length == 25 ? 1 : 0),
         ),
       );
     } catch (error, stackTrace) {

@@ -26,7 +26,7 @@ mixin ApiClientRef<T> on AsyncNotifier<T> {
     } on TokenMismatchException catch (_) {
       await ref.read(authRepositoryProvider.notifier).logout();
       return null;
-    } catch (_) {
+    } catch (_, __) {
       return null;
     }
   }
