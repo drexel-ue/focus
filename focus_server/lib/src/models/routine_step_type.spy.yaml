@@ -1,0 +1,10 @@
+### Type of a [RoutineStep].
+enum: RoutineStepType
+serialized: byName
+values:
+  ### Completed or not completed.
+  - binary
+  ### Completed after a [Duration] has passed.
+  - duration
+  ### Completed after a tally is met.
+  - tally

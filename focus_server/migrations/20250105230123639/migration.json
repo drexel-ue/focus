@@ -1,0 +1,192 @@
+{
+  "actions": [
+    {
+      "type": "deleteTable",
+      "deleteTable": "routine_steps"
+    },
+    {
+      "type": "deleteTable",
+      "deleteTable": "routine_segments"
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "routine_records",
+        "dartName": "RoutineRecord",
+        "module": "focus",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "nextval('routine_records_id_seq'::regclass)",
+            "dartType": "int?"
+          },
+          {
+            "name": "createdAt",
+            "columnType": 4,
+            "isNullable": false,
+            "dartType": "DateTime"
+          },
+          {
+            "name": "lastModifiedAt",
+            "columnType": 4,
+            "isNullable": false,
+            "dartType": "DateTime"
+          },
+          {
+            "name": "userId",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "routineId",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "status",
+            "columnType": 0,
+            "isNullable": false,
+            "columnDefault": "'running'::text",
+            "dartType": "protocol:RoutineRecordStatus"
+          }
+        ],
+        "foreignKeys": [],
+        "indexes": [
+          {
+            "indexName": "routine_records_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          }
+        ],
+        "managed": true
+      }
+    },
+    {
+      "type": "deleteTable",
+      "deleteTable": "routines"
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "routines",
+        "dartName": "Routine",
+        "module": "focus",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "nextval('routines_id_seq'::regclass)",
+            "dartType": "int?"
+          },
+          {
+            "name": "createdAt",
+            "columnType": 4,
+            "isNullable": false,
+            "dartType": "DateTime"
+          },
+          {
+            "name": "lastModifiedAt",
+            "columnType": 4,
+            "isNullable": false,
+            "dartType": "DateTime"
+          },
+          {
+            "name": "userId",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "title",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "name": "steps",
+            "columnType": 8,
+            "isNullable": false,
+            "dartType": "List<protocol:RoutineStep>"
+          },
+          {
+            "name": "buffs",
+            "columnType": 8,
+            "isNullable": false,
+            "dartType": "List<protocol:UserBuff>"
+          },
+          {
+            "name": "debuffs",
+            "columnType": 8,
+            "isNullable": false,
+            "dartType": "List<protocol:UserDebuff>"
+          }
+        ],
+        "foreignKeys": [],
+        "indexes": [
+          {
+            "indexName": "routines_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          }
+        ],
+        "managed": true
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "type": "tableDropped",
+      "message": "Table \"routine_steps\" will be dropped.",
+      "table": "routine_steps",
+      "columns": [],
+      "destrucive": true
+    },
+    {
+      "type": "tableDropped",
+      "message": "Table \"routine_segments\" will be dropped.",
+      "table": "routine_segments",
+      "columns": [],
+      "destrucive": true
+    },
+    {
+      "type": "columnDropped",
+      "message": "Column \"active\" of table \"routines\" will be dropped.",
+      "table": "routines",
+      "columns": [
+        "active"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "tableDropped",
+      "message": "One or more columns are added to table \"routines\" which cannot be added in a table migration. The complete table will be deleted and recreated.",
+      "table": "routines",
+      "columns": [
+        "steps"
+      ],
+      "destrucive": true
+    }
+  ],
+  "migrationApiVersion": 1
+}

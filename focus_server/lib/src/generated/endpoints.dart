@@ -16,8 +16,9 @@ import '../endpoints/routine_endpoint.dart' as _i4;
 import '../endpoints/task_endpoint.dart' as _i5;
 import 'package:focus_server/src/generated/auth_token.dart' as _i6;
 import 'package:focus_server/src/generated/routine_step.dart' as _i7;
-import 'package:focus_server/src/generated/routine_segment.dart' as _i8;
-import 'package:focus_server/src/generated/user_ability_stats.dart' as _i9;
+import 'package:focus_server/src/generated/user_buff.dart' as _i8;
+import 'package:focus_server/src/generated/user_debuff.dart' as _i9;
+import 'package:focus_server/src/generated/user_ability_stats.dart' as _i10;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -135,20 +136,20 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<String>(),
               nullable: false,
             ),
-            'active': _i1.ParameterDescription(
-              name: 'active',
-              type: _i1.getType<bool>(),
-              nullable: false,
-            ),
             'steps': _i1.ParameterDescription(
               name: 'steps',
-              type: _i1.getType<List<_i7.RoutineStep>?>(),
-              nullable: true,
+              type: _i1.getType<List<_i7.RoutineStep>>(),
+              nullable: false,
             ),
-            'segments': _i1.ParameterDescription(
-              name: 'segments',
-              type: _i1.getType<List<_i8.RoutineSegment>?>(),
-              nullable: true,
+            'buffs': _i1.ParameterDescription(
+              name: 'buffs',
+              type: _i1.getType<List<_i8.UserBuff>>(),
+              nullable: false,
+            ),
+            'debuffs': _i1.ParameterDescription(
+              name: 'debuffs',
+              type: _i1.getType<List<_i9.UserDebuff>>(),
+              nullable: false,
             ),
           },
           call: (
@@ -158,9 +159,9 @@ class Endpoints extends _i1.EndpointDispatch {
               (endpoints['routine'] as _i4.RoutineEndpoint).createRoutine(
             session,
             title: params['title'],
-            active: params['active'],
             steps: params['steps'],
-            segments: params['segments'],
+            buffs: params['buffs'],
+            debuffs: params['debuffs'],
           ),
         ),
         'updateRoutine': _i1.MethodConnector(
@@ -176,20 +177,10 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<String>(),
               nullable: false,
             ),
-            'active': _i1.ParameterDescription(
-              name: 'active',
-              type: _i1.getType<bool>(),
-              nullable: false,
-            ),
             'steps': _i1.ParameterDescription(
               name: 'steps',
-              type: _i1.getType<List<_i7.RoutineStep>?>(),
-              nullable: true,
-            ),
-            'segments': _i1.ParameterDescription(
-              name: 'segments',
-              type: _i1.getType<List<_i8.RoutineSegment>?>(),
-              nullable: true,
+              type: _i1.getType<List<_i7.RoutineStep>>(),
+              nullable: false,
             ),
           },
           call: (
@@ -200,9 +191,7 @@ class Endpoints extends _i1.EndpointDispatch {
             session,
             routineId: params['routineId'],
             title: params['title'],
-            active: params['active'],
             steps: params['steps'],
-            segments: params['segments'],
           ),
         ),
         'deleteRoutine': _i1.MethodConnector(
@@ -219,6 +208,60 @@ class Endpoints extends _i1.EndpointDispatch {
             Map<String, dynamic> params,
           ) async =>
               (endpoints['routine'] as _i4.RoutineEndpoint).deleteRoutine(
+            session,
+            params['routineId'],
+          ),
+        ),
+        'startRoutine': _i1.MethodConnector(
+          name: 'startRoutine',
+          params: {
+            'routineId': _i1.ParameterDescription(
+              name: 'routineId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['routine'] as _i4.RoutineEndpoint).startRoutine(
+            session,
+            params['routineId'],
+          ),
+        ),
+        'completeRoutine': _i1.MethodConnector(
+          name: 'completeRoutine',
+          params: {
+            'routineId': _i1.ParameterDescription(
+              name: 'routineId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['routine'] as _i4.RoutineEndpoint).completeRoutine(
+            session,
+            params['routineId'],
+          ),
+        ),
+        'abortRoutine': _i1.MethodConnector(
+          name: 'abortRoutine',
+          params: {
+            'routineId': _i1.ParameterDescription(
+              name: 'routineId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['routine'] as _i4.RoutineEndpoint).abortRoutine(
             session,
             params['routineId'],
           ),
@@ -262,7 +305,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'abilityExpValues': _i1.ParameterDescription(
               name: 'abilityExpValues',
-              type: _i1.getType<_i9.UserAbilityStats>(),
+              type: _i1.getType<_i10.UserAbilityStats>(),
               nullable: false,
             ),
           },
@@ -315,7 +358,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'abilityExpValues': _i1.ParameterDescription(
               name: 'abilityExpValues',
-              type: _i1.getType<_i9.UserAbilityStats>(),
+              type: _i1.getType<_i10.UserAbilityStats>(),
               nullable: false,
             ),
           },

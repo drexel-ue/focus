@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:focus_server/src/custom_scope.dart';
+import 'package:focus_server/src/future_calls/routine_completion_check_future_call.dart';
 import 'package:serverpod/serverpod.dart';
 
 import 'package:focus_server/src/web/routes/root.dart';
@@ -24,7 +25,7 @@ void run(List<String> args) async {
       if (token.isEmpty) {
         return null;
       }
-      if (session.endpoint == "auth" && session.method != "refresh") {
+      if (session.endpoint == 'auth' && session.method != 'refresh') {
         return await _validateClerkToken(session, token);
       }
       return await _validateFocusToken(session, token);
@@ -32,7 +33,10 @@ void run(List<String> args) async {
   );
 
   // If you are using any future calls, they need to be registered here.
-  // pod.registerFutureCall(ExampleFutureCall(), 'exampleFutureCall');
+  pod.registerFutureCall(
+    RoutineCompletionCheckFutureCall(),
+    RoutineCompletionCheckFutureCall.callName,
+  );
 
   // Setup a default page at the web root.
   pod.webServer.addRoute(RouteRoot(), '/');

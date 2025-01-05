@@ -11,9 +11,10 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 import 'routine_step.dart' as _i2;
-import 'routine_segment.dart' as _i3;
+import 'user_buff.dart' as _i3;
+import 'user_debuff.dart' as _i4;
 
-/// Repeatable sequence of [Step]s.
+/// A repeatable series of steps.
 abstract class Routine implements _i1.TableRow, _i1.ProtocolSerialization {
   Routine._({
     this.id,
@@ -21,9 +22,9 @@ abstract class Routine implements _i1.TableRow, _i1.ProtocolSerialization {
     required this.lastModifiedAt,
     required this.userId,
     required this.title,
-    required this.active,
-    this.steps,
-    this.segments,
+    required this.steps,
+    required this.buffs,
+    required this.debuffs,
   });
 
   factory Routine({
@@ -32,9 +33,9 @@ abstract class Routine implements _i1.TableRow, _i1.ProtocolSerialization {
     required DateTime lastModifiedAt,
     required int userId,
     required String title,
-    required bool active,
-    List<_i2.RoutineStep>? steps,
-    List<_i3.RoutineSegment>? segments,
+    required List<_i2.RoutineStep> steps,
+    required List<_i3.UserBuff> buffs,
+    required List<_i4.UserDebuff> debuffs,
   }) = _RoutineImpl;
 
   factory Routine.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -46,12 +47,14 @@ abstract class Routine implements _i1.TableRow, _i1.ProtocolSerialization {
           jsonSerialization['lastModifiedAt']),
       userId: jsonSerialization['userId'] as int,
       title: jsonSerialization['title'] as String,
-      active: jsonSerialization['active'] as bool,
-      steps: (jsonSerialization['steps'] as List?)
-          ?.map((e) => _i2.RoutineStep.fromJson((e as Map<String, dynamic>)))
+      steps: (jsonSerialization['steps'] as List)
+          .map((e) => _i2.RoutineStep.fromJson((e as Map<String, dynamic>)))
           .toList(),
-      segments: (jsonSerialization['segments'] as List?)
-          ?.map((e) => _i3.RoutineSegment.fromJson((e as Map<String, dynamic>)))
+      buffs: (jsonSerialization['buffs'] as List)
+          .map((e) => _i3.UserBuff.fromJson((e as int)))
+          .toList(),
+      debuffs: (jsonSerialization['debuffs'] as List)
+          .map((e) => _i4.UserDebuff.fromJson((e as int)))
           .toList(),
     );
   }
@@ -63,26 +66,26 @@ abstract class Routine implements _i1.TableRow, _i1.ProtocolSerialization {
   @override
   int? id;
 
-  /// Timestamp of entry into database.
+  /// Timestamp of model creation.
   DateTime createdAt;
 
   /// Timestamp of last update to database entry.
   DateTime lastModifiedAt;
 
-  /// Id of [User] that created this routine.
+  /// Id of the [User] that created this task.
   int userId;
 
   /// Title.
   String title;
 
-  /// Is this routine active?
-  bool active;
+  /// [RoutineStep]s to complete.
+  List<_i2.RoutineStep> steps;
 
-  /// [Step]s of this routine.
-  List<_i2.RoutineStep>? steps;
+  /// [UserBuff]s awarded upon completion of this routine.
+  List<_i3.UserBuff> buffs;
 
-  /// Collection of steps.
-  List<_i3.RoutineSegment>? segments;
+  /// [UserDebuff]s to apply upon failure to complete this routine within 24 hours of starting it.
+  List<_i4.UserDebuff> debuffs;
 
   @override
   _i1.Table get table => t;
@@ -93,9 +96,9 @@ abstract class Routine implements _i1.TableRow, _i1.ProtocolSerialization {
     DateTime? lastModifiedAt,
     int? userId,
     String? title,
-    bool? active,
     List<_i2.RoutineStep>? steps,
-    List<_i3.RoutineSegment>? segments,
+    List<_i3.UserBuff>? buffs,
+    List<_i4.UserDebuff>? debuffs,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -105,10 +108,9 @@ abstract class Routine implements _i1.TableRow, _i1.ProtocolSerialization {
       'lastModifiedAt': lastModifiedAt.toJson(),
       'userId': userId,
       'title': title,
-      'active': active,
-      if (steps != null) 'steps': steps?.toJson(valueToJson: (v) => v.toJson()),
-      if (segments != null)
-        'segments': segments?.toJson(valueToJson: (v) => v.toJson()),
+      'steps': steps.toJson(valueToJson: (v) => v.toJson()),
+      'buffs': buffs.toJson(valueToJson: (v) => v.toJson()),
+      'debuffs': debuffs.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -120,22 +122,14 @@ abstract class Routine implements _i1.TableRow, _i1.ProtocolSerialization {
       'lastModifiedAt': lastModifiedAt.toJson(),
       'userId': userId,
       'title': title,
-      'active': active,
-      if (steps != null)
-        'steps': steps?.toJson(valueToJson: (v) => v.toJsonForProtocol()),
-      if (segments != null)
-        'segments': segments?.toJson(valueToJson: (v) => v.toJsonForProtocol()),
+      'steps': steps.toJson(valueToJson: (v) => v.toJsonForProtocol()),
+      'buffs': buffs.toJson(valueToJson: (v) => v.toJson()),
+      'debuffs': debuffs.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
-  static RoutineInclude include({
-    _i2.RoutineStepIncludeList? steps,
-    _i3.RoutineSegmentIncludeList? segments,
-  }) {
-    return RoutineInclude._(
-      steps: steps,
-      segments: segments,
-    );
+  static RoutineInclude include() {
+    return RoutineInclude._();
   }
 
   static RoutineIncludeList includeList({
@@ -173,18 +167,18 @@ class _RoutineImpl extends Routine {
     required DateTime lastModifiedAt,
     required int userId,
     required String title,
-    required bool active,
-    List<_i2.RoutineStep>? steps,
-    List<_i3.RoutineSegment>? segments,
+    required List<_i2.RoutineStep> steps,
+    required List<_i3.UserBuff> buffs,
+    required List<_i4.UserDebuff> debuffs,
   }) : super._(
           id: id,
           createdAt: createdAt,
           lastModifiedAt: lastModifiedAt,
           userId: userId,
           title: title,
-          active: active,
           steps: steps,
-          segments: segments,
+          buffs: buffs,
+          debuffs: debuffs,
         );
 
   @override
@@ -194,9 +188,9 @@ class _RoutineImpl extends Routine {
     DateTime? lastModifiedAt,
     int? userId,
     String? title,
-    bool? active,
-    Object? steps = _Undefined,
-    Object? segments = _Undefined,
+    List<_i2.RoutineStep>? steps,
+    List<_i3.UserBuff>? buffs,
+    List<_i4.UserDebuff>? debuffs,
   }) {
     return Routine(
       id: id is int? ? id : this.id,
@@ -204,13 +198,9 @@ class _RoutineImpl extends Routine {
       lastModifiedAt: lastModifiedAt ?? this.lastModifiedAt,
       userId: userId ?? this.userId,
       title: title ?? this.title,
-      active: active ?? this.active,
-      steps: steps is List<_i2.RoutineStep>?
-          ? steps
-          : this.steps?.map((e0) => e0.copyWith()).toList(),
-      segments: segments is List<_i3.RoutineSegment>?
-          ? segments
-          : this.segments?.map((e0) => e0.copyWith()).toList(),
+      steps: steps ?? this.steps.map((e0) => e0.copyWith()).toList(),
+      buffs: buffs ?? this.buffs.map((e0) => e0).toList(),
+      debuffs: debuffs ?? this.debuffs.map((e0) => e0).toList(),
     );
   }
 }
@@ -233,100 +223,40 @@ class RoutineTable extends _i1.Table {
       'title',
       this,
     );
-    active = _i1.ColumnBool(
-      'active',
+    steps = _i1.ColumnSerializable(
+      'steps',
+      this,
+    );
+    buffs = _i1.ColumnSerializable(
+      'buffs',
+      this,
+    );
+    debuffs = _i1.ColumnSerializable(
+      'debuffs',
       this,
     );
   }
 
-  /// Timestamp of entry into database.
+  /// Timestamp of model creation.
   late final _i1.ColumnDateTime createdAt;
 
   /// Timestamp of last update to database entry.
   late final _i1.ColumnDateTime lastModifiedAt;
 
-  /// Id of [User] that created this routine.
+  /// Id of the [User] that created this task.
   late final _i1.ColumnInt userId;
 
   /// Title.
   late final _i1.ColumnString title;
 
-  /// Is this routine active?
-  late final _i1.ColumnBool active;
+  /// [RoutineStep]s to complete.
+  late final _i1.ColumnSerializable steps;
 
-  /// [Step]s of this routine.
-  _i2.RoutineStepTable? ___steps;
+  /// [UserBuff]s awarded upon completion of this routine.
+  late final _i1.ColumnSerializable buffs;
 
-  /// [Step]s of this routine.
-  _i1.ManyRelation<_i2.RoutineStepTable>? _steps;
-
-  /// Collection of steps.
-  _i3.RoutineSegmentTable? ___segments;
-
-  /// Collection of steps.
-  _i1.ManyRelation<_i3.RoutineSegmentTable>? _segments;
-
-  _i2.RoutineStepTable get __steps {
-    if (___steps != null) return ___steps!;
-    ___steps = _i1.createRelationTable(
-      relationFieldName: '__steps',
-      field: Routine.t.id,
-      foreignField: _i2.RoutineStep.t.$_routinesStepsRoutinesId,
-      tableRelation: tableRelation,
-      createTable: (foreignTableRelation) =>
-          _i2.RoutineStepTable(tableRelation: foreignTableRelation),
-    );
-    return ___steps!;
-  }
-
-  _i3.RoutineSegmentTable get __segments {
-    if (___segments != null) return ___segments!;
-    ___segments = _i1.createRelationTable(
-      relationFieldName: '__segments',
-      field: Routine.t.id,
-      foreignField: _i3.RoutineSegment.t.$_routinesSegmentsRoutinesId,
-      tableRelation: tableRelation,
-      createTable: (foreignTableRelation) =>
-          _i3.RoutineSegmentTable(tableRelation: foreignTableRelation),
-    );
-    return ___segments!;
-  }
-
-  _i1.ManyRelation<_i2.RoutineStepTable> get steps {
-    if (_steps != null) return _steps!;
-    var relationTable = _i1.createRelationTable(
-      relationFieldName: 'steps',
-      field: Routine.t.id,
-      foreignField: _i2.RoutineStep.t.$_routinesStepsRoutinesId,
-      tableRelation: tableRelation,
-      createTable: (foreignTableRelation) =>
-          _i2.RoutineStepTable(tableRelation: foreignTableRelation),
-    );
-    _steps = _i1.ManyRelation<_i2.RoutineStepTable>(
-      tableWithRelations: relationTable,
-      table: _i2.RoutineStepTable(
-          tableRelation: relationTable.tableRelation!.lastRelation),
-    );
-    return _steps!;
-  }
-
-  _i1.ManyRelation<_i3.RoutineSegmentTable> get segments {
-    if (_segments != null) return _segments!;
-    var relationTable = _i1.createRelationTable(
-      relationFieldName: 'segments',
-      field: Routine.t.id,
-      foreignField: _i3.RoutineSegment.t.$_routinesSegmentsRoutinesId,
-      tableRelation: tableRelation,
-      createTable: (foreignTableRelation) =>
-          _i3.RoutineSegmentTable(tableRelation: foreignTableRelation),
-    );
-    _segments = _i1.ManyRelation<_i3.RoutineSegmentTable>(
-      tableWithRelations: relationTable,
-      table: _i3.RoutineSegmentTable(
-          tableRelation: relationTable.tableRelation!.lastRelation),
-    );
-    return _segments!;
-  }
+  /// [UserDebuff]s to apply upon failure to complete this routine within 24 hours of starting it.
+  late final _i1.ColumnSerializable debuffs;
 
   @override
   List<_i1.Column> get columns => [
@@ -335,39 +265,17 @@ class RoutineTable extends _i1.Table {
         lastModifiedAt,
         userId,
         title,
-        active,
+        steps,
+        buffs,
+        debuffs,
       ];
-
-  @override
-  _i1.Table? getRelationTable(String relationField) {
-    if (relationField == 'steps') {
-      return __steps;
-    }
-    if (relationField == 'segments') {
-      return __segments;
-    }
-    return null;
-  }
 }
 
 class RoutineInclude extends _i1.IncludeObject {
-  RoutineInclude._({
-    _i2.RoutineStepIncludeList? steps,
-    _i3.RoutineSegmentIncludeList? segments,
-  }) {
-    _steps = steps;
-    _segments = segments;
-  }
-
-  _i2.RoutineStepIncludeList? _steps;
-
-  _i3.RoutineSegmentIncludeList? _segments;
+  RoutineInclude._();
 
   @override
-  Map<String, _i1.Include?> get includes => {
-        'steps': _steps,
-        'segments': _segments,
-      };
+  Map<String, _i1.Include?> get includes => {};
 
   @override
   _i1.Table get table => Routine.t;
@@ -396,14 +304,6 @@ class RoutineIncludeList extends _i1.IncludeList {
 class RoutineRepository {
   const RoutineRepository._();
 
-  final attach = const RoutineAttachRepository._();
-
-  final attachRow = const RoutineAttachRowRepository._();
-
-  final detach = const RoutineDetachRepository._();
-
-  final detachRow = const RoutineDetachRowRepository._();
-
   Future<List<Routine>> find(
     _i1.Session session, {
     _i1.WhereExpressionBuilder<RoutineTable>? where,
@@ -413,7 +313,6 @@ class RoutineRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<RoutineTable>? orderByList,
     _i1.Transaction? transaction,
-    RoutineInclude? include,
   }) async {
     return session.db.find<Routine>(
       where: where?.call(Routine.t),
@@ -423,7 +322,6 @@ class RoutineRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
-      include: include,
     );
   }
 
@@ -435,7 +333,6 @@ class RoutineRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<RoutineTable>? orderByList,
     _i1.Transaction? transaction,
-    RoutineInclude? include,
   }) async {
     return session.db.findFirstRow<Routine>(
       where: where?.call(Routine.t),
@@ -444,7 +341,6 @@ class RoutineRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
-      include: include,
     );
   }
 
@@ -452,12 +348,10 @@ class RoutineRepository {
     _i1.Session session,
     int id, {
     _i1.Transaction? transaction,
-    RoutineInclude? include,
   }) async {
     return session.db.findById<Routine>(
       id,
       transaction: transaction,
-      include: include,
     );
   }
 
@@ -551,206 +445,6 @@ class RoutineRepository {
     return session.db.count<Routine>(
       where: where?.call(Routine.t),
       limit: limit,
-      transaction: transaction,
-    );
-  }
-}
-
-class RoutineAttachRepository {
-  const RoutineAttachRepository._();
-
-  Future<void> steps(
-    _i1.Session session,
-    Routine routine,
-    List<_i2.RoutineStep> routineStep, {
-    _i1.Transaction? transaction,
-  }) async {
-    if (routineStep.any((e) => e.id == null)) {
-      throw ArgumentError.notNull('routineStep.id');
-    }
-    if (routine.id == null) {
-      throw ArgumentError.notNull('routine.id');
-    }
-
-    var $routineStep = routineStep
-        .map((e) => _i2.RoutineStepImplicit(
-              e,
-              $_routinesStepsRoutinesId: routine.id,
-            ))
-        .toList();
-    await session.db.update<_i2.RoutineStep>(
-      $routineStep,
-      columns: [_i2.RoutineStep.t.$_routinesStepsRoutinesId],
-      transaction: transaction,
-    );
-  }
-
-  Future<void> segments(
-    _i1.Session session,
-    Routine routine,
-    List<_i3.RoutineSegment> routineSegment, {
-    _i1.Transaction? transaction,
-  }) async {
-    if (routineSegment.any((e) => e.id == null)) {
-      throw ArgumentError.notNull('routineSegment.id');
-    }
-    if (routine.id == null) {
-      throw ArgumentError.notNull('routine.id');
-    }
-
-    var $routineSegment = routineSegment
-        .map((e) => _i3.RoutineSegmentImplicit(
-              e,
-              $_routinesSegmentsRoutinesId: routine.id,
-            ))
-        .toList();
-    await session.db.update<_i3.RoutineSegment>(
-      $routineSegment,
-      columns: [_i3.RoutineSegment.t.$_routinesSegmentsRoutinesId],
-      transaction: transaction,
-    );
-  }
-}
-
-class RoutineAttachRowRepository {
-  const RoutineAttachRowRepository._();
-
-  Future<void> steps(
-    _i1.Session session,
-    Routine routine,
-    _i2.RoutineStep routineStep, {
-    _i1.Transaction? transaction,
-  }) async {
-    if (routineStep.id == null) {
-      throw ArgumentError.notNull('routineStep.id');
-    }
-    if (routine.id == null) {
-      throw ArgumentError.notNull('routine.id');
-    }
-
-    var $routineStep = _i2.RoutineStepImplicit(
-      routineStep,
-      $_routinesStepsRoutinesId: routine.id,
-    );
-    await session.db.updateRow<_i2.RoutineStep>(
-      $routineStep,
-      columns: [_i2.RoutineStep.t.$_routinesStepsRoutinesId],
-      transaction: transaction,
-    );
-  }
-
-  Future<void> segments(
-    _i1.Session session,
-    Routine routine,
-    _i3.RoutineSegment routineSegment, {
-    _i1.Transaction? transaction,
-  }) async {
-    if (routineSegment.id == null) {
-      throw ArgumentError.notNull('routineSegment.id');
-    }
-    if (routine.id == null) {
-      throw ArgumentError.notNull('routine.id');
-    }
-
-    var $routineSegment = _i3.RoutineSegmentImplicit(
-      routineSegment,
-      $_routinesSegmentsRoutinesId: routine.id,
-    );
-    await session.db.updateRow<_i3.RoutineSegment>(
-      $routineSegment,
-      columns: [_i3.RoutineSegment.t.$_routinesSegmentsRoutinesId],
-      transaction: transaction,
-    );
-  }
-}
-
-class RoutineDetachRepository {
-  const RoutineDetachRepository._();
-
-  Future<void> steps(
-    _i1.Session session,
-    List<_i2.RoutineStep> routineStep, {
-    _i1.Transaction? transaction,
-  }) async {
-    if (routineStep.any((e) => e.id == null)) {
-      throw ArgumentError.notNull('routineStep.id');
-    }
-
-    var $routineStep = routineStep
-        .map((e) => _i2.RoutineStepImplicit(
-              e,
-              $_routinesStepsRoutinesId: null,
-            ))
-        .toList();
-    await session.db.update<_i2.RoutineStep>(
-      $routineStep,
-      columns: [_i2.RoutineStep.t.$_routinesStepsRoutinesId],
-      transaction: transaction,
-    );
-  }
-
-  Future<void> segments(
-    _i1.Session session,
-    List<_i3.RoutineSegment> routineSegment, {
-    _i1.Transaction? transaction,
-  }) async {
-    if (routineSegment.any((e) => e.id == null)) {
-      throw ArgumentError.notNull('routineSegment.id');
-    }
-
-    var $routineSegment = routineSegment
-        .map((e) => _i3.RoutineSegmentImplicit(
-              e,
-              $_routinesSegmentsRoutinesId: null,
-            ))
-        .toList();
-    await session.db.update<_i3.RoutineSegment>(
-      $routineSegment,
-      columns: [_i3.RoutineSegment.t.$_routinesSegmentsRoutinesId],
-      transaction: transaction,
-    );
-  }
-}
-
-class RoutineDetachRowRepository {
-  const RoutineDetachRowRepository._();
-
-  Future<void> steps(
-    _i1.Session session,
-    _i2.RoutineStep routineStep, {
-    _i1.Transaction? transaction,
-  }) async {
-    if (routineStep.id == null) {
-      throw ArgumentError.notNull('routineStep.id');
-    }
-
-    var $routineStep = _i2.RoutineStepImplicit(
-      routineStep,
-      $_routinesStepsRoutinesId: null,
-    );
-    await session.db.updateRow<_i2.RoutineStep>(
-      $routineStep,
-      columns: [_i2.RoutineStep.t.$_routinesStepsRoutinesId],
-      transaction: transaction,
-    );
-  }
-
-  Future<void> segments(
-    _i1.Session session,
-    _i3.RoutineSegment routineSegment, {
-    _i1.Transaction? transaction,
-  }) async {
-    if (routineSegment.id == null) {
-      throw ArgumentError.notNull('routineSegment.id');
-    }
-
-    var $routineSegment = _i3.RoutineSegmentImplicit(
-      routineSegment,
-      $_routinesSegmentsRoutinesId: null,
-    );
-    await session.db.updateRow<_i3.RoutineSegment>(
-      $routineSegment,
-      columns: [_i3.RoutineSegment.t.$_routinesSegmentsRoutinesId],
       transaction: transaction,
     );
   }

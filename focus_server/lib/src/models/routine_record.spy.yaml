@@ -1,0 +1,14 @@
+### A record of a [User] interaction with a [Routine].
+class: RoutineRecord
+table: routine_records
+fields:
+  ### Timestamp of model creation.
+  createdAt: DateTime
+  ### Timestamp of last update to database entry.
+  lastModifiedAt: DateTime
+  ### Id of the [User] that created this task.
+  userId: int
+  ### Id of the [Routine] this record is tracking.
+  routineId: int
+  ### Status.
+  status: RoutineRecordStatus, default=running

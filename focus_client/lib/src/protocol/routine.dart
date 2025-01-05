@@ -11,9 +11,10 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'routine_step.dart' as _i2;
-import 'routine_segment.dart' as _i3;
+import 'user_buff.dart' as _i3;
+import 'user_debuff.dart' as _i4;
 
-/// Repeatable sequence of [Step]s.
+/// A repeatable series of steps.
 abstract class Routine implements _i1.SerializableModel {
   Routine._({
     this.id,
@@ -21,9 +22,9 @@ abstract class Routine implements _i1.SerializableModel {
     required this.lastModifiedAt,
     required this.userId,
     required this.title,
-    required this.active,
-    this.steps,
-    this.segments,
+    required this.steps,
+    required this.buffs,
+    required this.debuffs,
   });
 
   factory Routine({
@@ -32,9 +33,9 @@ abstract class Routine implements _i1.SerializableModel {
     required DateTime lastModifiedAt,
     required int userId,
     required String title,
-    required bool active,
-    List<_i2.RoutineStep>? steps,
-    List<_i3.RoutineSegment>? segments,
+    required List<_i2.RoutineStep> steps,
+    required List<_i3.UserBuff> buffs,
+    required List<_i4.UserDebuff> debuffs,
   }) = _RoutineImpl;
 
   factory Routine.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -46,12 +47,14 @@ abstract class Routine implements _i1.SerializableModel {
           jsonSerialization['lastModifiedAt']),
       userId: jsonSerialization['userId'] as int,
       title: jsonSerialization['title'] as String,
-      active: jsonSerialization['active'] as bool,
-      steps: (jsonSerialization['steps'] as List?)
-          ?.map((e) => _i2.RoutineStep.fromJson((e as Map<String, dynamic>)))
+      steps: (jsonSerialization['steps'] as List)
+          .map((e) => _i2.RoutineStep.fromJson((e as Map<String, dynamic>)))
           .toList(),
-      segments: (jsonSerialization['segments'] as List?)
-          ?.map((e) => _i3.RoutineSegment.fromJson((e as Map<String, dynamic>)))
+      buffs: (jsonSerialization['buffs'] as List)
+          .map((e) => _i3.UserBuff.fromJson((e as int)))
+          .toList(),
+      debuffs: (jsonSerialization['debuffs'] as List)
+          .map((e) => _i4.UserDebuff.fromJson((e as int)))
           .toList(),
     );
   }
@@ -61,26 +64,26 @@ abstract class Routine implements _i1.SerializableModel {
   /// the id will be null.
   int? id;
 
-  /// Timestamp of entry into database.
+  /// Timestamp of model creation.
   DateTime createdAt;
 
   /// Timestamp of last update to database entry.
   DateTime lastModifiedAt;
 
-  /// Id of [User] that created this routine.
+  /// Id of the [User] that created this task.
   int userId;
 
   /// Title.
   String title;
 
-  /// Is this routine active?
-  bool active;
+  /// [RoutineStep]s to complete.
+  List<_i2.RoutineStep> steps;
 
-  /// [Step]s of this routine.
-  List<_i2.RoutineStep>? steps;
+  /// [UserBuff]s awarded upon completion of this routine.
+  List<_i3.UserBuff> buffs;
 
-  /// Collection of steps.
-  List<_i3.RoutineSegment>? segments;
+  /// [UserDebuff]s to apply upon failure to complete this routine within 24 hours of starting it.
+  List<_i4.UserDebuff> debuffs;
 
   Routine copyWith({
     int? id,
@@ -88,9 +91,9 @@ abstract class Routine implements _i1.SerializableModel {
     DateTime? lastModifiedAt,
     int? userId,
     String? title,
-    bool? active,
     List<_i2.RoutineStep>? steps,
-    List<_i3.RoutineSegment>? segments,
+    List<_i3.UserBuff>? buffs,
+    List<_i4.UserDebuff>? debuffs,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -100,10 +103,9 @@ abstract class Routine implements _i1.SerializableModel {
       'lastModifiedAt': lastModifiedAt.toJson(),
       'userId': userId,
       'title': title,
-      'active': active,
-      if (steps != null) 'steps': steps?.toJson(valueToJson: (v) => v.toJson()),
-      if (segments != null)
-        'segments': segments?.toJson(valueToJson: (v) => v.toJson()),
+      'steps': steps.toJson(valueToJson: (v) => v.toJson()),
+      'buffs': buffs.toJson(valueToJson: (v) => v.toJson()),
+      'debuffs': debuffs.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -122,18 +124,18 @@ class _RoutineImpl extends Routine {
     required DateTime lastModifiedAt,
     required int userId,
     required String title,
-    required bool active,
-    List<_i2.RoutineStep>? steps,
-    List<_i3.RoutineSegment>? segments,
+    required List<_i2.RoutineStep> steps,
+    required List<_i3.UserBuff> buffs,
+    required List<_i4.UserDebuff> debuffs,
   }) : super._(
           id: id,
           createdAt: createdAt,
           lastModifiedAt: lastModifiedAt,
           userId: userId,
           title: title,
-          active: active,
           steps: steps,
-          segments: segments,
+          buffs: buffs,
+          debuffs: debuffs,
         );
 
   @override
@@ -143,9 +145,9 @@ class _RoutineImpl extends Routine {
     DateTime? lastModifiedAt,
     int? userId,
     String? title,
-    bool? active,
-    Object? steps = _Undefined,
-    Object? segments = _Undefined,
+    List<_i2.RoutineStep>? steps,
+    List<_i3.UserBuff>? buffs,
+    List<_i4.UserDebuff>? debuffs,
   }) {
     return Routine(
       id: id is int? ? id : this.id,
@@ -153,13 +155,9 @@ class _RoutineImpl extends Routine {
       lastModifiedAt: lastModifiedAt ?? this.lastModifiedAt,
       userId: userId ?? this.userId,
       title: title ?? this.title,
-      active: active ?? this.active,
-      steps: steps is List<_i2.RoutineStep>?
-          ? steps
-          : this.steps?.map((e0) => e0.copyWith()).toList(),
-      segments: segments is List<_i3.RoutineSegment>?
-          ? segments
-          : this.segments?.map((e0) => e0.copyWith()).toList(),
+      steps: steps ?? this.steps.map((e0) => e0.copyWith()).toList(),
+      buffs: buffs ?? this.buffs.map((e0) => e0).toList(),
+      debuffs: debuffs ?? this.debuffs.map((e0) => e0).toList(),
     );
   }
 }

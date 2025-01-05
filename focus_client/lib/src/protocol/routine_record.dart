@@ -10,37 +10,39 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import 'routine_step.dart' as _i2;
+import 'routine_record_status.dart' as _i2;
 
-/// A collection of [Step]s in a [Routine].
-abstract class RoutineSegment implements _i1.SerializableModel {
-  RoutineSegment._({
+/// A record of a [User] interaction with a [Routine].
+abstract class RoutineRecord implements _i1.SerializableModel {
+  RoutineRecord._({
     this.id,
     required this.createdAt,
     required this.lastModifiedAt,
-    required this.title,
-    this.steps,
-  });
+    required this.userId,
+    required this.routineId,
+    _i2.RoutineRecordStatus? status,
+  }) : status = status ?? _i2.RoutineRecordStatus.running;
 
-  factory RoutineSegment({
+  factory RoutineRecord({
     int? id,
     required DateTime createdAt,
     required DateTime lastModifiedAt,
-    required String title,
-    List<_i2.RoutineStep>? steps,
-  }) = _RoutineSegmentImpl;
+    required int userId,
+    required int routineId,
+    _i2.RoutineRecordStatus? status,
+  }) = _RoutineRecordImpl;
 
-  factory RoutineSegment.fromJson(Map<String, dynamic> jsonSerialization) {
-    return RoutineSegment(
+  factory RoutineRecord.fromJson(Map<String, dynamic> jsonSerialization) {
+    return RoutineRecord(
       id: jsonSerialization['id'] as int?,
       createdAt:
           _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
       lastModifiedAt: _i1.DateTimeJsonExtension.fromJson(
           jsonSerialization['lastModifiedAt']),
-      title: jsonSerialization['title'] as String,
-      steps: (jsonSerialization['steps'] as List?)
-          ?.map((e) => _i2.RoutineStep.fromJson((e as Map<String, dynamic>)))
-          .toList(),
+      userId: jsonSerialization['userId'] as int,
+      routineId: jsonSerialization['routineId'] as int,
+      status: _i2.RoutineRecordStatus.fromJson(
+          (jsonSerialization['status'] as String)),
     );
   }
 
@@ -49,24 +51,28 @@ abstract class RoutineSegment implements _i1.SerializableModel {
   /// the id will be null.
   int? id;
 
-  /// Timestamp of entry into database.
+  /// Timestamp of model creation.
   DateTime createdAt;
 
   /// Timestamp of last update to database entry.
   DateTime lastModifiedAt;
 
-  /// Title.
-  String title;
+  /// Id of the [User] that created this task.
+  int userId;
 
-  /// [Step]s of this segment.
-  List<_i2.RoutineStep>? steps;
+  /// Id of the [Routine] this record is tracking.
+  int routineId;
 
-  RoutineSegment copyWith({
+  /// Status.
+  _i2.RoutineRecordStatus status;
+
+  RoutineRecord copyWith({
     int? id,
     DateTime? createdAt,
     DateTime? lastModifiedAt,
-    String? title,
-    List<_i2.RoutineStep>? steps,
+    int? userId,
+    int? routineId,
+    _i2.RoutineRecordStatus? status,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -74,8 +80,9 @@ abstract class RoutineSegment implements _i1.SerializableModel {
       if (id != null) 'id': id,
       'createdAt': createdAt.toJson(),
       'lastModifiedAt': lastModifiedAt.toJson(),
-      'title': title,
-      if (steps != null) 'steps': steps?.toJson(valueToJson: (v) => v.toJson()),
+      'userId': userId,
+      'routineId': routineId,
+      'status': status.toJson(),
     };
   }
 
@@ -87,37 +94,39 @@ abstract class RoutineSegment implements _i1.SerializableModel {
 
 class _Undefined {}
 
-class _RoutineSegmentImpl extends RoutineSegment {
-  _RoutineSegmentImpl({
+class _RoutineRecordImpl extends RoutineRecord {
+  _RoutineRecordImpl({
     int? id,
     required DateTime createdAt,
     required DateTime lastModifiedAt,
-    required String title,
-    List<_i2.RoutineStep>? steps,
+    required int userId,
+    required int routineId,
+    _i2.RoutineRecordStatus? status,
   }) : super._(
           id: id,
           createdAt: createdAt,
           lastModifiedAt: lastModifiedAt,
-          title: title,
-          steps: steps,
+          userId: userId,
+          routineId: routineId,
+          status: status,
         );
 
   @override
-  RoutineSegment copyWith({
+  RoutineRecord copyWith({
     Object? id = _Undefined,
     DateTime? createdAt,
     DateTime? lastModifiedAt,
-    String? title,
-    Object? steps = _Undefined,
+    int? userId,
+    int? routineId,
+    _i2.RoutineRecordStatus? status,
   }) {
-    return RoutineSegment(
+    return RoutineRecord(
       id: id is int? ? id : this.id,
       createdAt: createdAt ?? this.createdAt,
       lastModifiedAt: lastModifiedAt ?? this.lastModifiedAt,
-      title: title ?? this.title,
-      steps: steps is List<_i2.RoutineStep>?
-          ? steps
-          : this.steps?.map((e0) => e0.copyWith()).toList(),
+      userId: userId ?? this.userId,
+      routineId: routineId ?? this.routineId,
+      status: status ?? this.status,
     );
   }
 }

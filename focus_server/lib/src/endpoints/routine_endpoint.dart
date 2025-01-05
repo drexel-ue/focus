@@ -1,5 +1,6 @@
 import 'package:focus_server/src/custom_scope.dart';
 import 'package:focus_server/src/extensions/session_extension.dart';
+import 'package:focus_server/src/future_calls/routine_completion_check_future_call.dart';
 import 'package:focus_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
 
@@ -17,6 +18,7 @@ class RoutineEndpoint extends Endpoint {
           session,
           where: (RoutineTable table) => table.userId.equals(user.id!),
           orderBy: (RoutineTable table) => table.createdAt,
+          orderDescending: true,
           limit: 25,
           offset: page * 25,
           transaction: transaction,
@@ -39,9 +41,9 @@ class RoutineEndpoint extends Endpoint {
   Future<Routine> createRoutine(
     Session session, {
     required String title,
-    required bool active,
-    List<RoutineStep>? steps,
-    List<RoutineSegment>? segments,
+    required List<RoutineStep> steps,
+    required List<UserBuff> buffs,
+    required List<UserDebuff> debuffs,
   }) async {
     return await session.db.transaction((Transaction transaction) async {
       try {
@@ -52,9 +54,9 @@ class RoutineEndpoint extends Endpoint {
           lastModifiedAt: now,
           userId: user.id!,
           title: title,
-          active: active,
           steps: steps,
-          segments: segments,
+          buffs: buffs,
+          debuffs: debuffs,
         );
         return await Routine.db.insertRow(session, routine, transaction: transaction);
       } catch (error, stackTrace) {
@@ -74,9 +76,7 @@ class RoutineEndpoint extends Endpoint {
     Session session, {
     required int routineId,
     required String title,
-    required bool active,
-    List<RoutineStep>? steps,
-    List<RoutineSegment>? segments,
+    required List<RoutineStep> steps,
   }) async {
     return await session.db.transaction((Transaction transaction) async {
       try {
@@ -89,9 +89,7 @@ class RoutineEndpoint extends Endpoint {
         routine
           ..lastModifiedAt = now
           ..title = title
-          ..active = active
-          ..steps = steps
-          ..segments = segments;
+          ..steps = steps;
         return await Routine.db.updateRow(session, routine, transaction: transaction);
       } catch (error, stackTrace) {
         session.log(
@@ -129,5 +127,117 @@ class RoutineEndpoint extends Endpoint {
         throw DeletionException(message: 'failed to delete routine.');
       }
     });
+  }
+
+  /// Creates a [RoutineRecord] and registers a future call to be invoked in 24 hours to check for
+  /// its completion.
+  Future<RoutineRecord> startRoutine(Session session, int routineId) async {
+    return await session.db.transaction((Transaction transaction) async {
+      try {
+        final user = await session.parseUserFromFocusSession(transaction);
+        final routine = await Routine.db.findById(session, routineId);
+        if (routine == null) {
+          throw NotFoundException(message: 'missing Routine');
+        }
+        final now = DateTime.timestamp();
+        var record = RoutineRecord(
+          createdAt: now,
+          lastModifiedAt: now,
+          userId: user.id!,
+          routineId: routineId,
+        );
+        record = await RoutineRecord.db.insertRow(session, record, transaction: transaction);
+        await session.serverpod.futureCallAtTime(
+          RoutineCompletionCheckFutureCall.callName,
+          routine,
+          now.add(const Duration(hours: 24)),
+          identifier: '${record.id}',
+        );
+        return record;
+      } catch (error, stackTrace) {
+        session.log(
+          'error in startRoutine',
+          level: LogLevel.error,
+          exception: error,
+          stackTrace: stackTrace,
+        );
+        rethrow;
+      }
+    });
+  }
+
+  /// Marks a [RoutineRecord] as complete and cancels the future call tied to it.
+  Future<UserWithRoutineRecord> completeRoutine(Session session, int routineId) async {
+    return await session.db.transaction((Transaction transaction) async {
+      try {
+        return await _abortOrCompleteRoutine(
+          session,
+          transaction,
+          routineId,
+          RoutineRecordStatus.completed,
+        );
+      } catch (error, stackTrace) {
+        session.log(
+          'error in completeRoutine',
+          level: LogLevel.error,
+          exception: error,
+          stackTrace: stackTrace,
+        );
+        rethrow;
+      }
+    });
+  }
+
+  /// Marks a [RoutineRecord] as aborted and cancels the future call tied to it.
+  Future<UserWithRoutineRecord> abortRoutine(Session session, int routineId) async {
+    return await session.db.transaction((Transaction transaction) async {
+      try {
+        return await _abortOrCompleteRoutine(
+          session,
+          transaction,
+          routineId,
+          RoutineRecordStatus.aborted,
+        );
+      } catch (error, stackTrace) {
+        session.log(
+          'error in completeRoutine',
+          level: LogLevel.error,
+          exception: error,
+          stackTrace: stackTrace,
+        );
+        rethrow;
+      }
+    });
+  }
+
+  Future<UserWithRoutineRecord> _abortOrCompleteRoutine(
+    Session session,
+    Transaction transaction,
+    int routineId,
+    RoutineRecordStatus status,
+  ) async {
+    var user = await session.parseUserFromFocusSession(transaction);
+    final routine = await Routine.db.findById(session, routineId);
+    if (routine == null || routine.userId != user.id) {
+      throw NotFoundException(message: 'missing Routine');
+    }
+    final records = await RoutineRecord.db.find(
+      session,
+      transaction: transaction,
+      where: (table) => table.routineId.equals(routineId),
+    );
+    var record = records.firstWhere((el) => el.status == RoutineRecordStatus.running);
+    record
+      ..status = status
+      ..lastModifiedAt = DateTime.timestamp();
+    record = await RoutineRecord.db.updateRow(session, record, transaction: transaction);
+    if (status == RoutineRecordStatus.completed) {
+      user.buffs.addAll(routine.buffs);
+    } else {
+      user.debuffs.addAll(routine.debuffs);
+    }
+    user = await User.db.updateRow(session, user, transaction: transaction);
+    await session.serverpod.cancelFutureCall('${record.id}');
+    return UserWithRoutineRecord(user: user, record: record);
   }
 }

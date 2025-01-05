@@ -1,0 +1,7 @@
+### Wrapper class for a [User] and a [RoutineRecord].
+class: UserWithRoutineRecord
+fields:
+  ### [User].
+  user: User
+  ### [RoutineRecord].
+  record: RoutineRecord

@@ -10,82 +10,77 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import 'ability_experience_value.dart' as _i2;
+import 'routine_step_type.dart' as _i2;
+import 'user_ability_stats.dart' as _i3;
 
-/// A par of a [Routine].
+/// Step in a [Routine].
 abstract class RoutineStep implements _i1.SerializableModel {
   RoutineStep._({
-    this.id,
-    required this.createdAt,
-    required this.lastModifiedAt,
     required this.title,
-    this.description,
+    required this.type,
+    required this.duration,
+    required this.tally,
+    int? repeats,
     required this.abilityExpValues,
-  });
+  }) : repeats = repeats ?? 0;
 
   factory RoutineStep({
-    int? id,
-    required DateTime createdAt,
-    required DateTime lastModifiedAt,
     required String title,
-    String? description,
-    required List<_i2.AbilityExperienceValue> abilityExpValues,
+    required _i2.RoutineStepType type,
+    required Duration duration,
+    required int tally,
+    int? repeats,
+    required _i3.UserAbilityStats abilityExpValues,
   }) = _RoutineStepImpl;
 
   factory RoutineStep.fromJson(Map<String, dynamic> jsonSerialization) {
     return RoutineStep(
-      id: jsonSerialization['id'] as int?,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      lastModifiedAt: _i1.DateTimeJsonExtension.fromJson(
-          jsonSerialization['lastModifiedAt']),
       title: jsonSerialization['title'] as String,
-      description: jsonSerialization['description'] as String?,
-      abilityExpValues: (jsonSerialization['abilityExpValues'] as List)
-          .map((e) =>
-              _i2.AbilityExperienceValue.fromJson((e as Map<String, dynamic>)))
-          .toList(),
+      type: _i2.RoutineStepType.fromJson((jsonSerialization['type'] as String)),
+      duration:
+          _i1.DurationJsonExtension.fromJson(jsonSerialization['duration']),
+      tally: jsonSerialization['tally'] as int,
+      repeats: jsonSerialization['repeats'] as int,
+      abilityExpValues: _i3.UserAbilityStats.fromJson(
+          (jsonSerialization['abilityExpValues'] as Map<String, dynamic>)),
     );
   }
-
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
-  int? id;
-
-  /// Timestamp of entry into database.
-  DateTime createdAt;
-
-  /// Timestamp of last update to database entry.
-  DateTime lastModifiedAt;
 
   /// Title.
   String title;
 
-  /// Description.
-  String? description;
+  /// Type.
+  _i2.RoutineStepType type;
 
-  /// Collection of [ExperiencePointValue]s to be rewarded upon completion of this task.
-  List<_i2.AbilityExperienceValue> abilityExpValues;
+  /// Optional [Duration] if type is [RoutineStepType.duration].
+  Duration duration;
+
+  /// Optional tally if type is [RoutineStepType.tally].
+  int tally;
+
+  /// How many times does this step repeat?
+  int repeats;
+
+  /// Collection of exp to be rewarded upon completion of this step.
+  _i3.UserAbilityStats abilityExpValues;
 
   RoutineStep copyWith({
-    int? id,
-    DateTime? createdAt,
-    DateTime? lastModifiedAt,
     String? title,
-    String? description,
-    List<_i2.AbilityExperienceValue>? abilityExpValues,
+    _i2.RoutineStepType? type,
+    Duration? duration,
+    int? tally,
+    int? repeats,
+    _i3.UserAbilityStats? abilityExpValues,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
-      if (id != null) 'id': id,
-      'createdAt': createdAt.toJson(),
-      'lastModifiedAt': lastModifiedAt.toJson(),
       'title': title,
-      if (description != null) 'description': description,
-      'abilityExpValues':
-          abilityExpValues.toJson(valueToJson: (v) => v.toJson()),
+      'type': type.toJson(),
+      'duration': duration.toJson(),
+      'tally': tally,
+      'repeats': repeats,
+      'abilityExpValues': abilityExpValues.toJson(),
     };
   }
 
@@ -95,42 +90,39 @@ abstract class RoutineStep implements _i1.SerializableModel {
   }
 }
 
-class _Undefined {}
-
 class _RoutineStepImpl extends RoutineStep {
   _RoutineStepImpl({
-    int? id,
-    required DateTime createdAt,
-    required DateTime lastModifiedAt,
     required String title,
-    String? description,
-    required List<_i2.AbilityExperienceValue> abilityExpValues,
+    required _i2.RoutineStepType type,
+    required Duration duration,
+    required int tally,
+    int? repeats,
+    required _i3.UserAbilityStats abilityExpValues,
   }) : super._(
-          id: id,
-          createdAt: createdAt,
-          lastModifiedAt: lastModifiedAt,
           title: title,
-          description: description,
+          type: type,
+          duration: duration,
+          tally: tally,
+          repeats: repeats,
           abilityExpValues: abilityExpValues,
         );
 
   @override
   RoutineStep copyWith({
-    Object? id = _Undefined,
-    DateTime? createdAt,
-    DateTime? lastModifiedAt,
     String? title,
-    Object? description = _Undefined,
-    List<_i2.AbilityExperienceValue>? abilityExpValues,
+    _i2.RoutineStepType? type,
+    Duration? duration,
+    int? tally,
+    int? repeats,
+    _i3.UserAbilityStats? abilityExpValues,
   }) {
     return RoutineStep(
-      id: id is int? ? id : this.id,
-      createdAt: createdAt ?? this.createdAt,
-      lastModifiedAt: lastModifiedAt ?? this.lastModifiedAt,
       title: title ?? this.title,
-      description: description is String? ? description : this.description,
-      abilityExpValues: abilityExpValues ??
-          this.abilityExpValues.map((e0) => e0.copyWith()).toList(),
+      type: type ?? this.type,
+      duration: duration ?? this.duration,
+      tally: tally ?? this.tally,
+      repeats: repeats ?? this.repeats,
+      abilityExpValues: abilityExpValues ?? this.abilityExpValues.copyWith(),
     );
   }
 }

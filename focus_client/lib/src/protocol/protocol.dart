@@ -20,23 +20,28 @@ import 'deletion_exception.dart' as _i8;
 import 'example.dart' as _i9;
 import 'expired_jwt_exception.dart' as _i10;
 import 'fetch_exception.dart' as _i11;
-import 'invalid_token_exception.dart' as _i12;
-import 'not_found_exception.dart' as _i13;
-import 'routine.dart' as _i14;
-import 'routine_segment.dart' as _i15;
-import 'routine_step.dart' as _i16;
-import 'task.dart' as _i17;
-import 'token_mismatch_exception.dart' as _i18;
-import 'update_exception.dart' as _i19;
-import 'user.dart' as _i20;
-import 'user_ability_stats.dart' as _i21;
-import 'user_buff.dart' as _i22;
-import 'user_debuff.dart' as _i23;
-import 'user_with_task.dart' as _i24;
-import 'package:focus_client/src/protocol/routine.dart' as _i25;
-import 'package:focus_client/src/protocol/routine_step.dart' as _i26;
-import 'package:focus_client/src/protocol/routine_segment.dart' as _i27;
-import 'package:focus_client/src/protocol/task.dart' as _i28;
+import 'future_call_exception.dart' as _i12;
+import 'invalid_token_exception.dart' as _i13;
+import 'not_found_exception.dart' as _i14;
+import 'routine.dart' as _i15;
+import 'routine_record.dart' as _i16;
+import 'routine_record_status.dart' as _i17;
+import 'routine_step.dart' as _i18;
+import 'routine_step_type.dart' as _i19;
+import 'task.dart' as _i20;
+import 'token_mismatch_exception.dart' as _i21;
+import 'update_exception.dart' as _i22;
+import 'user.dart' as _i23;
+import 'user_ability_stats.dart' as _i24;
+import 'user_buff.dart' as _i25;
+import 'user_debuff.dart' as _i26;
+import 'user_with_routine_record.dart' as _i27;
+import 'user_with_task.dart' as _i28;
+import 'package:focus_client/src/protocol/routine.dart' as _i29;
+import 'package:focus_client/src/protocol/routine_step.dart' as _i30;
+import 'package:focus_client/src/protocol/user_buff.dart' as _i31;
+import 'package:focus_client/src/protocol/user_debuff.dart' as _i32;
+import 'package:focus_client/src/protocol/task.dart' as _i33;
 export 'ability.dart';
 export 'ability_experience_value.dart';
 export 'auth_exception.dart';
@@ -47,11 +52,14 @@ export 'deletion_exception.dart';
 export 'example.dart';
 export 'expired_jwt_exception.dart';
 export 'fetch_exception.dart';
+export 'future_call_exception.dart';
 export 'invalid_token_exception.dart';
 export 'not_found_exception.dart';
 export 'routine.dart';
-export 'routine_segment.dart';
+export 'routine_record.dart';
+export 'routine_record_status.dart';
 export 'routine_step.dart';
+export 'routine_step_type.dart';
 export 'task.dart';
 export 'token_mismatch_exception.dart';
 export 'update_exception.dart';
@@ -59,6 +67,7 @@ export 'user.dart';
 export 'user_ability_stats.dart';
 export 'user_buff.dart';
 export 'user_debuff.dart';
+export 'user_with_routine_record.dart';
 export 'user_with_task.dart';
 export 'client.dart';
 
@@ -105,44 +114,56 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i11.FetchException) {
       return _i11.FetchException.fromJson(data) as T;
     }
-    if (t == _i12.InvalidTokenException) {
-      return _i12.InvalidTokenException.fromJson(data) as T;
+    if (t == _i12.FutureCallException) {
+      return _i12.FutureCallException.fromJson(data) as T;
     }
-    if (t == _i13.NotFoundException) {
-      return _i13.NotFoundException.fromJson(data) as T;
+    if (t == _i13.InvalidTokenException) {
+      return _i13.InvalidTokenException.fromJson(data) as T;
     }
-    if (t == _i14.Routine) {
-      return _i14.Routine.fromJson(data) as T;
+    if (t == _i14.NotFoundException) {
+      return _i14.NotFoundException.fromJson(data) as T;
     }
-    if (t == _i15.RoutineSegment) {
-      return _i15.RoutineSegment.fromJson(data) as T;
+    if (t == _i15.Routine) {
+      return _i15.Routine.fromJson(data) as T;
     }
-    if (t == _i16.RoutineStep) {
-      return _i16.RoutineStep.fromJson(data) as T;
+    if (t == _i16.RoutineRecord) {
+      return _i16.RoutineRecord.fromJson(data) as T;
     }
-    if (t == _i17.Task) {
-      return _i17.Task.fromJson(data) as T;
+    if (t == _i17.RoutineRecordStatus) {
+      return _i17.RoutineRecordStatus.fromJson(data) as T;
     }
-    if (t == _i18.TokenMismatchException) {
-      return _i18.TokenMismatchException.fromJson(data) as T;
+    if (t == _i18.RoutineStep) {
+      return _i18.RoutineStep.fromJson(data) as T;
     }
-    if (t == _i19.UpdateException) {
-      return _i19.UpdateException.fromJson(data) as T;
+    if (t == _i19.RoutineStepType) {
+      return _i19.RoutineStepType.fromJson(data) as T;
     }
-    if (t == _i20.User) {
-      return _i20.User.fromJson(data) as T;
+    if (t == _i20.Task) {
+      return _i20.Task.fromJson(data) as T;
     }
-    if (t == _i21.UserAbilityStats) {
-      return _i21.UserAbilityStats.fromJson(data) as T;
+    if (t == _i21.TokenMismatchException) {
+      return _i21.TokenMismatchException.fromJson(data) as T;
     }
-    if (t == _i22.UserBuff) {
-      return _i22.UserBuff.fromJson(data) as T;
+    if (t == _i22.UpdateException) {
+      return _i22.UpdateException.fromJson(data) as T;
     }
-    if (t == _i23.UserDebuff) {
-      return _i23.UserDebuff.fromJson(data) as T;
+    if (t == _i23.User) {
+      return _i23.User.fromJson(data) as T;
     }
-    if (t == _i24.UserWithTask) {
-      return _i24.UserWithTask.fromJson(data) as T;
+    if (t == _i24.UserAbilityStats) {
+      return _i24.UserAbilityStats.fromJson(data) as T;
+    }
+    if (t == _i25.UserBuff) {
+      return _i25.UserBuff.fromJson(data) as T;
+    }
+    if (t == _i26.UserDebuff) {
+      return _i26.UserDebuff.fromJson(data) as T;
+    }
+    if (t == _i27.UserWithRoutineRecord) {
+      return _i27.UserWithRoutineRecord.fromJson(data) as T;
+    }
+    if (t == _i28.UserWithTask) {
+      return _i28.UserWithTask.fromJson(data) as T;
     }
     if (t == _i1.getType<_i2.Ability?>()) {
       return (data != null ? _i2.Ability.fromJson(data) : null) as T;
@@ -176,107 +197,94 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i11.FetchException?>()) {
       return (data != null ? _i11.FetchException.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i12.InvalidTokenException?>()) {
-      return (data != null ? _i12.InvalidTokenException.fromJson(data) : null)
+    if (t == _i1.getType<_i12.FutureCallException?>()) {
+      return (data != null ? _i12.FutureCallException.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i13.NotFoundException?>()) {
-      return (data != null ? _i13.NotFoundException.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i14.Routine?>()) {
-      return (data != null ? _i14.Routine.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i15.RoutineSegment?>()) {
-      return (data != null ? _i15.RoutineSegment.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i16.RoutineStep?>()) {
-      return (data != null ? _i16.RoutineStep.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i17.Task?>()) {
-      return (data != null ? _i17.Task.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i18.TokenMismatchException?>()) {
-      return (data != null ? _i18.TokenMismatchException.fromJson(data) : null)
+    if (t == _i1.getType<_i13.InvalidTokenException?>()) {
+      return (data != null ? _i13.InvalidTokenException.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i19.UpdateException?>()) {
-      return (data != null ? _i19.UpdateException.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i14.NotFoundException?>()) {
+      return (data != null ? _i14.NotFoundException.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i20.User?>()) {
-      return (data != null ? _i20.User.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i15.Routine?>()) {
+      return (data != null ? _i15.Routine.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i21.UserAbilityStats?>()) {
-      return (data != null ? _i21.UserAbilityStats.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i16.RoutineRecord?>()) {
+      return (data != null ? _i16.RoutineRecord.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i22.UserBuff?>()) {
-      return (data != null ? _i22.UserBuff.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i17.RoutineRecordStatus?>()) {
+      return (data != null ? _i17.RoutineRecordStatus.fromJson(data) : null)
+          as T;
     }
-    if (t == _i1.getType<_i23.UserDebuff?>()) {
-      return (data != null ? _i23.UserDebuff.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i18.RoutineStep?>()) {
+      return (data != null ? _i18.RoutineStep.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i24.UserWithTask?>()) {
-      return (data != null ? _i24.UserWithTask.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i19.RoutineStepType?>()) {
+      return (data != null ? _i19.RoutineStepType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<List<_i16.RoutineStep>?>()) {
-      return (data != null
-          ? (data as List).map((e) => deserialize<_i16.RoutineStep>(e)).toList()
-          : null) as dynamic;
+    if (t == _i1.getType<_i20.Task?>()) {
+      return (data != null ? _i20.Task.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<List<_i15.RoutineSegment>?>()) {
-      return (data != null
-          ? (data as List)
-              .map((e) => deserialize<_i15.RoutineSegment>(e))
-              .toList()
-          : null) as dynamic;
+    if (t == _i1.getType<_i21.TokenMismatchException?>()) {
+      return (data != null ? _i21.TokenMismatchException.fromJson(data) : null)
+          as T;
     }
-    if (t == _i1.getType<List<_i16.RoutineStep>?>()) {
-      return (data != null
-          ? (data as List).map((e) => deserialize<_i16.RoutineStep>(e)).toList()
-          : null) as dynamic;
+    if (t == _i1.getType<_i22.UpdateException?>()) {
+      return (data != null ? _i22.UpdateException.fromJson(data) : null) as T;
     }
-    if (t == List<_i3.AbilityExperienceValue>) {
+    if (t == _i1.getType<_i23.User?>()) {
+      return (data != null ? _i23.User.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i24.UserAbilityStats?>()) {
+      return (data != null ? _i24.UserAbilityStats.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i25.UserBuff?>()) {
+      return (data != null ? _i25.UserBuff.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i26.UserDebuff?>()) {
+      return (data != null ? _i26.UserDebuff.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i27.UserWithRoutineRecord?>()) {
+      return (data != null ? _i27.UserWithRoutineRecord.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i28.UserWithTask?>()) {
+      return (data != null ? _i28.UserWithTask.fromJson(data) : null) as T;
+    }
+    if (t == List<_i18.RoutineStep>) {
       return (data as List)
-          .map((e) => deserialize<_i3.AbilityExperienceValue>(e))
+          .map((e) => deserialize<_i18.RoutineStep>(e))
           .toList() as dynamic;
     }
-    if (t == List<_i22.UserBuff>) {
-      return (data as List).map((e) => deserialize<_i22.UserBuff>(e)).toList()
+    if (t == List<_i25.UserBuff>) {
+      return (data as List).map((e) => deserialize<_i25.UserBuff>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i23.UserDebuff>) {
-      return (data as List).map((e) => deserialize<_i23.UserDebuff>(e)).toList()
+    if (t == List<_i26.UserDebuff>) {
+      return (data as List).map((e) => deserialize<_i26.UserDebuff>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i25.Routine>) {
-      return (data as List).map((e) => deserialize<_i25.Routine>(e)).toList()
+    if (t == List<_i29.Routine>) {
+      return (data as List).map((e) => deserialize<_i29.Routine>(e)).toList()
           as dynamic;
     }
-    if (t == _i1.getType<List<_i26.RoutineStep>?>()) {
-      return (data != null
-          ? (data as List).map((e) => deserialize<_i26.RoutineStep>(e)).toList()
-          : null) as dynamic;
+    if (t == List<_i30.RoutineStep>) {
+      return (data as List)
+          .map((e) => deserialize<_i30.RoutineStep>(e))
+          .toList() as dynamic;
     }
-    if (t == _i1.getType<List<_i27.RoutineSegment>?>()) {
-      return (data != null
-          ? (data as List)
-              .map((e) => deserialize<_i27.RoutineSegment>(e))
-              .toList()
-          : null) as dynamic;
+    if (t == List<_i31.UserBuff>) {
+      return (data as List).map((e) => deserialize<_i31.UserBuff>(e)).toList()
+          as dynamic;
     }
-    if (t == _i1.getType<List<_i26.RoutineStep>?>()) {
-      return (data != null
-          ? (data as List).map((e) => deserialize<_i26.RoutineStep>(e)).toList()
-          : null) as dynamic;
+    if (t == List<_i32.UserDebuff>) {
+      return (data as List).map((e) => deserialize<_i32.UserDebuff>(e)).toList()
+          as dynamic;
     }
-    if (t == _i1.getType<List<_i27.RoutineSegment>?>()) {
-      return (data != null
-          ? (data as List)
-              .map((e) => deserialize<_i27.RoutineSegment>(e))
-              .toList()
-          : null) as dynamic;
-    }
-    if (t == List<_i28.Task>) {
-      return (data as List).map((e) => deserialize<_i28.Task>(e)).toList()
+    if (t == List<_i33.Task>) {
+      return (data as List).map((e) => deserialize<_i33.Task>(e)).toList()
           as dynamic;
     }
     return super.deserialize<T>(data, t);
@@ -316,43 +324,55 @@ class Protocol extends _i1.SerializationManager {
     if (data is _i11.FetchException) {
       return 'FetchException';
     }
-    if (data is _i12.InvalidTokenException) {
+    if (data is _i12.FutureCallException) {
+      return 'FutureCallException';
+    }
+    if (data is _i13.InvalidTokenException) {
       return 'InvalidTokenException';
     }
-    if (data is _i13.NotFoundException) {
+    if (data is _i14.NotFoundException) {
       return 'NotFoundException';
     }
-    if (data is _i14.Routine) {
+    if (data is _i15.Routine) {
       return 'Routine';
     }
-    if (data is _i15.RoutineSegment) {
-      return 'RoutineSegment';
+    if (data is _i16.RoutineRecord) {
+      return 'RoutineRecord';
     }
-    if (data is _i16.RoutineStep) {
+    if (data is _i17.RoutineRecordStatus) {
+      return 'RoutineRecordStatus';
+    }
+    if (data is _i18.RoutineStep) {
       return 'RoutineStep';
     }
-    if (data is _i17.Task) {
+    if (data is _i19.RoutineStepType) {
+      return 'RoutineStepType';
+    }
+    if (data is _i20.Task) {
       return 'Task';
     }
-    if (data is _i18.TokenMismatchException) {
+    if (data is _i21.TokenMismatchException) {
       return 'TokenMismatchException';
     }
-    if (data is _i19.UpdateException) {
+    if (data is _i22.UpdateException) {
       return 'UpdateException';
     }
-    if (data is _i20.User) {
+    if (data is _i23.User) {
       return 'User';
     }
-    if (data is _i21.UserAbilityStats) {
+    if (data is _i24.UserAbilityStats) {
       return 'UserAbilityStats';
     }
-    if (data is _i22.UserBuff) {
+    if (data is _i25.UserBuff) {
       return 'UserBuff';
     }
-    if (data is _i23.UserDebuff) {
+    if (data is _i26.UserDebuff) {
       return 'UserDebuff';
     }
-    if (data is _i24.UserWithTask) {
+    if (data is _i27.UserWithRoutineRecord) {
+      return 'UserWithRoutineRecord';
+    }
+    if (data is _i28.UserWithTask) {
       return 'UserWithTask';
     }
     return null;
@@ -394,44 +414,56 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName == 'FetchException') {
       return deserialize<_i11.FetchException>(data['data']);
     }
+    if (dataClassName == 'FutureCallException') {
+      return deserialize<_i12.FutureCallException>(data['data']);
+    }
     if (dataClassName == 'InvalidTokenException') {
-      return deserialize<_i12.InvalidTokenException>(data['data']);
+      return deserialize<_i13.InvalidTokenException>(data['data']);
     }
     if (dataClassName == 'NotFoundException') {
-      return deserialize<_i13.NotFoundException>(data['data']);
+      return deserialize<_i14.NotFoundException>(data['data']);
     }
     if (dataClassName == 'Routine') {
-      return deserialize<_i14.Routine>(data['data']);
+      return deserialize<_i15.Routine>(data['data']);
     }
-    if (dataClassName == 'RoutineSegment') {
-      return deserialize<_i15.RoutineSegment>(data['data']);
+    if (dataClassName == 'RoutineRecord') {
+      return deserialize<_i16.RoutineRecord>(data['data']);
+    }
+    if (dataClassName == 'RoutineRecordStatus') {
+      return deserialize<_i17.RoutineRecordStatus>(data['data']);
     }
     if (dataClassName == 'RoutineStep') {
-      return deserialize<_i16.RoutineStep>(data['data']);
+      return deserialize<_i18.RoutineStep>(data['data']);
+    }
+    if (dataClassName == 'RoutineStepType') {
+      return deserialize<_i19.RoutineStepType>(data['data']);
     }
     if (dataClassName == 'Task') {
-      return deserialize<_i17.Task>(data['data']);
+      return deserialize<_i20.Task>(data['data']);
     }
     if (dataClassName == 'TokenMismatchException') {
-      return deserialize<_i18.TokenMismatchException>(data['data']);
+      return deserialize<_i21.TokenMismatchException>(data['data']);
     }
     if (dataClassName == 'UpdateException') {
-      return deserialize<_i19.UpdateException>(data['data']);
+      return deserialize<_i22.UpdateException>(data['data']);
     }
     if (dataClassName == 'User') {
-      return deserialize<_i20.User>(data['data']);
+      return deserialize<_i23.User>(data['data']);
     }
     if (dataClassName == 'UserAbilityStats') {
-      return deserialize<_i21.UserAbilityStats>(data['data']);
+      return deserialize<_i24.UserAbilityStats>(data['data']);
     }
     if (dataClassName == 'UserBuff') {
-      return deserialize<_i22.UserBuff>(data['data']);
+      return deserialize<_i25.UserBuff>(data['data']);
     }
     if (dataClassName == 'UserDebuff') {
-      return deserialize<_i23.UserDebuff>(data['data']);
+      return deserialize<_i26.UserDebuff>(data['data']);
+    }
+    if (dataClassName == 'UserWithRoutineRecord') {
+      return deserialize<_i27.UserWithRoutineRecord>(data['data']);
     }
     if (dataClassName == 'UserWithTask') {
-      return deserialize<_i24.UserWithTask>(data['data']);
+      return deserialize<_i28.UserWithTask>(data['data']);
     }
     return super.deserializeByClassName(data);
   }

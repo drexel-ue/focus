@@ -15,11 +15,13 @@ import 'package:focus_client/src/protocol/auth_session.dart' as _i3;
 import 'package:focus_client/src/protocol/auth_token.dart' as _i4;
 import 'package:focus_client/src/protocol/routine.dart' as _i5;
 import 'package:focus_client/src/protocol/routine_step.dart' as _i6;
-import 'package:focus_client/src/protocol/routine_segment.dart' as _i7;
-import 'package:focus_client/src/protocol/task.dart' as _i8;
-import 'package:focus_client/src/protocol/user_ability_stats.dart' as _i9;
-import 'package:focus_client/src/protocol/user_with_task.dart' as _i10;
-import 'protocol.dart' as _i11;
+import 'package:focus_client/src/protocol/user_buff.dart' as _i7;
+import 'package:focus_client/src/protocol/user_debuff.dart' as _i8;
+import 'package:focus_client/src/protocol/routine_record.dart' as _i9;
+import 'package:focus_client/src/protocol/task.dart' as _i10;
+import 'package:focus_client/src/protocol/user_ability_stats.dart' as _i11;
+import 'package:focus_client/src/protocol/user_with_task.dart' as _i12;
+import 'protocol.dart' as _i13;
 
 /// Handles [AuthSession] creation.
 /// {@category Endpoint}
@@ -81,18 +83,18 @@ class EndpointRoutine extends _i1.EndpointRef {
   /// Creates and returns a new [Routine].
   _i2.Future<_i5.Routine> createRoutine({
     required String title,
-    required bool active,
-    List<_i6.RoutineStep>? steps,
-    List<_i7.RoutineSegment>? segments,
+    required List<_i6.RoutineStep> steps,
+    required List<_i7.UserBuff> buffs,
+    required List<_i8.UserDebuff> debuffs,
   }) =>
       caller.callServerEndpoint<_i5.Routine>(
         'routine',
         'createRoutine',
         {
           'title': title,
-          'active': active,
           'steps': steps,
-          'segments': segments,
+          'buffs': buffs,
+          'debuffs': debuffs,
         },
       );
 
@@ -100,9 +102,7 @@ class EndpointRoutine extends _i1.EndpointRef {
   _i2.Future<_i5.Routine> updateRoutine({
     required int routineId,
     required String title,
-    required bool active,
-    List<_i6.RoutineStep>? steps,
-    List<_i7.RoutineSegment>? segments,
+    required List<_i6.RoutineStep> steps,
   }) =>
       caller.callServerEndpoint<_i5.Routine>(
         'routine',
@@ -110,9 +110,7 @@ class EndpointRoutine extends _i1.EndpointRef {
         {
           'routineId': routineId,
           'title': title,
-          'active': active,
           'steps': steps,
-          'segments': segments,
         },
       );
 
@@ -121,6 +119,31 @@ class EndpointRoutine extends _i1.EndpointRef {
       caller.callServerEndpoint<_i5.Routine>(
         'routine',
         'deleteRoutine',
+        {'routineId': routineId},
+      );
+
+  /// Creates a [RoutineRecord] and registers a future call to be invoked in 24 hours to check for
+  /// its completion.
+  _i2.Future<_i9.RoutineRecord> startRoutine(int routineId) =>
+      caller.callServerEndpoint<_i9.RoutineRecord>(
+        'routine',
+        'startRoutine',
+        {'routineId': routineId},
+      );
+
+  /// Marks a [RoutineRecord] as complete and cancels the future call tied to it.
+  _i2.Future<_i9.RoutineRecord> completeRoutine(int routineId) =>
+      caller.callServerEndpoint<_i9.RoutineRecord>(
+        'routine',
+        'completeRoutine',
+        {'routineId': routineId},
+      );
+
+  /// Marks a [RoutineRecord] as aborted and cancels the future call tied to it.
+  _i2.Future<_i9.RoutineRecord> abortRoutine(int routineId) =>
+      caller.callServerEndpoint<_i9.RoutineRecord>(
+        'routine',
+        'abortRoutine',
         {'routineId': routineId},
       );
 }
@@ -134,20 +157,20 @@ class EndpointTask extends _i1.EndpointRef {
   String get name => 'task';
 
   /// Get tasks for a [User].
-  _i2.Future<List<_i8.Task>> getTasks(int page) =>
-      caller.callServerEndpoint<List<_i8.Task>>(
+  _i2.Future<List<_i10.Task>> getTasks(int page) =>
+      caller.callServerEndpoint<List<_i10.Task>>(
         'task',
         'getTasks',
         {'page': page},
       );
 
   /// Create a [Task].
-  _i2.Future<_i8.Task> createTask({
+  _i2.Future<_i10.Task> createTask({
     required String title,
     String? description,
-    required _i9.UserAbilityStats abilityExpValues,
+    required _i11.UserAbilityStats abilityExpValues,
   }) =>
-      caller.callServerEndpoint<_i8.Task>(
+      caller.callServerEndpoint<_i10.Task>(
         'task',
         'createTask',
         {
@@ -158,21 +181,21 @@ class EndpointTask extends _i1.EndpointRef {
       );
 
   /// Toggles the completion state of a [Task].
-  _i2.Future<_i10.UserWithTask> toggleTaskComplete(int taskId) =>
-      caller.callServerEndpoint<_i10.UserWithTask>(
+  _i2.Future<_i12.UserWithTask> toggleTaskComplete(int taskId) =>
+      caller.callServerEndpoint<_i12.UserWithTask>(
         'task',
         'toggleTaskComplete',
         {'taskId': taskId},
       );
 
   /// Update a [Task].
-  _i2.Future<_i8.Task> updateTask({
+  _i2.Future<_i10.Task> updateTask({
     required int taskId,
     required String title,
     String? description,
-    required _i9.UserAbilityStats abilityExpValues,
+    required _i11.UserAbilityStats abilityExpValues,
   }) =>
-      caller.callServerEndpoint<_i8.Task>(
+      caller.callServerEndpoint<_i10.Task>(
         'task',
         'updateTask',
         {
@@ -184,8 +207,8 @@ class EndpointTask extends _i1.EndpointRef {
       );
 
   /// Deletes a [Task].
-  _i2.Future<_i8.Task> deleteTask(int taskId) =>
-      caller.callServerEndpoint<_i8.Task>(
+  _i2.Future<_i10.Task> deleteTask(int taskId) =>
+      caller.callServerEndpoint<_i10.Task>(
         'task',
         'deleteTask',
         {'taskId': taskId},
@@ -208,7 +231,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
           host,
-          _i11.Protocol(),
+          _i13.Protocol(),
           securityContext: securityContext,
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,

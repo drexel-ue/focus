@@ -1,0 +1,12 @@
+### The status of a [RoutineRecord].
+enum: RoutineRecordStatus
+serialized: byName
+values:
+  ### The [Routine] is currently running.
+  - running
+  ### The [Routine] was completed.
+  - completed
+  ### The [Routine] was aborted by the user.
+  - aborted
+  ### The [Routine] was not completed within 24 hours.
+  - timedOut

@@ -1,18 +1,18 @@
-### Repeatable sequence of [Step]s.
+### A repeatable series of steps.
 class: Routine
 table: routines
 fields:
-  ### Timestamp of entry into database.
+  ### Timestamp of model creation.
   createdAt: DateTime
   ### Timestamp of last update to database entry.
   lastModifiedAt: DateTime
-  ### Id of [User] that created this routine.
+  ### Id of the [User] that created this task.
   userId: int
   ### Title.
   title: String
-  ### Is this routine active?
-  active: bool
-  ### [Step]s of this routine.
-  steps: List<RoutineStep>?, relation
-  ### Collection of steps.
-  segments: List<RoutineSegment>?, relation
+  ### [RoutineStep]s to complete.
+  steps: List<RoutineStep>
+  ### [UserBuff]s awarded upon completion of this routine.
+  buffs: List<UserBuff>
+  ### [UserDebuff]s to apply upon failure to complete this routine within 24 hours of starting it.
+  debuffs: List<UserDebuff>

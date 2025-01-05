@@ -8,6 +8,9 @@ routine:
   - createRoutine:
   - updateRoutine:
   - deleteRoutine:
+  - startRoutine:
+  - completeRoutine:
+  - abortRoutine:
 task:
   - getTasks:
   - createTask:

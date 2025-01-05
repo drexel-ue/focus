@@ -1,0 +1,5 @@
+### Default exception when dealing with [FutureCall]s.
+exception: FutureCallException
+fields:
+  ### Message
+  message: String

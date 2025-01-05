@@ -1,14 +1,15 @@
-### A par of a [Routine].
+### Step in a [Routine].
 class: RoutineStep
-table: routine_steps
 fields:
-  ### Timestamp of entry into database.
-  createdAt: DateTime
-  ### Timestamp of last update to database entry.
-  lastModifiedAt: DateTime
   ### Title.
   title: String
-  ### Description.
-  description: String?
-  ### Collection of [ExperiencePointValue]s to be rewarded upon completion of this task.
-  abilityExpValues: List<AbilityExperienceValue>
+  ### Type.
+  type: RoutineStepType
+  ### Optional [Duration] if type is [RoutineStepType.duration].
+  duration: Duration
+  ### Optional tally if type is [RoutineStepType.tally].
+  tally: int
+  ### How many times does this step repeat?
+  repeats: int, default=0
+  ### Collection of exp to be rewarded upon completion of this step.
+  abilityExpValues: UserAbilityStats
