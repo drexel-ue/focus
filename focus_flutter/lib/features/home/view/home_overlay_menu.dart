@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/home/repository/home_repository.dart';
-import 'package:focus_flutter/features/widget/focus_button.dart';
+import 'package:focus_flutter/features/widgets/focus_button.dart';
 
 /// Ovarlay menu for the [HomePage].
 @immutable

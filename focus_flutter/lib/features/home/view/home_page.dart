@@ -12,9 +12,9 @@ import 'package:focus_flutter/features/routines/view/routines_page.dart';
 import 'package:focus_flutter/features/settings/view/settings_page.dart';
 import 'package:focus_flutter/features/stats/view/stats_page.dart';
 import 'package:focus_flutter/features/tasks/view/tasks_page.dart';
-import 'package:focus_flutter/features/widget/focus_button.dart';
-import 'package:focus_flutter/features/widget/focus_painter.dart';
-import 'package:focus_flutter/features/widget/marquee_text.dart';
+import 'package:focus_flutter/features/widgets/focus_button.dart';
+import 'package:focus_flutter/features/widgets/focus_painter.dart';
+import 'package:focus_flutter/features/widgets/marquee_text.dart';
 import 'package:go_router/go_router.dart';
 
 /// Home Page.

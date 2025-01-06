@@ -7,9 +7,9 @@ import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/tasks/repository/tasks_repository.dart';
 import 'package:focus_flutter/features/tasks/view/delete_task_modal.dart';
 import 'package:focus_flutter/features/tasks/view/task_form.dart';
-import 'package:focus_flutter/features/widget/focus_button.dart';
-import 'package:focus_flutter/features/widget/focus_checkbox.dart';
-import 'package:focus_flutter/features/widget/focus_modal.dart';
+import 'package:focus_flutter/features/widgets/focus_button.dart';
+import 'package:focus_flutter/features/widgets/focus_checkbox.dart';
+import 'package:focus_flutter/features/widgets/focus_modal.dart';
 
 /// Tasks Page.
 @immutable

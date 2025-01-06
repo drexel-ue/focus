@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:focus_flutter/app/assets.dart';
-import 'package:focus_flutter/features/widget/focus_painter.dart';
+import 'package:focus_flutter/features/widgets/focus_painter.dart';
 
 /// Focus themed checkbox.
 @immutable

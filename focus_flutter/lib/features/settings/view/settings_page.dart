@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_flutter/features/auth/repository/auth_repository.dart';
-import 'package:focus_flutter/features/widget/focus_button.dart';
+import 'package:focus_flutter/features/widgets/focus_button.dart';
 
 /// Settings Page.
 @immutable

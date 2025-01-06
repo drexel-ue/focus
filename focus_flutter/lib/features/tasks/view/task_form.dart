@@ -5,9 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/tasks/repository/tasks_repository.dart';
-import 'package:focus_flutter/features/widget/digits_only_input_formatter.dart';
-import 'package:focus_flutter/features/widget/focus_button.dart';
-import 'package:focus_flutter/features/widget/loading_cover.dart';
+import 'package:focus_flutter/features/widgets/digits_only_input_formatter.dart';
+import 'package:focus_flutter/features/widgets/focus_button.dart';
+import 'package:focus_flutter/features/widgets/loading_cover.dart';
 
 /// Form for creating/editing a [Task].
 @immutable

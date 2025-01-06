@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/tasks/repository/tasks_repository.dart';
-import 'package:focus_flutter/features/widget/focus_button.dart';
-import 'package:focus_flutter/features/widget/loading_cover.dart';
+import 'package:focus_flutter/features/widgets/focus_button.dart';
+import 'package:focus_flutter/features/widgets/loading_cover.dart';
 
 /// Confirms deltion of a [Task].
 @immutable
