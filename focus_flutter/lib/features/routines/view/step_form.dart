@@ -160,24 +160,17 @@ class _StepFormState extends ConsumerState<StepForm> {
               },
             ),
             verticalMargin16,
-            Align(
-              alignment: Alignment.centerLeft,
-              child: DropdownMenu<RoutineStepType>(
-                initialSelection: _type,
-                dropdownMenuEntries: [
-                  for (final type in RoutineStepType.values) //
-                    DropdownMenuEntry(
-                      value: type,
-                      label: type.name,
-                    ),
-                ],
-                onSelected: (type) {
-                  if (type == null) {
-                    return;
-                  }
-                  setState(() => _type = type);
-                },
-              ),
+            SegmentedButton<RoutineStepType>(
+              showSelectedIcon: false,
+              selected: {_type},
+              segments: [
+                for (final type in RoutineStepType.values) //
+                  ButtonSegment(
+                    value: type,
+                    label: Text(type.name),
+                  ),
+              ],
+              onSelectionChanged: (values) => setState(() => _type = values.first),
             ),
             spacer,
             Row(

@@ -39,4 +39,7 @@ class AppColors {
 
   /// Icy Blue.
   static const icyBlue = Color(0xFF97C1E6);
+
+  /// Transparent.
+  static const transparent = Color(0x00000000);
 }

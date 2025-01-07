@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart' show focusedOutlineInputBorder, outlineInputBorder;
 import 'package:focus_flutter/app/routing.dart';
+import 'package:focus_flutter/app/theme.dart';
 import 'package:focus_flutter/features/auth/repository/clerk_auth_provider.dart';
 import 'package:focus_flutter/features/home/repository/home_repository.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -36,65 +37,7 @@ class FocusApp extends ConsumerWidget {
               debugShowCheckedModeBanner: false,
               title: 'Focus',
               routerConfig: ref.read(goRouterProvider),
-              theme: ThemeData(
-                useMaterial3: true,
-                iconTheme: const IconThemeData(color: Colors.white),
-                textTheme: GoogleFonts.robotoTextTheme().apply(
-                  bodyColor: Colors.white,
-                  displayColor: Colors.white,
-                  decorationColor: AppColors.white,
-                ),
-                listTileTheme: const ListTileThemeData(
-                  iconColor: AppColors.white,
-                  textColor: AppColors.white,
-                ),
-                buttonTheme: ButtonThemeData(
-                  textTheme: ButtonTextTheme.primary,
-                  colorScheme: ColorScheme.fromSeed(
-                    seedColor: Colors.black,
-                    surface: Colors.black,
-                    primary: Colors.white,
-                  ),
-                ),
-                colorScheme: ColorScheme.fromSeed(
-                  seedColor: Colors.black,
-                  surface: Colors.black,
-                  primary: Colors.white,
-                ),
-                inputDecorationTheme: const InputDecorationTheme(
-                  contentPadding: allPadding8,
-                  border: outlineInputBorder,
-                  focusedBorder: focusedOutlineInputBorder,
-                  enabledBorder: outlineInputBorder,
-                  hintStyle: TextStyle(
-                    color: Colors.white38,
-                  ),
-                ),
-                textSelectionTheme: const TextSelectionThemeData(
-                  cursorColor: Colors.white,
-                  selectionHandleColor: Colors.white,
-                  selectionColor: Colors.white12,
-                ),
-                dropdownMenuTheme: const DropdownMenuThemeData(
-                  // textStyle: TextStyle(color: Colors.white),
-                  inputDecorationTheme: InputDecorationTheme(
-                    iconColor: AppColors.white,
-                    suffixIconColor: AppColors.white,
-                  ),
-                  menuStyle: MenuStyle(
-                    elevation: WidgetStatePropertyAll(0.0),
-                    shape: WidgetStatePropertyAll(
-                      RoundedRectangleBorder(
-                        side: BorderSide(color: AppColors.white, width: 2.0),
-                      ),
-                    ),
-                    maximumSize: WidgetStatePropertyAll(Size.fromWidth(200.0)),
-                    backgroundColor: WidgetStatePropertyAll(AppColors.black),
-                    alignment: Alignment.bottomLeft,
-                  ),
-                ),
-                splashColor: Colors.transparent,
-              ),
+              theme: generateTheme(),
               builder: (BuildContext context, Widget? child) {
                 return Material(child: SafeArea(child: child!));
               },
