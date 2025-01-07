@@ -8,7 +8,8 @@ extension UserDeuffX on UserDebuff {
       UserDebuff.fatigued => AppColors.dullBrown,
       UserDebuff.undisciplined => AppColors.dullGray,
       UserDebuff.dunce => AppColors.drab,
-      UserDebuff.slacker => throw UnimplementedError(),
+      UserDebuff.slacker => AppColors.darkOliveGreen,
+      UserDebuff.coldMuscle => AppColors.icyBlue,
     };
   }
 }

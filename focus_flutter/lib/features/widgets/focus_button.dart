@@ -56,7 +56,7 @@ class FocusButton extends StatelessWidget {
           child: Center(
             child: Padding(
               padding: square ? allPadding4 : horizontalPadding10,
-              child: DefaultTextStyle(
+              child: DefaultTextStyle.merge(
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

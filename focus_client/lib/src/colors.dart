@@ -36,4 +36,7 @@ class AppColors {
 
   /// Dark Olive Green.
   static const darkOliveGreen = Color(0xFF556B2F);
+
+  /// Icy Blue.
+  static const icyBlue = Color(0xFF97C1E6);
 }

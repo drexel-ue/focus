@@ -13,7 +13,7 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 
 /// Negative modifiers for [Ability] exp gained.
 enum UserDebuff implements _i1.SerializableModel {
-  /// The [User] is sleep deprived. -5% to all exp gain.
+  /// The [User] is not well rested. -5% to all exp gain.
   fatigued,
 
   /// The [User] has failed to complete a [Task] or [Routine] in the past 3 days. -5% to all exp gain.
@@ -23,7 +23,10 @@ enum UserDebuff implements _i1.SerializableModel {
   dunce,
 
   /// The [User] has failed to complete a strength or agility based [Task] or [Routine] in the past 3 days. -2% to vitality exp gain.
-  slacker;
+  slacker,
+
+  /// The [User] has failed to complete a warm up. -2% to strength and agility exp gain.
+  coldMuscle;
 
   static UserDebuff fromJson(int index) {
     switch (index) {
@@ -35,6 +38,8 @@ enum UserDebuff implements _i1.SerializableModel {
         return dunce;
       case 3:
         return slacker;
+      case 4:
+        return coldMuscle;
       default:
         throw ArgumentError(
             'Value "$index" cannot be converted to "UserDebuff"');

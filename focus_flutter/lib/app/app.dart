@@ -60,6 +60,7 @@ class FocusApp extends ConsumerWidget {
                   selectionHandleColor: Colors.white,
                   selectionColor: Colors.white12,
                 ),
+                splashColor: Colors.transparent,
               ),
               builder: (BuildContext context, Widget? child) {
                 return Material(child: SafeArea(child: child!));
