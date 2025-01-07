@@ -2,3 +2,5 @@ focus_flutter/.env
 .dart_tool/
 pubspec.lock
 .DS_Store
+focus_server/.flutter-plugins-dependencies
+focus_server/.flutter-plugins
