@@ -172,6 +172,10 @@ class _StepFormState extends ConsumerState<StepForm> {
               ],
               onSelectionChanged: (values) => setState(() => _type = values.first),
             ),
+            if (_type != RoutineStepType.binary) ...[
+              verticalMargin16,
+              verticalMargin16,
+            ],
             spacer,
             Row(
               children: [
