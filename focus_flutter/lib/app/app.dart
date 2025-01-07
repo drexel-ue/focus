@@ -1,6 +1,7 @@
 import 'package:clerk_flutter/clerk_flutter.dart' hide outlineInputBorder;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart' show focusedOutlineInputBorder, outlineInputBorder;
 import 'package:focus_flutter/app/routing.dart';
 import 'package:focus_flutter/features/auth/repository/clerk_auth_provider.dart';
@@ -36,10 +37,24 @@ class FocusApp extends ConsumerWidget {
               title: 'Focus',
               routerConfig: ref.read(goRouterProvider),
               theme: ThemeData(
+                useMaterial3: true,
                 iconTheme: const IconThemeData(color: Colors.white),
                 textTheme: GoogleFonts.robotoTextTheme().apply(
                   bodyColor: Colors.white,
                   displayColor: Colors.white,
+                  decorationColor: AppColors.white,
+                ),
+                listTileTheme: const ListTileThemeData(
+                  iconColor: AppColors.white,
+                  textColor: AppColors.white,
+                ),
+                buttonTheme: ButtonThemeData(
+                  textTheme: ButtonTextTheme.primary,
+                  colorScheme: ColorScheme.fromSeed(
+                    seedColor: Colors.black,
+                    surface: Colors.black,
+                    primary: Colors.white,
+                  ),
                 ),
                 colorScheme: ColorScheme.fromSeed(
                   seedColor: Colors.black,
@@ -59,6 +74,24 @@ class FocusApp extends ConsumerWidget {
                   cursorColor: Colors.white,
                   selectionHandleColor: Colors.white,
                   selectionColor: Colors.white12,
+                ),
+                dropdownMenuTheme: const DropdownMenuThemeData(
+                  // textStyle: TextStyle(color: Colors.white),
+                  inputDecorationTheme: InputDecorationTheme(
+                    iconColor: AppColors.white,
+                    suffixIconColor: AppColors.white,
+                  ),
+                  menuStyle: MenuStyle(
+                    elevation: WidgetStatePropertyAll(0.0),
+                    shape: WidgetStatePropertyAll(
+                      RoundedRectangleBorder(
+                        side: BorderSide(color: AppColors.white, width: 2.0),
+                      ),
+                    ),
+                    maximumSize: WidgetStatePropertyAll(Size.fromWidth(200.0)),
+                    backgroundColor: WidgetStatePropertyAll(AppColors.black),
+                    alignment: Alignment.bottomLeft,
+                  ),
                 ),
                 splashColor: Colors.transparent,
               ),

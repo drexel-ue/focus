@@ -12,11 +12,6 @@ class RoutinesPage extends ConsumerStatefulWidget {
   /// Construcs a const [RoutinesPage].
   const RoutinesPage({super.key});
 
-  static const _formConstraints = BoxConstraints(
-    maxWidth: 500.0,
-    maxHeight: 700.0,
-  );
-
   @override
   ConsumerState<RoutinesPage> createState() => _RoutinesPageState();
 }
@@ -30,12 +25,14 @@ class _RoutinesPageState extends ConsumerState<RoutinesPage> {
     });
   }
 
-  void _showRoutineForm(BuildContext context, [Routine? routine]) => FocusModal.show(
-        context,
-        (BuildContext context, VoidCallback closeModal) =>
-            RoutineForm(close: closeModal, routine: routine),
-        constraints: RoutinesPage._formConstraints,
-      );
+  void _showRoutineForm(BuildContext context, [Routine? routine]) {
+    FocusModal.show(
+      context,
+      (BuildContext context, CloseModal closeModal) {
+        return RoutineForm(close: closeModal, routine: routine);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

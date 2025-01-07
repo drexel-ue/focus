@@ -19,8 +19,8 @@ abstract class RoutineStep
   RoutineStep._({
     required this.title,
     required this.type,
-    required this.duration,
-    required this.tally,
+    this.duration,
+    this.tally,
     int? repeats,
     required this.abilityExpValues,
   }) : repeats = repeats ?? 0;
@@ -28,8 +28,8 @@ abstract class RoutineStep
   factory RoutineStep({
     required String title,
     required _i2.RoutineStepType type,
-    required Duration duration,
-    required int tally,
+    Duration? duration,
+    int? tally,
     int? repeats,
     required _i3.UserAbilityStats abilityExpValues,
   }) = _RoutineStepImpl;
@@ -38,9 +38,10 @@ abstract class RoutineStep
     return RoutineStep(
       title: jsonSerialization['title'] as String,
       type: _i2.RoutineStepType.fromJson((jsonSerialization['type'] as String)),
-      duration:
-          _i1.DurationJsonExtension.fromJson(jsonSerialization['duration']),
-      tally: jsonSerialization['tally'] as int,
+      duration: jsonSerialization['duration'] == null
+          ? null
+          : _i1.DurationJsonExtension.fromJson(jsonSerialization['duration']),
+      tally: jsonSerialization['tally'] as int?,
       repeats: jsonSerialization['repeats'] as int,
       abilityExpValues: _i3.UserAbilityStats.fromJson(
           (jsonSerialization['abilityExpValues'] as Map<String, dynamic>)),
@@ -54,10 +55,10 @@ abstract class RoutineStep
   _i2.RoutineStepType type;
 
   /// Optional [Duration] if type is [RoutineStepType.duration].
-  Duration duration;
+  Duration? duration;
 
   /// Optional tally if type is [RoutineStepType.tally].
-  int tally;
+  int? tally;
 
   /// How many times does this step repeat?
   int repeats;
@@ -78,8 +79,8 @@ abstract class RoutineStep
     return {
       'title': title,
       'type': type.toJson(),
-      'duration': duration.toJson(),
-      'tally': tally,
+      if (duration != null) 'duration': duration?.toJson(),
+      if (tally != null) 'tally': tally,
       'repeats': repeats,
       'abilityExpValues': abilityExpValues.toJson(),
     };
@@ -90,8 +91,8 @@ abstract class RoutineStep
     return {
       'title': title,
       'type': type.toJson(),
-      'duration': duration.toJson(),
-      'tally': tally,
+      if (duration != null) 'duration': duration?.toJson(),
+      if (tally != null) 'tally': tally,
       'repeats': repeats,
       'abilityExpValues': abilityExpValues.toJsonForProtocol(),
     };
@@ -103,12 +104,14 @@ abstract class RoutineStep
   }
 }
 
+class _Undefined {}
+
 class _RoutineStepImpl extends RoutineStep {
   _RoutineStepImpl({
     required String title,
     required _i2.RoutineStepType type,
-    required Duration duration,
-    required int tally,
+    Duration? duration,
+    int? tally,
     int? repeats,
     required _i3.UserAbilityStats abilityExpValues,
   }) : super._(
@@ -124,16 +127,16 @@ class _RoutineStepImpl extends RoutineStep {
   RoutineStep copyWith({
     String? title,
     _i2.RoutineStepType? type,
-    Duration? duration,
-    int? tally,
+    Object? duration = _Undefined,
+    Object? tally = _Undefined,
     int? repeats,
     _i3.UserAbilityStats? abilityExpValues,
   }) {
     return RoutineStep(
       title: title ?? this.title,
       type: type ?? this.type,
-      duration: duration ?? this.duration,
-      tally: tally ?? this.tally,
+      duration: duration is Duration? ? duration : this.duration,
+      tally: tally is int? ? tally : this.tally,
       repeats: repeats ?? this.repeats,
       abilityExpValues: abilityExpValues ?? this.abilityExpValues.copyWith(),
     );

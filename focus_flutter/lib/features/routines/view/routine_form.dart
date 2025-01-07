@@ -4,7 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/routines/repository/routines_repository.dart';
+import 'package:focus_flutter/features/routines/view/step_form.dart';
+import 'package:focus_flutter/features/widgets/focus_button.dart';
 import 'package:focus_flutter/features/widgets/focus_choice_chip.dart';
+import 'package:focus_flutter/features/widgets/focus_modal.dart';
 import 'package:focus_flutter/features/widgets/loading_cover.dart';
 
 /// Form for creating/editing a [Routine].
@@ -32,6 +35,7 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
     ..addListener(_listener);
   late final _buffs = <UserBuff>{...?widget.routine?.buffs};
   late final _debuffs = <UserDebuff>{...?widget.routine?.debuffs};
+  late final _steps = <RoutineStep>[];
 
   void _listener() => setState(() {});
 
@@ -55,6 +59,24 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
     });
   }
 
+  void _onReorderSteps(int oldIndex, int newIndex) {}
+
+  Future<void> _addStep() async {
+    final step = await FocusModal.show(
+      context,
+      (BuildContext context, CloseModal<RoutineStep?> closeModal) {
+        return StepForm(close: closeModal);
+      },
+    );
+    if (step != null) {
+      _steps.add(step);
+    }
+  }
+
+  bool get _createEnabled => _titleController.text.isNotEmpty && _steps.isNotEmpty;
+
+  Future<void> _submit() async {}
+
   @override
   void dispose() {
     _titleController
@@ -69,47 +91,86 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
       loading: ref.watch(routinesRepositoryProvider).isLoading,
       child: Padding(
         padding: horizontalPadding16,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              verticalMargin16,
-              TextField(
-                controller: _titleController,
-                cursorColor: Colors.white,
-                decoration: const InputDecoration(
-                  hintText: 'Title',
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            verticalMargin16,
+            TextField(
+              controller: _titleController,
+              cursorColor: Colors.white,
+              decoration: const InputDecoration(
+                hintText: 'Title',
+              ),
+            ),
+            verticalMargin16,
+            Wrap(
+              spacing: 4.0,
+              children: [
+                for (final buff in UserBuff.values.whereNot((el) => el == UserBuff.disciplined)) //
+                  FocusChoiceChip(
+                    label: buff.name,
+                    selected: _buffs.contains(buff),
+                    selectedColor: buff.color,
+                    onSelected: (bool selected) => _onBuffSelected(selected, buff),
+                  ),
+              ],
+            ),
+            verticalMargin16,
+            Wrap(
+              spacing: 4.0,
+              children: [
+                for (final debuff in [UserDebuff.fatigued, UserDebuff.coldMuscle]) //
+                  FocusChoiceChip(
+                    label: debuff.name,
+                    selected: _debuffs.contains(debuff),
+                    selectedColor: debuff.color,
+                    onSelected: (bool selected) => _onDebuffSelected(selected, debuff),
+                  ),
+              ],
+            ),
+            verticalMargin16,
+            Expanded(
+              child: ReorderableListView.builder(
+                itemCount: _steps.length,
+                onReorder: _onReorderSteps,
+                shrinkWrap: true,
+                footer: ListTile(
+                  key: const ValueKey('add-step-tile'),
+                  title: const Text('Add step'),
+                  trailing: const Icon(Icons.add),
+                  onTap: _addStep,
                 ),
+                itemBuilder: (BuildContext context, int index) {
+                  final step = _steps[index];
+                  return ListTile(
+                    key: ValueKey(index),
+                    title: Text(step.title),
+                  );
+                },
               ),
-              verticalMargin16,
-              Wrap(
-                spacing: 4.0,
-                children: [
-                  for (final buff
-                      in UserBuff.values.whereNot((el) => el == UserBuff.disciplined)) //
-                    FocusChoiceChip(
-                      label: buff.name,
-                      selected: _buffs.contains(buff),
-                      selectedColor: buff.color,
-                      onSelected: (bool selected) => _onBuffSelected(selected, buff),
-                    ),
-                ],
-              ),
-              verticalMargin16,
-              Wrap(
-                spacing: 4.0,
-                children: [
-                  for (final debuff in [UserDebuff.fatigued, UserDebuff.coldMuscle]) //
-                    FocusChoiceChip(
-                      label: debuff.name,
-                      selected: _debuffs.contains(debuff),
-                      selectedColor: debuff.color,
-                      onSelected: (bool selected) => _onDebuffSelected(selected, debuff),
-                    ),
-                ],
-              ),
-            ],
-          ),
+            ),
+            verticalMargin16,
+            Row(
+              children: [
+                Expanded(
+                  child: FocusButton(
+                    onTap: () => widget.close(),
+                    child: const Text('Cancel'),
+                  ),
+                ),
+                horizontalMargin16,
+                Expanded(
+                  child: FocusButton(
+                    onTap: () => _submit(),
+                    filled: true,
+                    enabled: _createEnabled,
+                    child: Text(widget.routine != null ? 'Update' : 'Create'),
+                  ),
+                ),
+              ],
+            ),
+            verticalMargin16,
+          ],
         ),
       ),
     );

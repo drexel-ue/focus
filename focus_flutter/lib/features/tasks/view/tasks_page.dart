@@ -17,11 +17,6 @@ class TasksPage extends ConsumerStatefulWidget {
   /// Construcs a const [TasksPage].
   const TasksPage({super.key});
 
-  static const _formConstraints = BoxConstraints(
-    maxWidth: 500.0,
-    maxHeight: 700.0,
-  );
-
   @override
   ConsumerState<TasksPage> createState() => _TasksPageState();
 }
@@ -30,15 +25,19 @@ class _TasksPageState extends ConsumerState<TasksPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => ref.read(taskRepositoryProvider.notifier).loadTasks());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(taskRepositoryProvider.notifier).loadTasks();
+    });
   }
 
-  void _showTaskForm(BuildContext context, [Task? task]) => FocusModal.show(
-        context,
-        (BuildContext context, VoidCallback closeModal) => TaskForm(close: closeModal, task: task),
-        constraints: TasksPage._formConstraints,
-      );
+  void _showTaskForm(BuildContext context, [Task? task]) {
+    FocusModal.show(
+      context,
+      (BuildContext context, CloseModal closeModal) {
+        return TaskForm(close: closeModal, task: task);
+      },
+    );
+  }
 
   void _showDeleteModal(BuildContext context, Task task) => FocusModal.show(
         context,

@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:focus_flutter/app/layout.dart';
 
+/// Callback for closing a modal with an optional value.
+typedef CloseModal<T> = void Function([T? value]);
+
 /// Callback for rendering the content of the model. Provides a callback for closing the modal.
-typedef ModalBuilder = Widget Function(BuildContext context, VoidCallback closeModel);
+typedef ModalBuilder<T> = Widget Function(BuildContext context, CloseModal<T?> closeModel);
 
 /// Focus themed modal.
 @immutable
-class FocusModal extends StatefulWidget {
+class FocusModal<T> extends StatefulWidget {
   const FocusModal._({
     required this.builder,
-    this.constraints = const BoxConstraints(),
+    this.constraints = const BoxConstraints(
+      maxWidth: 500.0,
+      maxHeight: 700.0,
+    ),
   });
 
   /// Content builder.
-  final ModalBuilder builder;
+  final ModalBuilder<T> builder;
 
   /// Constraints for the modal.
   final BoxConstraints constraints;
@@ -51,10 +57,10 @@ class FocusModal extends StatefulWidget {
   }
 
   @override
-  State<FocusModal> createState() => _FocusModalState();
+  State<FocusModal<T>> createState() => _FocusModalState<T>();
 }
 
-class _FocusModalState extends State<FocusModal> with SingleTickerProviderStateMixin {
+class _FocusModalState<T> extends State<FocusModal<T>> with SingleTickerProviderStateMixin {
   late final AnimationController _animationController;
 
   @override
@@ -112,10 +118,10 @@ class _FocusModalState extends State<FocusModal> with SingleTickerProviderStateM
                 child: _animationController.isCompleted //
                     ? widget.builder(
                         context,
-                        () async {
+                        ([T? value]) async {
                           await _animationController.reverse();
                           if (context.mounted) {
-                            Navigator.of(context).pop();
+                            Navigator.of(context).pop(value);
                           }
                         },
                       )

@@ -6,9 +6,9 @@ fields:
   ### Type.
   type: RoutineStepType
   ### Optional [Duration] if type is [RoutineStepType.duration].
-  duration: Duration
+  duration: Duration?
   ### Optional tally if type is [RoutineStepType.tally].
-  tally: int
+  tally: int?
   ### How many times does this step repeat?
   repeats: int, default=0
   ### Collection of exp to be rewarded upon completion of this step.
