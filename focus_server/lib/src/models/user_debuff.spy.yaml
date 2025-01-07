@@ -1,5 +1,11 @@
 ### Negative modifiers for [Ability] exp gained.
 enum: UserDebuff
 values:
-  ### The [User] is sleep deprived.
+  ### The [User] is sleep deprived. -5% to all exp gain.
   - fatigued
+  ### The [User] has failed to complete a [Task] or [Routine] in the past 3 days. -5% to all exp gain.
+  - undisciplined
+  ### The [User] has failed to complete an intelligence based [Task] or [Routine] in the past 3 days. -2% to intelligence exp gain.
+  - dunce
+  ### The [User] has failed to complete a strength or agility based [Task] or [Routine] in the past 3 days. -2% to vitality exp gain.
+  - slacker
