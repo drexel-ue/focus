@@ -12,6 +12,7 @@ import 'package:focus_flutter/features/routines/view/routines_page.dart';
 import 'package:focus_flutter/features/settings/view/settings_page.dart';
 import 'package:focus_flutter/features/stats/view/stats_page.dart';
 import 'package:focus_flutter/features/tasks/view/tasks_page.dart';
+import 'package:focus_flutter/features/widgets/focus_border.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
 import 'package:focus_flutter/features/widgets/focus_painter.dart';
 import 'package:focus_flutter/features/widgets/marquee_text.dart';
@@ -86,14 +87,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Expanded(
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.white,
-                width: 2.0,
-                strokeAlign: BorderSide.strokeAlignCenter,
-              ),
-            ),
+          child: FocusBorder(
             child: PageView(
               controller: _pageController,
               physics: const NeverScrollableScrollPhysics(),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:focus_flutter/app/layout.dart';
+import 'package:focus_flutter/features/widgets/focus_border.dart';
 
 /// Callback for closing a modal with an optional value.
 typedef CloseModal<T> = void Function([T? value]);
@@ -70,14 +71,7 @@ class _FocusModalState<T> extends State<FocusModal<T>> {
           padding: allPadding32,
           child: ConstrainedBox(
             constraints: widget.constraints,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.white,
-                  width: 2.0,
-                ),
-                color: Colors.black,
-              ),
+            child: FocusBorder(
               child: SizeTransition(
                 axis: Axis.horizontal,
                 fixedCrossAxisSizeFactor: 1.0,
