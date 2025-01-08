@@ -163,6 +163,28 @@ class _StepFormState extends ConsumerState<StepForm> {
               },
             ),
             verticalMargin16,
+            Row(
+              children: [
+                Text('Repeat x${_repeats + 1}'),
+                horizontalMargin16,
+                FocusButton(
+                  onTap: () => setState(() {
+                    _repeats = (_repeats - 1).clamp(0, _repeats);
+                  }),
+                  square: true,
+                  child: const Text('-'),
+                ),
+                horizontalMargin16,
+                FocusButton(
+                  onTap: () => setState(() {
+                    _repeats += 1;
+                  }),
+                  square: true,
+                  child: const Text('+'),
+                ),
+              ],
+            ),
+            verticalMargin16,
             SegmentedButton<RoutineStepType>(
               showSelectedIcon: false,
               selected: {_type},
