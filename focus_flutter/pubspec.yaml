@@ -34,6 +34,7 @@ dependencies:
   collection: ^1.19.0
   flutter_slidable: ^3.1.2
   duration_picker: ^1.2.0
+  animated_flip_counter: ^0.3.4
 
 dependency_overrides:
   clerk_auth:

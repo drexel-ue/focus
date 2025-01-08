@@ -1,3 +1,4 @@
+import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:collection/collection.dart';
 import 'package:duration_picker/duration_picker.dart';
 import 'package:flutter/material.dart';
@@ -210,6 +211,72 @@ class _StepFormState extends ConsumerState<StepForm> {
                 onChange: (Duration duration) => setState(() => _duration = duration),
               ),
               verticalMargin16,
+            ],
+            if (_type == RoutineStepType.tally) ...[
+              verticalMargin16,
+              AnimatedFlipCounter(
+                value: _tally ?? 0,
+                textStyle: const TextStyle(fontSize: 72.0),
+              ),
+              verticalMargin16,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  FocusButton(
+                    onTap: () {
+                      if (_tally case int tally) {
+                        setState(() {
+                          _tally = (tally - 10).clamp(0, tally);
+                        });
+                      }
+                    },
+                    square: true,
+                    child: const Text('-10'),
+                  ),
+                  FocusButton(
+                    onTap: () {
+                      if (_tally case int tally) {
+                        setState(() {
+                          _tally = (tally - 1).clamp(0, tally);
+                        });
+                      }
+                    },
+                    square: true,
+                    child: const Text('-1'),
+                  ),
+                  FocusButton(
+                    onTap: () => setState(() => _tally = 0),
+                    square: true,
+                    child: const Text('0'),
+                  ),
+                  FocusButton(
+                    onTap: () {
+                      setState(() {
+                        if (_tally case int tally) {
+                          _tally = tally + 1;
+                        } else {
+                          _tally = 1;
+                        }
+                      });
+                    },
+                    square: true,
+                    child: const Text('+1'),
+                  ),
+                  FocusButton(
+                    onTap: () {
+                      setState(() {
+                        if (_tally case int tally) {
+                          _tally = tally + 10;
+                        } else {
+                          _tally = 10;
+                        }
+                      });
+                    },
+                    square: true,
+                    child: const Text('+10'),
+                  ),
+                ],
+              ),
             ],
             spacer,
             Row(
