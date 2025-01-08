@@ -12,8 +12,8 @@ enum HomeTab {
   /// Tasks.
   tasks('TASKS'),
 
-  /// Games.
-  games('GAMES'),
+  /// Tools..
+  tools('TOOLS'),
 
   /// Settings.
   settings('SETTINGS'),
