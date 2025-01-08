@@ -22,18 +22,12 @@ class _AbilityLevelProgressTilesState extends State<AbilityLevelProgressTiles>
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2500),
-    )
-      ..addListener(_listener)
-      ..forward();
+    )..forward();
   }
-
-  void _listener() => setState(() {});
 
   @override
   void dispose() {
-    _controller
-      ..removeListener(_listener)
-      ..dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -46,17 +40,12 @@ class _AbilityLevelProgressTilesState extends State<AbilityLevelProgressTiles>
         for (int index = 0; index < Ability.values.length; index++) //
           AblilityLevelProgressTile(
             ability: Ability.values[index],
-            animation: Tween<double>(
-              begin: 0.0,
-              end: 1.0,
-            ).animate(
-              CurvedAnimation(
-                parent: _controller,
-                curve: Interval(
-                  1 / Ability.values.length * index,
-                  1 / Ability.values.length * index + 1 / Ability.values.length,
-                  curve: Curves.easeInOut,
-                ),
+            animation: CurvedAnimation(
+              parent: _controller,
+              curve: Interval(
+                1 / Ability.values.length * index,
+                1 / Ability.values.length * index + 1 / Ability.values.length,
+                curve: Curves.easeInOut,
               ),
             ),
           ),
