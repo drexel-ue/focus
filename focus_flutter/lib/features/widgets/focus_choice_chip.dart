@@ -39,7 +39,7 @@ class FocusChoiceChip extends StatelessWidget {
       ),
       selected: selected,
       selectedColor: selectedColor,
-      checkmarkColor: offsetColor,
+      showCheckmark: false,
       elevation: 0.0,
       pressElevation: 0.0,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.zero)),
