@@ -33,7 +33,7 @@ class FocusModal<T> extends StatefulWidget {
     return await showGeneralDialog(
       context: context,
       barrierDismissible: true,
-      barrierLabel: '',
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
       transitionDuration: const Duration(milliseconds: 550),
       pageBuilder: (
         BuildContext context,
@@ -60,72 +60,47 @@ class FocusModal<T> extends StatefulWidget {
   State<FocusModal<T>> createState() => _FocusModalState<T>();
 }
 
-class _FocusModalState<T> extends State<FocusModal<T>> with SingleTickerProviderStateMixin {
-  late final AnimationController _animationController;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 550),
-    )
-      ..addListener(_listener)
-      ..forward();
-  }
-
-  void _listener() => setState(() {});
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
+class _FocusModalState<T> extends State<FocusModal<T>> {
   @override
   Widget build(BuildContext context) {
+    final transitionController = ModalRoute.of(context)!.animation!;
     return SafeArea(
       child: Center(
         child: Padding(
           padding: allPadding32,
           child: ConstrainedBox(
             constraints: widget.constraints,
-            child: FractionallySizedBox(
-              widthFactor: Tween<double>(begin: 0.0, end: 1.0)
-                  .animate(
-                    CurvedAnimation(
-                      parent: _animationController,
-                      curve: const Interval(0.0, 0.5, curve: Curves.easeOut),
-                    ),
-                  )
-                  .value,
-              heightFactor: Tween<double>(begin: 0.0, end: 1.0)
-                  .animate(
-                    CurvedAnimation(
-                      parent: _animationController,
-                      curve: const Interval(0.5, 1.0, curve: Curves.easeOut),
-                    ),
-                  )
-                  .value,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 2.0,
-                  ),
-                  color: Colors.black,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.white,
+                  width: 2.0,
                 ),
-                child: _animationController.isCompleted //
-                    ? widget.builder(
-                        context,
-                        ([T? value]) async {
-                          await _animationController.reverse();
-                          if (context.mounted) {
-                            Navigator.of(context).pop(value);
-                          }
-                        },
-                      )
-                    : const SizedBox.expand(),
+                color: Colors.black,
+              ),
+              child: SizeTransition(
+                axis: Axis.horizontal,
+                fixedCrossAxisSizeFactor: 1.0,
+                sizeFactor: CurvedAnimation(
+                  parent: transitionController,
+                  curve: const Interval(0.0, 0.5, curve: Curves.easeOut),
+                ),
+                child: SizeTransition(
+                  axis: Axis.vertical,
+                  fixedCrossAxisSizeFactor: 1.0,
+                  sizeFactor: CurvedAnimation(
+                    parent: transitionController,
+                    curve: const Interval(0.5, 1.0, curve: Curves.easeOut),
+                  ),
+                  child: widget.builder(
+                    context,
+                    ([T? value]) async {
+                      if (context.mounted) {
+                        Navigator.of(context).pop(value);
+                      }
+                    },
+                  ),
+                ),
               ),
             ),
           ),

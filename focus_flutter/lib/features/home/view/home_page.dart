@@ -88,7 +88,11 @@ class _HomePageState extends ConsumerState<HomePage> {
         Expanded(
           child: DecoratedBox(
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.white, width: 2.0),
+              border: Border.all(
+                color: Colors.white,
+                width: 2.0,
+                strokeAlign: BorderSide.strokeAlignCenter,
+              ),
             ),
             child: PageView(
               controller: _pageController,
@@ -114,20 +118,22 @@ class _HomePageState extends ConsumerState<HomePage> {
               child: Align(
                 alignment: Alignment.centerRight,
                 child: SizedBox(
-                  height: 46.0,
-                  child: AnimatedSize(
-                    duration: const Duration(milliseconds: 550),
-                    child: IntrinsicWidth(
-                      child: CustomPaint(
-                        painter: FocusPainter(
-                          color: color,
-                        ),
-                        child: InkWell(
-                          onTap: homeState.snack?.onTap,
-                          onLongPress: homeState.snack != null ? () => notifier.clearSnack() : null,
-                          child: Center(
-                            child: Padding(
-                              padding: horizontalPadding16,
+                  height: 48.0,
+                  child: CustomPaint(
+                    painter: FocusPainter(
+                      color: color,
+                    ),
+                    child: InkWell(
+                      onTap: homeState.snack?.onTap,
+                      onLongPress: homeState.snack != null ? () => notifier.clearSnack() : null,
+                      child: AnimatedSize(
+                        duration: const Duration(milliseconds: 550),
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: horizontalPadding16,
+                          child: UnconstrainedBox(
+                            constrainedAxis: Axis.vertical,
+                            child: Center(
                               child: MarqueeText(
                                 text,
                                 style: homeState.snack != null //

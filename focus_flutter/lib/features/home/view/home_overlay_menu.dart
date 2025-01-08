@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/home/repository/home_repository.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
@@ -32,6 +33,7 @@ class _OverlayMenuState extends ConsumerState<HomeOverlayMenu> with SingleTicker
   late final AnimationController _animationController;
   final _offsetAnimations = <Animation<double>>[];
   final _opacityAnimations = <Animation<double>>[];
+  late final Animation<Color?> _colorAnimation;
 
   @override
   void initState() {
@@ -42,9 +44,9 @@ class _OverlayMenuState extends ConsumerState<HomeOverlayMenu> with SingleTicker
       reverseDuration: const Duration(milliseconds: 250),
     );
     _initializeTweens();
-    _animationController
-      ..addListener(_animationControllerListener)
-      ..forward();
+    _colorAnimation = ColorTween(begin: AppColors.transparent, end: AppColors.black)
+        .animate(_animationController);
+    _animationController.forward();
   }
 
   void _initializeTweens() {
@@ -73,8 +75,6 @@ class _OverlayMenuState extends ConsumerState<HomeOverlayMenu> with SingleTicker
     }
   }
 
-  void _animationControllerListener() => setState(() {});
-
   Future<void> _homeRepositoryListener(HomeState? prev, HomeState next) async {
     if (!next.menuOpen) {
       await _animationController.reverse();
@@ -86,9 +86,7 @@ class _OverlayMenuState extends ConsumerState<HomeOverlayMenu> with SingleTicker
 
   @override
   void dispose() {
-    _animationController
-      ..removeListener(_animationControllerListener)
-      ..dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -99,33 +97,51 @@ class _OverlayMenuState extends ConsumerState<HomeOverlayMenu> with SingleTicker
       link: widget.layerLink,
       followerAnchor: Alignment.bottomRight,
       targetAnchor: Alignment.topRight,
-      child: ColoredBox(
-        color: Colors.black.withAlpha(
-          Tween<double>(begin: 0.0, end: 255.0).animate(_animationController).value.round(),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for (int index = 0; index < widget.tabs.length; index++) ...[
-              Transform.translate(
-                offset: Offset(0.0, _offsetAnimations[index].value),
-                child: Opacity(
-                  opacity: _opacityAnimations[index].value,
-                  child: FocusButton(
-                    onTap: () {
-                      final homeRepository = ref.read(homeRepositoryProvider.notifier);
-                      homeRepository
-                        ..tab = widget.tabs[index]
-                        ..closeMenu();
+      offset: const Offset(1.0, 0.0),
+      child: Padding(
+        padding: bottomPadding16,
+        child: AnimatedBuilder(
+          animation: _animationController,
+          builder: (context, child) {
+            return ColoredBox(
+              color: _colorAnimation.value!,
+              child: child,
+            );
+          },
+          child: Transform.translate(
+            offset: const Offset(-1.0, 0.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (int index = 0; index < widget.tabs.length; index++) ...[
+                  AnimatedBuilder(
+                    animation: _offsetAnimations[index],
+                    builder: (context, child) {
+                      return Transform.translate(
+                        offset: Offset(0.0, _offsetAnimations[index].value),
+                        child: child,
+                      );
                     },
-                    child: Text(widget.tabs[index].label),
+                    child: FadeTransition(
+                      opacity: _opacityAnimations[index],
+                      child: FocusButton(
+                        onTap: () {
+                          final homeRepository = ref.read(homeRepositoryProvider.notifier);
+                          homeRepository
+                            ..tab = widget.tabs[index]
+                            ..closeMenu();
+                        },
+                        child: Text(widget.tabs[index].label),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              verticalMargin16,
-            ],
-          ],
+                  if (index < widget.tabs.length - 1) //
+                    verticalMargin16,
+                ],
+              ],
+            ),
+          ),
         ),
       ),
     );

@@ -37,10 +37,13 @@ class FocusButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
+      width: square ? 48.0 : null,
+      height: 48.0,
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
           width: selected ? 2.5 : 2.0,
+          strokeAlign: BorderSide.strokeAlignCenter,
         ),
         color: !enabled
             ? Colors.grey
@@ -50,22 +53,18 @@ class FocusButton extends StatelessWidget {
       ),
       child: InkWell(
         onTap: enabled ? () => onTap() : null,
-        child: SizedBox(
-          height: 48.0,
-          width: square ? 48.0 : null,
-          child: Center(
-            child: Padding(
-              padding: square ? allPadding4 : horizontalPadding10,
-              child: DefaultTextStyle.merge(
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: filled ? Colors.black : Colors.white,
-                  fontWeight: selected ? FontWeight.w600 : null,
-                ),
-                child: child,
+        child: Center(
+          child: Padding(
+            padding: square ? allPadding4 : horizontalPadding10,
+            child: DefaultTextStyle.merge(
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: filled ? Colors.black : Colors.white,
+                fontWeight: selected ? FontWeight.w600 : null,
               ),
+              child: child,
             ),
           ),
         ),
