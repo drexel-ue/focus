@@ -33,6 +33,7 @@ dependencies:
   flutter_lorem: ^2.0.0
   collection: ^1.19.0
   flutter_slidable: ^3.1.2
+  duration_picker: ^1.2.0
 
 dependency_overrides:
   clerk_auth:

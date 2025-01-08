@@ -42,4 +42,7 @@ class AppColors {
 
   /// Transparent.
   static const transparent = Color(0x00000000);
+
+  /// Black Silver.
+  static const blackSilver = Color(0xFF737474);
 }

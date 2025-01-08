@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:duration_picker/duration_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,6 +36,7 @@ class _StepFormState extends ConsumerState<StepForm> {
     ..addListener(_listener);
   late RoutineStepType _type = widget.step?.type ?? RoutineStepType.binary;
   late Duration? _duration = widget.step?.duration;
+  BaseUnit _baseUnit = BaseUnit.second;
   late int? _tally = widget.step?.tally;
   late int _repeats = widget.step?.repeats ?? 0;
   late final _abilityExpValues = <Ability, TextEditingController>{
@@ -170,10 +172,43 @@ class _StepFormState extends ConsumerState<StepForm> {
                     label: Text(type.name),
                   ),
               ],
-              onSelectionChanged: (values) => setState(() => _type = values.first),
+              onSelectionChanged: (values) => setState(() {
+                _type = values.first;
+                switch (_type) {
+                  case RoutineStepType.binary:
+                    _duration = null;
+                    _tally = null;
+                  case RoutineStepType.duration:
+                    _tally = null;
+                  case RoutineStepType.tally:
+                    _duration = null;
+                }
+              }),
             ),
-            if (_type != RoutineStepType.binary) ...[
+            if (_type == RoutineStepType.duration) ...[
               verticalMargin16,
+              SegmentedButton<BaseUnit>(
+                showSelectedIcon: false,
+                selected: {_baseUnit},
+                segments: [
+                  for (final unit in BaseUnit.values) //
+                    ButtonSegment(
+                      value: unit,
+                      label: Text(
+                        unit.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                ],
+                onSelectionChanged: (values) => setState(() => _baseUnit = values.first),
+              ),
+              verticalMargin16,
+              DurationPicker(
+                duration: _duration ?? Duration.zero,
+                baseUnit: _baseUnit,
+                onChange: (Duration duration) => setState(() => _duration = duration),
+              ),
               verticalMargin16,
             ],
             spacer,

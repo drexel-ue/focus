@@ -5,6 +5,12 @@ import 'package:google_fonts/google_fonts.dart';
 
 /// Focus theme.
 ThemeData generateTheme() {
+  final colorScheme = ColorScheme.fromSeed(
+    seedColor: Colors.black,
+    surface: Colors.black,
+    primary: Colors.white,
+    secondary: AppColors.blackSilver,
+  );
   return ThemeData(
     useMaterial3: true,
     iconTheme: const IconThemeData(color: Colors.white),
@@ -19,11 +25,7 @@ ThemeData generateTheme() {
     ),
     buttonTheme: ButtonThemeData(
       textTheme: ButtonTextTheme.primary,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: Colors.black,
-        surface: Colors.black,
-        primary: Colors.white,
-      ),
+      colorScheme: colorScheme,
     ),
     segmentedButtonTheme: SegmentedButtonThemeData(
       style: ButtonStyle(
@@ -47,11 +49,7 @@ ThemeData generateTheme() {
         }),
       ),
     ),
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: Colors.black,
-      surface: Colors.black,
-      primary: Colors.white,
-    ),
+    colorScheme: colorScheme,
     inputDecorationTheme: const InputDecorationTheme(
       contentPadding: allPadding8,
       border: outlineInputBorder,
