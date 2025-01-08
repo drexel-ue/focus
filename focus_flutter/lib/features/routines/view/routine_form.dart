@@ -1,10 +1,12 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/routines/repository/routines_repository.dart';
 import 'package:focus_flutter/features/routines/view/step_form.dart';
+import 'package:focus_flutter/features/widgets/focus_border.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
 import 'package:focus_flutter/features/widgets/focus_choice_chip.dart';
 import 'package:focus_flutter/features/widgets/focus_modal.dart';
@@ -134,17 +136,52 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
                 itemCount: _steps.length,
                 onReorder: _onReorderSteps,
                 shrinkWrap: true,
-                footer: ListTile(
+                padding: allPadding1,
+                footer: InkWell(
                   key: const ValueKey('add-step-tile'),
-                  title: const Text('Add step'),
-                  trailing: const Icon(Icons.add),
                   onTap: _addStep,
+                  child: Padding(
+                    padding: allPadding8,
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: Text(
+                          'Add step',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextTheme.of(context).titleMedium,
+                        )),
+                        horizontalMargin16,
+                        const Icon(Icons.add),
+                      ],
+                    ),
+                  ),
                 ),
                 itemBuilder: (BuildContext context, int index) {
-                  final step = _steps[index];
-                  return ListTile(
+                  final step = _steps[0];
+                  return Padding(
                     key: ValueKey(index),
-                    title: Text(step.title),
+                    padding: index < _steps.length ? bottomPadding16 : EdgeInsets.zero,
+                    child: FocusBorder(
+                      child: Padding(
+                        padding: allPadding8,
+                        child: Row(
+                          children: [
+                            Expanded(
+                                child: Text(
+                              step.title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextTheme.of(context).titleMedium,
+                            )),
+                            horizontalMargin16,
+                            Text('x${step.repeats + 1}'),
+                            horizontalMargin16,
+                            const Icon(Icons.menu),
+                          ],
+                        ),
+                      ),
+                    ),
                   );
                 },
               ),
