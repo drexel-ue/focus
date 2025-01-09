@@ -11,6 +11,7 @@ import 'package:focus_flutter/features/widgets/digits_only_input_formatter.dart'
 import 'package:focus_flutter/features/widgets/focus_button.dart';
 import 'package:focus_flutter/features/widgets/focus_modal.dart';
 import 'package:focus_flutter/features/widgets/loading_cover.dart';
+import 'package:focus_flutter/features/widgets/scroll_shadow.dart';
 
 /// Form for creating/editing a [RoutineStep].
 @immutable
@@ -117,191 +118,201 @@ class _StepFormState extends ConsumerState<StepForm> {
   Widget build(BuildContext context) {
     return LoadingCover(
       loading: ref.watch(taskRepositoryProvider).isLoading,
-      child: Padding(
-        padding: allPadding16,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: _titleController,
-              cursorColor: Colors.white,
-              decoration: const InputDecoration(
-                hintText: 'Title',
-              ),
-            ),
-            verticalMargin16,
-            GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 200.0,
-                mainAxisExtent: 48.0,
-                mainAxisSpacing: 16.0,
-                crossAxisSpacing: 16.0,
-              ),
-              itemCount: Ability.values.length,
-              itemBuilder: (BuildContext context, int index) {
-                final ability = Ability.values[index];
-                return Row(
-                  children: [
-                    Expanded(child: Text(ability.name.substring(0, 3).toUpperCase())),
-                    horizontalMargin8,
-                    Expanded(
-                      child: TextField(
-                        controller: _abilityExpValues[ability],
-                        textAlign: TextAlign.center,
-                        textAlignVertical: TextAlignVertical.center,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          DigitOnlyInputFormatter(),
-                          FilteringTextInputFormatter.digitsOnly,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: ScrollShadow(
+              padding: allPadding16,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: _titleController,
+                    cursorColor: Colors.white,
+                    decoration: const InputDecoration(
+                      hintText: 'Title',
+                    ),
+                  ),
+                  verticalMargin16,
+                  GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 200.0,
+                      mainAxisExtent: 48.0,
+                      mainAxisSpacing: 16.0,
+                      crossAxisSpacing: 16.0,
+                    ),
+                    itemCount: Ability.values.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final ability = Ability.values[index];
+                      return Row(
+                        children: [
+                          Expanded(child: Text(ability.name.substring(0, 3).toUpperCase())),
+                          horizontalMargin8,
+                          Expanded(
+                            child: TextField(
+                              controller: _abilityExpValues[ability],
+                              textAlign: TextAlign.center,
+                              textAlignVertical: TextAlignVertical.center,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                DigitOnlyInputFormatter(),
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                            ),
+                          ),
                         ],
+                      );
+                    },
+                  ),
+                  verticalMargin16,
+                  Row(
+                    children: [
+                      Text('Repeat x${_repeats + 1}'),
+                      horizontalMargin16,
+                      FocusButton(
+                        onTap: () => setState(() {
+                          _repeats = (_repeats - 1).clamp(0, _repeats);
+                        }),
+                        square: true,
+                        child: const Text('-'),
                       ),
+                      horizontalMargin16,
+                      FocusButton(
+                        onTap: () => setState(() {
+                          _repeats += 1;
+                        }),
+                        square: true,
+                        child: const Text('+'),
+                      ),
+                    ],
+                  ),
+                  verticalMargin16,
+                  SegmentedButton<RoutineStepType>(
+                    showSelectedIcon: false,
+                    selected: {_type},
+                    segments: [
+                      for (final type in RoutineStepType.values) //
+                        ButtonSegment(
+                          value: type,
+                          label: Text(type.name),
+                        ),
+                    ],
+                    onSelectionChanged: (values) => setState(() {
+                      _type = values.first;
+                      switch (_type) {
+                        case RoutineStepType.binary:
+                          _duration = null;
+                          _tally = null;
+                        case RoutineStepType.duration:
+                          _tally = null;
+                        case RoutineStepType.tally:
+                          _duration = null;
+                      }
+                    }),
+                  ),
+                  if (_type == RoutineStepType.duration) ...[
+                    verticalMargin16,
+                    SegmentedButton<BaseUnit>(
+                      showSelectedIcon: false,
+                      selected: {_baseUnit},
+                      segments: [
+                        for (final unit in BaseUnit.values) //
+                          ButtonSegment(
+                            value: unit,
+                            label: Text(
+                              unit.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                      ],
+                      onSelectionChanged: (values) => setState(() => _baseUnit = values.first),
+                    ),
+                    verticalMargin16,
+                    DurationPicker(
+                      duration: _duration ?? Duration.zero,
+                      baseUnit: _baseUnit,
+                      onChange: (Duration duration) => setState(() => _duration = duration),
+                    ),
+                    verticalMargin16,
+                  ],
+                  if (_type == RoutineStepType.tally) ...[
+                    verticalMargin16,
+                    AnimatedFlipCounter(
+                      value: _tally ?? 0,
+                      textStyle: const TextStyle(fontSize: 72.0),
+                    ),
+                    verticalMargin16,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        FocusButton(
+                          onTap: () {
+                            if (_tally case int tally) {
+                              setState(() {
+                                _tally = (tally - 10).clamp(0, tally);
+                              });
+                            }
+                          },
+                          square: true,
+                          child: const Text('-10'),
+                        ),
+                        FocusButton(
+                          onTap: () {
+                            if (_tally case int tally) {
+                              setState(() {
+                                _tally = (tally - 1).clamp(0, tally);
+                              });
+                            }
+                          },
+                          square: true,
+                          child: const Text('-1'),
+                        ),
+                        FocusButton(
+                          onTap: () => setState(() => _tally = 0),
+                          square: true,
+                          child: const Text('0'),
+                        ),
+                        FocusButton(
+                          onTap: () {
+                            setState(() {
+                              if (_tally case int tally) {
+                                _tally = tally + 1;
+                              } else {
+                                _tally = 1;
+                              }
+                            });
+                          },
+                          square: true,
+                          child: const Text('+1'),
+                        ),
+                        FocusButton(
+                          onTap: () {
+                            setState(() {
+                              if (_tally case int tally) {
+                                _tally = tally + 10;
+                              } else {
+                                _tally = 10;
+                              }
+                            });
+                          },
+                          square: true,
+                          child: const Text('+10'),
+                        ),
+                      ],
                     ),
                   ],
-                );
-              },
-            ),
-            verticalMargin16,
-            Row(
-              children: [
-                Text('Repeat x${_repeats + 1}'),
-                horizontalMargin16,
-                FocusButton(
-                  onTap: () => setState(() {
-                    _repeats = (_repeats - 1).clamp(0, _repeats);
-                  }),
-                  square: true,
-                  child: const Text('-'),
-                ),
-                horizontalMargin16,
-                FocusButton(
-                  onTap: () => setState(() {
-                    _repeats += 1;
-                  }),
-                  square: true,
-                  child: const Text('+'),
-                ),
-              ],
-            ),
-            verticalMargin16,
-            SegmentedButton<RoutineStepType>(
-              showSelectedIcon: false,
-              selected: {_type},
-              segments: [
-                for (final type in RoutineStepType.values) //
-                  ButtonSegment(
-                    value: type,
-                    label: Text(type.name),
-                  ),
-              ],
-              onSelectionChanged: (values) => setState(() {
-                _type = values.first;
-                switch (_type) {
-                  case RoutineStepType.binary:
-                    _duration = null;
-                    _tally = null;
-                  case RoutineStepType.duration:
-                    _tally = null;
-                  case RoutineStepType.tally:
-                    _duration = null;
-                }
-              }),
-            ),
-            if (_type == RoutineStepType.duration) ...[
-              verticalMargin16,
-              SegmentedButton<BaseUnit>(
-                showSelectedIcon: false,
-                selected: {_baseUnit},
-                segments: [
-                  for (final unit in BaseUnit.values) //
-                    ButtonSegment(
-                      value: unit,
-                      label: Text(
-                        unit.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                ],
-                onSelectionChanged: (values) => setState(() => _baseUnit = values.first),
-              ),
-              verticalMargin16,
-              DurationPicker(
-                duration: _duration ?? Duration.zero,
-                baseUnit: _baseUnit,
-                onChange: (Duration duration) => setState(() => _duration = duration),
-              ),
-              verticalMargin16,
-            ],
-            if (_type == RoutineStepType.tally) ...[
-              verticalMargin16,
-              AnimatedFlipCounter(
-                value: _tally ?? 0,
-                textStyle: const TextStyle(fontSize: 72.0),
-              ),
-              verticalMargin16,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  FocusButton(
-                    onTap: () {
-                      if (_tally case int tally) {
-                        setState(() {
-                          _tally = (tally - 10).clamp(0, tally);
-                        });
-                      }
-                    },
-                    square: true,
-                    child: const Text('-10'),
-                  ),
-                  FocusButton(
-                    onTap: () {
-                      if (_tally case int tally) {
-                        setState(() {
-                          _tally = (tally - 1).clamp(0, tally);
-                        });
-                      }
-                    },
-                    square: true,
-                    child: const Text('-1'),
-                  ),
-                  FocusButton(
-                    onTap: () => setState(() => _tally = 0),
-                    square: true,
-                    child: const Text('0'),
-                  ),
-                  FocusButton(
-                    onTap: () {
-                      setState(() {
-                        if (_tally case int tally) {
-                          _tally = tally + 1;
-                        } else {
-                          _tally = 1;
-                        }
-                      });
-                    },
-                    square: true,
-                    child: const Text('+1'),
-                  ),
-                  FocusButton(
-                    onTap: () {
-                      setState(() {
-                        if (_tally case int tally) {
-                          _tally = tally + 10;
-                        } else {
-                          _tally = 10;
-                        }
-                      });
-                    },
-                    square: true,
-                    child: const Text('+10'),
-                  ),
                 ],
               ),
-            ],
-            spacer,
-            Row(
+            ),
+          ),
+          Padding(
+            padding: allPadding16 - topPadding16,
+            child: Row(
               children: [
                 Expanded(
                   child: FocusButton(
@@ -320,8 +331,8 @@ class _StepFormState extends ConsumerState<StepForm> {
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
