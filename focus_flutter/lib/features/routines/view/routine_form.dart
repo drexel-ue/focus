@@ -151,21 +151,21 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
                 onReorder: _onReorderSteps,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                padding: allPadding1,
                 footer: InkWell(
                   key: const ValueKey('add-step-tile'),
                   onTap: _addStep,
                   child: Padding(
-                    padding: allPadding8,
+                    padding: verticalPadding8,
                     child: Row(
                       children: [
                         Expanded(
-                            child: Text(
-                          'Add step',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextTheme.of(context).titleMedium,
-                        )),
+                          child: Text(
+                            'Add step',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextTheme.of(context).titleMedium,
+                          ),
+                        ),
                         horizontalMargin16,
                         const Icon(Icons.add),
                       ],
