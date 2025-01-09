@@ -11,6 +11,7 @@ import 'package:focus_flutter/features/widgets/focus_button.dart';
 import 'package:focus_flutter/features/widgets/focus_choice_chip.dart';
 import 'package:focus_flutter/features/widgets/focus_modal.dart';
 import 'package:focus_flutter/features/widgets/loading_cover.dart';
+import 'package:focus_flutter/features/widgets/scroll_shadow.dart';
 
 /// Form for creating/editing a [Routine].
 @immutable
@@ -91,21 +92,24 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
   Widget build(BuildContext context) {
     return LoadingCover(
       loading: ref.watch(routinesRepositoryProvider).isLoading,
-      child: Padding(
-        padding: horizontalPadding16,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            verticalMargin16,
-            TextField(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          verticalMargin16,
+          Padding(
+            padding: horizontalPadding16,
+            child: TextField(
               controller: _titleController,
               cursorColor: Colors.white,
               decoration: const InputDecoration(
                 hintText: 'Title',
               ),
             ),
-            verticalMargin16,
-            Wrap(
+          ),
+          verticalMargin16,
+          Padding(
+            padding: horizontalPadding16,
+            child: Wrap(
               spacing: 4.0,
               children: [
                 for (final buff in UserBuff.values.whereNot((el) => el == UserBuff.disciplined)) //
@@ -117,8 +121,11 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
                   ),
               ],
             ),
-            verticalMargin16,
-            Wrap(
+          ),
+          verticalMargin16,
+          Padding(
+            padding: horizontalPadding16,
+            child: Wrap(
               spacing: 4.0,
               children: [
                 for (final debuff in [UserDebuff.fatigued, UserDebuff.coldMuscle]) //
@@ -130,12 +137,16 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
                   ),
               ],
             ),
-            verticalMargin16,
-            Expanded(
+          ),
+          verticalMargin16,
+          Expanded(
+            child: ScrollShadow(
+              padding: horizontalPadding16 + bottomPadding16,
               child: ReorderableListView.builder(
                 itemCount: _steps.length,
                 onReorder: _onReorderSteps,
                 shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 padding: allPadding1,
                 footer: InkWell(
                   key: const ValueKey('add-step-tile'),
@@ -158,7 +169,7 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
                   ),
                 ),
                 itemBuilder: (BuildContext context, int index) {
-                  final step = _steps[0];
+                  final step = _steps[index];
                   return Padding(
                     key: ValueKey(index),
                     padding: index < _steps.length ? bottomPadding16 : EdgeInsets.zero,
@@ -168,12 +179,13 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
                         child: Row(
                           children: [
                             Expanded(
-                                child: Text(
-                              step.title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextTheme.of(context).titleMedium,
-                            )),
+                              child: Text(
+                                step.title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextTheme.of(context).titleMedium,
+                              ),
+                            ),
                             horizontalMargin16,
                             Text('x${step.repeats + 1}'),
                             horizontalMargin16,
@@ -186,8 +198,10 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
                 },
               ),
             ),
-            verticalMargin16,
-            Row(
+          ),
+          Padding(
+            padding: horizontalPadding16 + bottomPadding16,
+            child: Row(
               children: [
                 Expanded(
                   child: FocusButton(
@@ -206,9 +220,8 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
                 ),
               ],
             ),
-            verticalMargin16,
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
