@@ -11,6 +11,7 @@ ThemeData generateTheme() {
     primary: Colors.white,
     secondary: AppColors.blackSilver,
   );
+  const borderSide = BorderSide(color: AppColors.white, width: 2.0);
   return ThemeData(
     useMaterial3: true,
     iconTheme: const IconThemeData(color: Colors.white),
@@ -31,9 +32,8 @@ ThemeData generateTheme() {
       style: ButtonStyle(
         animationDuration: Duration.zero,
         elevation: const WidgetStatePropertyAll(0.0),
-        splashFactory: NoSplash.splashFactory,
         shadowColor: const WidgetStatePropertyAll(AppColors.transparent),
-        side: const WidgetStatePropertyAll(BorderSide(color: AppColors.white, width: 2.0)),
+        side: const WidgetStatePropertyAll(borderSide),
         shape: const WidgetStatePropertyAll(RoundedRectangleBorder()),
         backgroundColor: WidgetStateColor.resolveWith((Set<WidgetState> states) {
           if (states.contains(WidgetState.selected)) {
@@ -74,7 +74,7 @@ ThemeData generateTheme() {
         elevation: WidgetStatePropertyAll(0.0),
         shape: WidgetStatePropertyAll(
           RoundedRectangleBorder(
-            side: BorderSide(color: AppColors.white, width: 2.0),
+            side: borderSide,
           ),
         ),
         maximumSize: WidgetStatePropertyAll(Size.fromWidth(200.0)),
@@ -82,6 +82,17 @@ ThemeData generateTheme() {
         alignment: Alignment.bottomLeft,
       ),
     ),
-    splashColor: Colors.transparent,
+    expansionTileTheme: ExpansionTileThemeData(
+      textColor: AppColors.white,
+      collapsedTextColor: AppColors.white,
+      iconColor: AppColors.white,
+      collapsedIconColor: AppColors.white,
+      tilePadding: horizontalPadding16,
+      childrenPadding: horizontalPadding16,
+      shape: const Border(),
+      expansionAnimationStyle: AnimationStyle(curve: Curves.easeOut),
+      expandedAlignment: Alignment.topLeft,
+    ),
+    splashFactory: NoSplash.splashFactory,
   );
 }
