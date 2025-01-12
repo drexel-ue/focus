@@ -53,16 +53,20 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
   }
 
   void _onDebuffSelected(bool selected, UserDebuff debuff) {
-    setState(() {
-      if (selected) {
-        _debuffs.add(debuff);
-      } else {
-        _debuffs.remove(debuff);
-      }
-    });
+    if (selected) {
+      _debuffs.add(debuff);
+    } else {
+      _debuffs.remove(debuff);
+    }
   }
 
-  void _onReorderSteps(int oldIndex, int newIndex) {}
+  void _onReorderSteps(int oldIndex, int newIndex) {
+    if (oldIndex < newIndex) {
+      newIndex -= 1;
+    }
+    final step = _steps.removeAt(oldIndex);
+    _steps.insert(newIndex, step);
+  }
 
   Future<void> _addStep() async {
     final step = await FocusModal.show(
