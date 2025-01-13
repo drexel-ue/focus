@@ -90,40 +90,43 @@ class CrudListItemView<T> extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: InkWell(
-                      splashColor: Colors.transparent,
-                      onTap: () => onItemTapped(item),
-                      child: Row(
-                        children: [
-                          if (T == Task)
-                            FocusCheckbox(
-                              onTap: () => onCheckboxTapped?.call(item as Task),
-                              selected: (item as Task).completed,
-                            ),
-                          horizontalMargin16,
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  getTitle(item)!,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextTheme.of(context).titleMedium,
-                                ),
-                                if (getDescription(item) case String description) ...[
+                    child: SizedBox(
+                      height: 56.0,
+                      child: InkWell(
+                        splashColor: Colors.transparent,
+                        onTap: () => onItemTapped(item),
+                        child: Row(
+                          children: [
+                            if (T == Task)
+                              FocusCheckbox(
+                                onTap: () => onCheckboxTapped?.call(item as Task),
+                                selected: (item as Task).completed,
+                              ),
+                            horizontalMargin16,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
                                   Text(
-                                    description,
-                                    maxLines: 2,
+                                    getTitle(item)!,
+                                    maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
+                                    style: TextTheme.of(context).titleMedium,
                                   ),
+                                  if (getDescription(item) case String description) ...[
+                                    Text(
+                                      description,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
                                 ],
-                              ],
+                              ),
                             ),
-                          ),
-                          horizontalMargin16,
-                        ],
+                            horizontalMargin16,
+                          ],
+                        ),
                       ),
                     ),
                   ),
