@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:focus_client/focus_client.dart';
-import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/tasks/repository/tasks_repository.dart';
 import 'package:focus_flutter/features/tasks/view/delete_task_modal.dart';
 import 'package:focus_flutter/features/tasks/view/task_form.dart';
+import 'package:focus_flutter/features/widgets/crud_list_item_view.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
-import 'package:focus_flutter/features/widgets/focus_checkbox.dart';
 import 'package:focus_flutter/features/widgets/focus_modal.dart';
-import 'package:focus_flutter/features/widgets/scroll_shadow.dart';
 
 /// Tasks Page.
 @immutable
@@ -52,91 +49,14 @@ class _TasksPageState extends ConsumerState<TasksPage> {
   Widget build(BuildContext context) {
     var tasks = ref.watch(taskRepositoryProvider).value?.tasks ?? const <Task>[];
     final notifier = ref.read(taskRepositoryProvider.notifier);
-    if (tasks.isEmpty) {
-      return Center(
-        child: SizedBox(
-          width: 200.0,
-          child: FocusButton(
-            onTap: () => _showTaskForm(context),
-            child: const Text('Create task'),
-          ),
-        ),
-      );
-    }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Align(
-          alignment: Alignment.centerRight,
-          child: IconButton(
-            onPressed: () => _showTaskForm(context),
-            icon: const Icon(Icons.add, color: Colors.white),
-          ),
-        ),
-        Expanded(
-          child: ScrollShadow(
-            child: ListView.builder(
-              itemCount: tasks.length,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (BuildContext context, int index) {
-                final task = tasks[index];
-                return Padding(
-                  padding: bottomPadding16,
-                  child: Slidable(
-                    endActionPane: ActionPane(
-                      motion: const BehindMotion(),
-                      children: [
-                        SlidableAction(
-                          onPressed: (_) => _showDeleteModal(context, task),
-                          icon: Icons.delete_forever_sharp,
-                          backgroundColor: Colors.red,
-                          foregroundColor: Colors.white,
-                        ),
-                      ],
-                    ),
-                    child: InkWell(
-                      splashColor: Colors.transparent,
-                      onTap: () => _showTaskForm(context, task),
-                      child: Row(
-                        children: [
-                          FocusCheckbox(
-                            onTap: () => notifier.toggleTaskComplete(task.id!),
-                            selected: task.completed,
-                          ),
-                          horizontalMargin16,
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  task.title,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextTheme.of(context).titleMedium,
-                                ),
-                                if (task.description case String description) ...[
-                                  // verticalMargin4,
-                                  Text(
-                                    description,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ),
-      ],
+    return CrudListItemView<Task>(
+      items: tasks,
+      getTitle: (task) => task.title,
+      getDescription: (task) => task.description,
+      onAddItem: () => _showTaskForm(context),
+      onDeleteItem: (task) => _showDeleteModal(context, task),
+      onItemTapped: (task) => _showTaskForm(context, task),
+      onCheckboxTapped: (task) => notifier.toggleTaskComplete(task.id!),
     );
   }
 }
