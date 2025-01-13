@@ -40,7 +40,6 @@ class _RoutinesPageState extends ConsumerState<RoutinesPage> {
   @override
   Widget build(BuildContext context) {
     var routines = ref.watch(routinesRepositoryProvider).value?.routines ?? const <Routine>[];
-    final notifier = ref.read(routinesRepositoryProvider.notifier);
     return CrudListItemView<Routine>(
       items: routines,
       getTitle: (routine) => routine.title,
