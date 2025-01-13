@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart';
@@ -19,12 +18,8 @@ class RoutineForm extends ConsumerStatefulWidget {
   /// Constructs a const [RoutineForm].
   const RoutineForm({
     super.key,
-    required this.close,
     this.routine,
   });
-
-  /// Callback to call when cancelling.
-  final VoidCallback close;
 
   /// [Routine] to edit.
   final Routine? routine;
@@ -53,11 +48,13 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
   }
 
   void _onDebuffSelected(bool selected, UserDebuff debuff) {
-    if (selected) {
-      _debuffs.add(debuff);
-    } else {
-      _debuffs.remove(debuff);
-    }
+    setState(() {
+      if (selected) {
+        _debuffs.add(debuff);
+      } else {
+        _debuffs.remove(debuff);
+      }
+    });
   }
 
   void _onReorderSteps(int oldIndex, int newIndex) {
@@ -80,9 +77,31 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
     }
   }
 
+  Future<void> _editStep(int index) async {
+    final step = await FocusModal.show(
+      context,
+      (BuildContext context, CloseModal<RoutineStep?> closeModal) {
+        return StepForm(close: closeModal, step: _steps[index]);
+      },
+    );
+    if (step != null) {
+      _steps[index] = step;
+    }
+  }
+
   bool get _createEnabled => _titleController.text.isNotEmpty && _steps.isNotEmpty;
 
-  Future<void> _submit() async {}
+  Future<void> _submit() async {
+    // final routine = await ref.read(routinesRepositoryProvider.notifier).createRoutine(
+    //       title: _titleController.text,
+    //       steps: _steps,
+    //       buffs: _buffs,
+    //       debuffs: _debuffs,
+    //     );
+    // if (mounted) {
+    //   Navigator.of(context).pop();
+    // }
+  }
 
   @override
   void dispose() {
@@ -182,23 +201,26 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
                     key: ValueKey(index),
                     padding: index < _steps.length ? bottomPadding16 : EdgeInsets.zero,
                     child: FocusBorder(
-                      child: Padding(
-                        padding: allPadding8,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                step.title,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextTheme.of(context).titleMedium,
+                      child: InkWell(
+                        onTap: () => _editStep(index),
+                        child: Padding(
+                          padding: allPadding8,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  step.title,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextTheme.of(context).titleMedium,
+                                ),
                               ),
-                            ),
-                            horizontalMargin16,
-                            Text('x${step.repeats + 1}'),
-                            horizontalMargin16,
-                            const Icon(Icons.menu),
-                          ],
+                              horizontalMargin16,
+                              Text('x${step.repeats + 1}'),
+                              horizontalMargin16,
+                              const Icon(Icons.menu),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -213,7 +235,7 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
               children: [
                 Expanded(
                   child: FocusButton(
-                    onTap: () => widget.close(),
+                    onTap: () => Navigator.of(context).pop(),
                     child: const Text('Cancel'),
                   ),
                 ),

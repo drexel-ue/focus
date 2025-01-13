@@ -28,9 +28,7 @@ class _RoutinesPageState extends ConsumerState<RoutinesPage> {
   void _showRoutineForm(BuildContext context, [Routine? routine]) {
     FocusModal.show(
       context,
-      (BuildContext context, CloseModal closeModal) {
-        return RoutineForm(close: closeModal, routine: routine);
-      },
+      (BuildContext context, CloseModal closeModal) => RoutineForm(routine: routine),
     );
   }
 

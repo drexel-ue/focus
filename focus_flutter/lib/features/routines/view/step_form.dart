@@ -63,7 +63,8 @@ class _StepFormState extends ConsumerState<StepForm> {
         RoutineStepType.duration => step.duration != _duration,
         RoutineStepType.tally => step.tally != _tally,
       };
-      return titleChanged || expValuesChanged || typeValueChanged;
+      final repeatsChanged = step.repeats != _repeats;
+      return titleChanged || expValuesChanged || typeValueChanged || repeatsChanged;
     } else {
       if (_titleController.text.isEmpty) {
         return false;
@@ -178,7 +179,7 @@ class _StepFormState extends ConsumerState<StepForm> {
                           _repeats = (_repeats - 1).clamp(0, _repeats);
                         }),
                         square: true,
-                        child: const Text('-'),
+                        child: const Icon(Icons.remove),
                       ),
                       horizontalMargin16,
                       FocusButton(
@@ -186,7 +187,7 @@ class _StepFormState extends ConsumerState<StepForm> {
                           _repeats += 1;
                         }),
                         square: true,
-                        child: const Text('+'),
+                        child: const Icon(Icons.add),
                       ),
                     ],
                   ),

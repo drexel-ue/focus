@@ -34,7 +34,7 @@ class _TasksPageState extends ConsumerState<TasksPage> {
     FocusModal.show(
       context,
       (BuildContext context, CloseModal closeModal) {
-        return TaskForm(close: closeModal, task: task);
+        return TaskForm(task: task);
       },
     );
   }

@@ -15,12 +15,8 @@ class TaskForm extends ConsumerStatefulWidget {
   /// Constructs a const [TaskForm].
   const TaskForm({
     super.key,
-    required this.close,
     this.task,
   });
-
-  /// Callback to call when cancelling.
-  final VoidCallback close;
 
   /// [Task] to edit.
   final Task? task;
@@ -86,7 +82,7 @@ class _TaskFormState extends ConsumerState<TaskForm> {
           );
     }
     if (mounted) {
-      widget.close();
+      Navigator.of(context).pop();
     }
   }
 
@@ -173,7 +169,7 @@ class _TaskFormState extends ConsumerState<TaskForm> {
               children: [
                 Expanded(
                   child: FocusButton(
-                    onTap: () => widget.close(),
+                    onTap: () => Navigator.of(context).pop(),
                     child: const Text('Cancel'),
                   ),
                 ),
