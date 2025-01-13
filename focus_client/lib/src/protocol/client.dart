@@ -105,6 +105,8 @@ class EndpointRoutine extends _i1.EndpointRef {
     required int routineId,
     required String title,
     required List<_i6.RoutineStep> steps,
+    required List<_i7.UserBuff> buffs,
+    required List<_i8.UserDebuff> debuffs,
   }) =>
       caller.callServerEndpoint<_i5.Routine>(
         'routine',
@@ -113,6 +115,8 @@ class EndpointRoutine extends _i1.EndpointRef {
           'routineId': routineId,
           'title': title,
           'steps': steps,
+          'buffs': buffs,
+          'debuffs': debuffs,
         },
       );
 

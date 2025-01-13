@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/features/routines/repository/routines_repository.dart';
 import 'package:focus_flutter/features/routines/view/routine_form.dart';
+import 'package:focus_flutter/features/widgets/crud_list_item_view.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
 import 'package:focus_flutter/features/widgets/focus_modal.dart';
 
@@ -32,21 +33,21 @@ class _RoutinesPageState extends ConsumerState<RoutinesPage> {
     );
   }
 
+  void _showDeleteModal(BuildContext context, [Routine? routine]) {
+    // TODO(drexel-ue): implement
+  }
+
   @override
   Widget build(BuildContext context) {
     var routines = ref.watch(routinesRepositoryProvider).value?.routines ?? const <Routine>[];
     final notifier = ref.read(routinesRepositoryProvider.notifier);
-    if (routines.isEmpty) {
-      return Center(
-        child: SizedBox(
-          width: 200.0,
-          child: FocusButton(
-            onTap: () => _showRoutineForm(context),
-            child: const Text('Create routine'),
-          ),
-        ),
-      );
-    }
-    return const Center(child: Text('Routines'));
+    return CrudListItemView<Routine>(
+      items: routines,
+      getTitle: (routine) => routine.title,
+      getDescription: (routine) => null,
+      onAddItem: () => _showRoutineForm(context),
+      onDeleteItem: (routine) => _showDeleteModal(context, routine),
+      onItemTapped: (routine) => _showRoutineForm(context, routine),
+    );
   }
 }

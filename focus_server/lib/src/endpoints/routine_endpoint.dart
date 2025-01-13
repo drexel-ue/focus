@@ -77,6 +77,8 @@ class RoutineEndpoint extends Endpoint {
     required int routineId,
     required String title,
     required List<RoutineStep> steps,
+    required List<UserBuff> buffs,
+    required List<UserDebuff> debuffs,
   }) async {
     return await session.db.transaction((Transaction transaction) async {
       try {
@@ -89,7 +91,9 @@ class RoutineEndpoint extends Endpoint {
         routine
           ..lastModifiedAt = now
           ..title = title
-          ..steps = steps;
+          ..steps = steps
+          ..buffs = buffs
+          ..debuffs = debuffs;
         return await Routine.db.updateRow(session, routine, transaction: transaction);
       } catch (error, stackTrace) {
         session.log(

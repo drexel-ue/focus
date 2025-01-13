@@ -95,13 +95,12 @@ class CrudListItemView<T> extends StatelessWidget {
                       onTap: () => onItemTapped(item),
                       child: Row(
                         children: [
-                          if (T == Task) ...[
+                          if (T == Task)
                             FocusCheckbox(
                               onTap: () => onCheckboxTapped?.call(item as Task),
                               selected: (item as Task).completed,
                             ),
-                            horizontalMargin16,
-                          ],
+                          horizontalMargin16,
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -123,6 +122,7 @@ class CrudListItemView<T> extends StatelessWidget {
                               ],
                             ),
                           ),
+                          horizontalMargin16,
                         ],
                       ),
                     ),

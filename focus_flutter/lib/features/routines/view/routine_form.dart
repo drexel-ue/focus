@@ -33,7 +33,7 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
     ..addListener(_listener);
   late final _buffs = <UserBuff>{...?widget.routine?.buffs};
   late final _debuffs = <UserDebuff>{...?widget.routine?.debuffs};
-  late final _steps = <RoutineStep>[];
+  late final _steps = <RoutineStep>[...?widget.routine?.steps];
 
   void _listener() => setState(() {});
 
@@ -92,15 +92,25 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
   bool get _createEnabled => _titleController.text.isNotEmpty && _steps.isNotEmpty;
 
   Future<void> _submit() async {
-    // final routine = await ref.read(routinesRepositoryProvider.notifier).createRoutine(
-    //       title: _titleController.text,
-    //       steps: _steps,
-    //       buffs: _buffs,
-    //       debuffs: _debuffs,
-    //     );
-    // if (mounted) {
-    //   Navigator.of(context).pop();
-    // }
+    if (widget.routine case Routine routine) {
+      await ref.read(routinesRepositoryProvider.notifier).updateRoutine(
+            routineId: routine.id!,
+            title: _titleController.text.trim(),
+            steps: _steps,
+            buffs: _buffs.toList(),
+            debuffs: _debuffs.toList(),
+          );
+    } else {
+      await ref.read(routinesRepositoryProvider.notifier).createRoutine(
+            title: _titleController.text.trim(),
+            steps: _steps,
+            buffs: _buffs.toList(),
+            debuffs: _debuffs.toList(),
+          );
+    }
+    if (mounted) {
+      Navigator.of(context).pop();
+    }
   }
 
   @override

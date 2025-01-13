@@ -329,6 +329,8 @@ class _RoutineEndpoint {
     required int routineId,
     required String title,
     required List<_i7.RoutineStep> steps,
+    required List<_i8.UserBuff> buffs,
+    required List<_i9.UserDebuff> debuffs,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -345,6 +347,8 @@ class _RoutineEndpoint {
             'routineId': routineId,
             'title': title,
             'steps': steps,
+            'buffs': buffs,
+            'debuffs': debuffs,
           }),
           serializationManager: _serializationManager,
         );

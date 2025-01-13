@@ -135,10 +135,11 @@ class TasksRepository extends AsyncNotifier<TaskState>
       state = AsyncData(currentState.requireValue.copyWith(tasks: tasks));
       homeRepo.showPositiveSnack('Updated task: ${task.title}');
     } catch (error, stackTrace) {
-      logSevere('error in createTask', error, stackTrace);
+      logSevere('error in updateTask', error, stackTrace);
       state = AsyncError<TaskState>(error, stackTrace).copyWithPrevious(currentState);
       homeRepo.showNegativeSnack('Failed to update task: $title. Tap to retry.', () async {
-        await createTask(
+        await updateTask(
+          taskId: taskId,
           title: title,
           description: description,
           abilityExpValues: abilityExpValues,

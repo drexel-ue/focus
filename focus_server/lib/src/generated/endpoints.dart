@@ -182,6 +182,16 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<List<_i7.RoutineStep>>(),
               nullable: false,
             ),
+            'buffs': _i1.ParameterDescription(
+              name: 'buffs',
+              type: _i1.getType<List<_i8.UserBuff>>(),
+              nullable: false,
+            ),
+            'debuffs': _i1.ParameterDescription(
+              name: 'debuffs',
+              type: _i1.getType<List<_i9.UserDebuff>>(),
+              nullable: false,
+            ),
           },
           call: (
             _i1.Session session,
@@ -192,6 +202,8 @@ class Endpoints extends _i1.EndpointDispatch {
             routineId: params['routineId'],
             title: params['title'],
             steps: params['steps'],
+            buffs: params['buffs'],
+            debuffs: params['debuffs'],
           ),
         ),
         'deleteRoutine': _i1.MethodConnector(

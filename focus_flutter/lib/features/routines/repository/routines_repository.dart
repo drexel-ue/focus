@@ -89,6 +89,68 @@ class RoutinesRepository extends AsyncNotifier<RoutinesState>
     }
   }
 
+  /// Updates a [Routine].
+  Future<void> updateRoutine({
+    required int routineId,
+    required String title,
+    required List<UserBuff> buffs,
+    required List<UserDebuff> debuffs,
+    required List<RoutineStep> steps,
+  }) async {
+    final currentState = state;
+    try {
+      state = const AsyncLoading<RoutinesState>().copyWithPrevious(currentState);
+      homeRepo.showSnack('Updating routine: $title...');
+      final routine = await refreshIfNeeded((api) async {
+        return await api.routine.updateRoutine(
+          routineId: routineId,
+          title: title,
+          steps: steps,
+          buffs: buffs,
+          debuffs: debuffs,
+        );
+      });
+      final index =
+          currentState.requireValue.routines.indexWhere((element) => element.id == routineId);
+      final routines = currentState.requireValue.routines;
+      routines[index] = routine!;
+      state = AsyncData(currentState.requireValue.copyWith(routines: routines));
+      homeRepo.showPositiveSnack('Updated routine: ${routine.title}');
+    } catch (error, stackTrace) {
+      logSevere('error in updateRoutine', error, stackTrace);
+      state = AsyncError<RoutinesState>(error, stackTrace).copyWithPrevious(currentState);
+      homeRepo.showNegativeSnack('Failed to update routine: $title. Tap to retry.', () async {
+        await updateRoutine(
+          routineId: routineId,
+          title: title,
+          buffs: buffs,
+          debuffs: debuffs,
+          steps: steps,
+        );
+      });
+    }
+  }
+
+  /// Deletes a [Routine].
+  Future<void> deleteRoutine(int routineId) async {
+    final currentState = state;
+    try {
+      state = const AsyncLoading<RoutinesState>().copyWithPrevious(currentState);
+      final routine =
+          await refreshIfNeeded((api) async => await api.routine.deleteRoutine(routineId));
+      final routines = currentState.requireValue.routines
+        ..removeWhere((element) => element.id == routineId);
+      state = AsyncData(currentState.requireValue.copyWith(routines: routines));
+      homeRepo.showPositiveSnack('Deleted routine: ${routine!.title}');
+    } catch (error, stackTrace) {
+      logSevere('error in deleteRoutine', error, stackTrace);
+      state = AsyncError<RoutinesState>(error, stackTrace).copyWithPrevious(currentState);
+      homeRepo.showNegativeSnack('Failed to delete routine. Tap to retry.', () async {
+        await deleteRoutine(routineId);
+      });
+    }
+  }
+
   /// Reset state.
   void logout() => state = const AsyncData(RoutinesState());
 
