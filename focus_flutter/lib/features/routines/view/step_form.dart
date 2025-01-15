@@ -312,7 +312,7 @@ class _StepFormState extends ConsumerState<StepForm> {
             ),
           ),
           Padding(
-            padding: allPadding16 - topPadding16,
+            padding: allPadding16,
             child: Row(
               children: [
                 Expanded(

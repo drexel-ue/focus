@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/features/routines/repository/routines_repository.dart';
+import 'package:focus_flutter/features/routines/view/delete_routine_modal.dart';
 import 'package:focus_flutter/features/routines/view/routine_form.dart';
 import 'package:focus_flutter/features/widgets/crud_list_item_view.dart';
 import 'package:focus_flutter/features/widgets/focus_modal.dart';
@@ -32,9 +33,14 @@ class _RoutinesPageState extends ConsumerState<RoutinesPage> {
     );
   }
 
-  void _showDeleteModal(BuildContext context, [Routine? routine]) {
-    // TODO(drexel-ue): implement
-  }
+  void _showDeleteModal(BuildContext context, Routine routine) => FocusModal.show(
+        context,
+        (_, __) => DeleteRoutineModal(routine: routine),
+        constraints: const BoxConstraints(
+          maxWidth: 500.0,
+          maxHeight: 700.0,
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {

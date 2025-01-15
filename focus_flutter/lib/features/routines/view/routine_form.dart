@@ -140,40 +140,46 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
             ),
           ),
           verticalMargin16,
-          ExpansionTile(
-            title: Text('Buffs ${_buffs.isNotEmpty ? '(${_buffs.length})' : ''}'),
-            children: [
-              Wrap(
-                spacing: 4.0,
-                children: [
-                  for (final buff
-                      in UserBuff.values.whereNot((el) => el == UserBuff.disciplined)) //
-                    FocusChoiceChip(
-                      label: buff.name,
-                      selected: _buffs.contains(buff),
-                      selectedColor: buff.color,
-                      onSelected: (bool selected) => _onBuffSelected(selected, buff),
-                    ),
-                ],
-              ),
-            ],
+          Padding(
+            padding: horizontalPadding16,
+            child: ExpansionTile(
+              title: Text('Buffs ${_buffs.isNotEmpty ? '(${_buffs.length})' : ''}'),
+              children: [
+                Wrap(
+                  spacing: 4.0,
+                  children: [
+                    for (final buff
+                        in UserBuff.values.whereNot((el) => el == UserBuff.disciplined)) //
+                      FocusChoiceChip(
+                        label: buff.name,
+                        selected: _buffs.contains(buff),
+                        selectedColor: buff.color,
+                        onSelected: (bool selected) => _onBuffSelected(selected, buff),
+                      ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          ExpansionTile(
-            title: Text('Debuffs ${_debuffs.isNotEmpty ? '(${_debuffs.length})' : ''}'),
-            children: [
-              Wrap(
-                spacing: 4.0,
-                children: [
-                  for (final debuff in [UserDebuff.fatigued, UserDebuff.coldMuscle]) //
-                    FocusChoiceChip(
-                      label: debuff.name,
-                      selected: _debuffs.contains(debuff),
-                      selectedColor: debuff.color,
-                      onSelected: (bool selected) => _onDebuffSelected(selected, debuff),
-                    ),
-                ],
-              ),
-            ],
+          Padding(
+            padding: horizontalPadding16,
+            child: ExpansionTile(
+              title: Text('Debuffs ${_debuffs.isNotEmpty ? '(${_debuffs.length})' : ''}'),
+              children: [
+                Wrap(
+                  spacing: 4.0,
+                  children: [
+                    for (final debuff in [UserDebuff.fatigued, UserDebuff.coldMuscle]) //
+                      FocusChoiceChip(
+                        label: debuff.name,
+                        selected: _debuffs.contains(debuff),
+                        selectedColor: debuff.color,
+                        onSelected: (bool selected) => _onDebuffSelected(selected, debuff),
+                      ),
+                  ],
+                ),
+              ],
+            ),
           ),
           verticalMargin16,
           Expanded(
@@ -240,7 +246,7 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
             ),
           ),
           Padding(
-            padding: horizontalPadding16 + bottomPadding16,
+            padding: allPadding16,
             child: Row(
               children: [
                 Expanded(
