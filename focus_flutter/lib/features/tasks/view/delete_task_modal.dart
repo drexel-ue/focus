@@ -13,14 +13,10 @@ class DeleteTaskModal extends ConsumerWidget {
   const DeleteTaskModal({
     super.key,
     required this.task,
-    required this.close,
   });
 
   /// [Task] in question.
   final Task task;
-
-  /// Callback when cancel is pressed.
-  final VoidCallback close;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -79,7 +75,7 @@ class DeleteTaskModal extends ConsumerWidget {
               children: [
                 Expanded(
                   child: FocusButton(
-                    onTap: () => close(),
+                    onTap: () => Navigator.of(context).pop(),
                     child: const Text('Cancel'),
                   ),
                 ),
@@ -88,7 +84,9 @@ class DeleteTaskModal extends ConsumerWidget {
                   child: FocusButton(
                     onTap: () async {
                       await ref.read(taskRepositoryProvider.notifier).deleteTask(task.id!);
-                      close();
+                      if (context.mounted) {
+                        Navigator.of(context).pop();
+                      }
                     },
                     filled: true,
                     child: const Text('Delete'),

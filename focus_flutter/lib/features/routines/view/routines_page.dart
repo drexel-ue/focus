@@ -4,7 +4,6 @@ import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/features/routines/repository/routines_repository.dart';
 import 'package:focus_flutter/features/routines/view/routine_form.dart';
 import 'package:focus_flutter/features/widgets/crud_list_item_view.dart';
-import 'package:focus_flutter/features/widgets/focus_button.dart';
 import 'package:focus_flutter/features/widgets/focus_modal.dart';
 
 /// Routines Page.

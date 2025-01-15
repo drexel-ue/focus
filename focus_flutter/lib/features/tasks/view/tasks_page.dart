@@ -5,7 +5,6 @@ import 'package:focus_flutter/features/tasks/repository/tasks_repository.dart';
 import 'package:focus_flutter/features/tasks/view/delete_task_modal.dart';
 import 'package:focus_flutter/features/tasks/view/task_form.dart';
 import 'package:focus_flutter/features/widgets/crud_list_item_view.dart';
-import 'package:focus_flutter/features/widgets/focus_button.dart';
 import 'package:focus_flutter/features/widgets/focus_modal.dart';
 
 /// Tasks Page.
@@ -38,7 +37,7 @@ class _TasksPageState extends ConsumerState<TasksPage> {
 
   void _showDeleteModal(BuildContext context, Task task) => FocusModal.show(
         context,
-        (_, VoidCallback close) => DeleteTaskModal(task: task, close: close),
+        (_, __) => DeleteTaskModal(task: task),
         constraints: const BoxConstraints(
           maxWidth: 500.0,
           maxHeight: 400.0,
