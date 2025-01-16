@@ -4,8 +4,11 @@ import 'package:focus_client/focus_client.dart';
 /// Focus themed slider thumb.
 @immutable
 class FocusSliderThumbShape extends SliderComponentShape {
+  static const _thumbWidth = 8.0;
+  static const _thumbHeight = 16.0;
+
   @override
-  Size getPreferredSize(bool isEnabled, bool isDiscrete) => const Size(8.0, 16.0);
+  Size getPreferredSize(bool isEnabled, bool isDiscrete) => const Size(_thumbWidth, _thumbHeight);
 
   @override
   void paint(
@@ -25,8 +28,8 @@ class FocusSliderThumbShape extends SliderComponentShape {
     final canvas = context.canvas;
     canvas.drawRect(
       Rect.fromPoints(
-        Offset(center.dx - 4.0, center.dy - 8.0),
-        Offset(center.dx + 4.0, center.dy + 8.0),
+        Offset(center.dx - _thumbWidth / 2.0, center.dy - _thumbHeight / 2.0),
+        Offset(center.dx + _thumbWidth / 2.0, center.dy + _thumbHeight / 2.0),
       ),
       Paint()
         ..color = AppColors.white
