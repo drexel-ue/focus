@@ -50,9 +50,32 @@ class _TaskStatsExpansionTileState extends ConsumerState<TaskStatsExpansionTile>
           padding: leftPadding32 + rightPadding16,
           child: Row(
             children: [
-              Expanded(child: Text('${stats.shortestCompletionTime}')),
-              Expanded(child: Text('${stats.averageCompletionTime}')),
-              Expanded(child: Text('${stats.longestCompletionTime}')),
+              Expanded(
+                child: Text(
+                  stats.shortestCompletionTime.asText,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              verticalMargin8,
+              Expanded(
+                child: Text(
+                  stats.averageCompletionTime.asText,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              verticalMargin8,
+              Expanded(
+                child: Text(
+                  stats.longestCompletionTime.asText,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ],
           ),
         ),
@@ -77,5 +100,23 @@ class _TaskStatsExpansionTileState extends ConsumerState<TaskStatsExpansionTile>
         verticalMargin8,
       ],
     );
+  }
+}
+
+extension on Duration {
+  String get asText {
+    if (this == Duration.zero) {
+      return 'n/a';
+    }
+    if (inDays > 0) {
+      return '$inDays days';
+    }
+    if (inHours > 0) {
+      return '$inHours hours';
+    }
+    if (inMinutes > 0) {
+      return '$inMinutes minutes';
+    }
+    return '$inSeconds seconds';
   }
 }
