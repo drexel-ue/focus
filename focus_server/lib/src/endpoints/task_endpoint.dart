@@ -85,6 +85,7 @@ class TaskEndpoint extends Endpoint {
         user.abilityStats = task.completed
             ? _addStats(user.abilityStats, task.abilityExpValues)
             : _substractStats(user.abilityStats, task.abilityExpValues);
+        task.lastModifiedAt = DateTime.timestamp();
         final updatedUser = await User.db.updateRow(session, user);
         final updatedTask = await Task.db.updateRow(session, task, transaction: transaction);
         return UserWithTask(user: updatedUser, task: updatedTask);
@@ -226,8 +227,8 @@ class TaskEndpoint extends Endpoint {
         }
         var averageInMilliseconds = 0;
         if (completedTally > 0) {
-          averageInMilliseconds =
-              completionDurations.reduce((a, b) => a + b).inMilliseconds ~/ completedTally;
+          final totalDuration = completionDurations.reduce((a, b) => a + b);
+          averageInMilliseconds = totalDuration.inMilliseconds ~/ completedTally;
         }
         final averageCompletionTime = completedTally > 0 //
             ? Duration(milliseconds: averageInMilliseconds)
