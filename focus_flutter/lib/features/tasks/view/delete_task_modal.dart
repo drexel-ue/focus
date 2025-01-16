@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/tasks/repository/tasks_repository.dart';
+import 'package:focus_flutter/features/widgets/ability_stats_display.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
 import 'package:focus_flutter/features/widgets/loading_cover.dart';
 
@@ -41,35 +42,7 @@ class DeleteTaskModal extends ConsumerWidget {
               textAlign: TextAlign.center,
             ),
             verticalMargin16,
-            GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 200.0,
-                mainAxisExtent: 48.0,
-                mainAxisSpacing: 16.0,
-                crossAxisSpacing: 16.0,
-              ),
-              itemCount: 5,
-              itemBuilder: (BuildContext context, int index) {
-                final ability = Ability.values[index];
-                return Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        ability.name.substring(0, 3).toUpperCase(),
-                      ),
-                    ),
-                    horizontalMargin8,
-                    Expanded(
-                      child: Text(
-                        task.abilityExpValues.expFor(ability).toString(),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
+            AbilityStatsDisplay(stats: task.abilityExpValues),
             spacer,
             Row(
               children: [

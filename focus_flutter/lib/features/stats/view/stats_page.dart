@@ -42,18 +42,20 @@ class StatsPage extends ConsumerWidget {
           ),
         ),
         verticalMargin16,
-        const ScrollShadow(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: horizontalPadding16,
-                child: AbilityLevelProgressTiles(),
-              ),
-              verticalMargin16,
-              TaskStatsTile(),
-            ],
+        const Expanded(
+          child: ScrollShadow(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: horizontalPadding16,
+                  child: AbilityLevelProgressTiles(),
+                ),
+                verticalMargin16,
+                TaskStatsTile(),
+              ],
+            ),
           ),
         ),
       ],

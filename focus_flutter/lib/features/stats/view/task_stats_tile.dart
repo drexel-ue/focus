@@ -4,6 +4,7 @@ import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/stats/repository/stats_repository.dart';
 import 'package:focus_flutter/features/stats/view/complete_incomplete_slider.dart';
+import 'package:focus_flutter/features/stats/view/task_stats_expansion_tile.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
 import 'package:focus_flutter/features/widgets/loading_cover.dart';
 
@@ -40,6 +41,7 @@ class _TaskStatsTileState extends ConsumerState<TaskStatsTile> {
               padding: horizontalPadding16,
               child: CompleteIncompleteSlider(),
             ),
+            const TaskStatsExpansionTile(),
           ] else
             Center(
               child: SizedBox(
