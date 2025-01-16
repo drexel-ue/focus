@@ -76,18 +76,24 @@ class CrudListItemView<T> extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 final item = items[index];
+                bool showDelete = true;
+                if (T == Task && (item as Task).completed) {
+                  showDelete = false;
+                }
                 return Padding(
                   padding: bottomPadding16,
                   child: Slidable(
+                    enabled: showDelete,
                     endActionPane: ActionPane(
                       motion: const BehindMotion(),
                       children: [
-                        SlidableAction(
-                          onPressed: (_) => onDeleteItem(item),
-                          icon: Icons.delete_forever_sharp,
-                          backgroundColor: Colors.red,
-                          foregroundColor: Colors.white,
-                        ),
+                        if (showDelete) //
+                          SlidableAction(
+                            onPressed: (_) => onDeleteItem(item),
+                            icon: Icons.delete_forever_sharp,
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                          ),
                       ],
                     ),
                     child: SizedBox(

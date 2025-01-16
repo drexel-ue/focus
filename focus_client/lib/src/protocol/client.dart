@@ -23,7 +23,8 @@ import 'package:focus_client/src/protocol/user_with_routine_record.dart'
 import 'package:focus_client/src/protocol/task.dart' as _i11;
 import 'package:focus_client/src/protocol/user_ability_stats.dart' as _i12;
 import 'package:focus_client/src/protocol/user_with_task.dart' as _i13;
-import 'protocol.dart' as _i14;
+import 'package:focus_client/src/protocol/task_stats.dart' as _i14;
+import 'protocol.dart' as _i15;
 
 /// Handles [AuthSession] creation.
 /// {@category Endpoint}
@@ -219,6 +220,14 @@ class EndpointTask extends _i1.EndpointRef {
         'deleteTask',
         {'taskId': taskId},
       );
+
+  /// Returns [TaskStats] for [User].
+  _i2.Future<_i14.TaskStats> getTaskStats() =>
+      caller.callServerEndpoint<_i14.TaskStats>(
+        'task',
+        'getTaskStats',
+        {},
+      );
 }
 
 class Client extends _i1.ServerpodClientShared {
@@ -237,7 +246,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
           host,
-          _i14.Protocol(),
+          _i15.Protocol(),
           securityContext: securityContext,
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart';
+import 'package:focus_flutter/features/widgets/focus_slider_thumb_shape.dart';
+import 'package:focus_flutter/features/widgets/focus_slider_track_shape.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 /// Focus theme.
@@ -92,6 +94,11 @@ ThemeData generateTheme() {
       shape: const Border(),
       expansionAnimationStyle: AnimationStyle(curve: Curves.easeOut),
       expandedAlignment: Alignment.topLeft,
+    ),
+    sliderTheme: SliderThemeData(
+      trackHeight: 8.0,
+      thumbShape: FocusSliderThumbShape(),
+      trackShape: FocusSliderTrackShape(),
     ),
     splashFactory: NoSplash.splashFactory,
   );

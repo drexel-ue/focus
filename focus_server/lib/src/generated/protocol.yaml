@@ -17,3 +17,4 @@ task:
   - toggleTaskComplete:
   - updateTask:
   - deleteTask:
+  - getTaskStats:

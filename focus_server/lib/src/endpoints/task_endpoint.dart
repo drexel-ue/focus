@@ -167,6 +167,96 @@ class TaskEndpoint extends Endpoint {
     });
   }
 
+  /// Returns [TaskStats] for [User].
+  Future<TaskStats> getTaskStats(Session session) async {
+    return await session.db.transaction((Transaction transaction) async {
+      try {
+        final user = await session.parseUserFromFocusSession(transaction);
+        final tasks = await Task.db.find(
+          session,
+          where: (TaskTable table) => table.userId.equals(user.id!),
+          transaction: transaction,
+        );
+        var completedStats = UserAbilityStats(
+          strengthExp: 0,
+          vitalityExp: 0,
+          agilityExp: 0,
+          intelligenceExp: 0,
+          perceptionExp: 0,
+        );
+        var incompletedStats = UserAbilityStats(
+          strengthExp: 0,
+          vitalityExp: 0,
+          agilityExp: 0,
+          intelligenceExp: 0,
+          perceptionExp: 0,
+        );
+        var completedTally = 0;
+        var incompleteTally = 0;
+        var longestRunningTaskTime = Duration.zero;
+        var shortestCompletionTaskTime = const Duration(days: 99999);
+        Task? longestCompletedTask;
+        Task? longestIncompleteTask;
+        Task? shortestCompletedTask;
+        final completionDurations = <Duration>[];
+        final now = DateTime.timestamp();
+        for (final task in tasks) {
+          if (task.completed) {
+            completedStats = _addStats(completedStats, task.abilityExpValues);
+            completedTally += 1;
+            final completionTime = task.lastModifiedAt.difference(task.createdAt);
+            if (completionTime > longestRunningTaskTime) {
+              longestRunningTaskTime = completionTime;
+              longestCompletedTask = task;
+            }
+            if (completionTime < shortestCompletionTaskTime) {
+              shortestCompletionTaskTime = completionTime;
+              shortestCompletedTask = task;
+            }
+            completionDurations.add(completionTime);
+          } else {
+            incompletedStats = _addStats(incompletedStats, task.abilityExpValues);
+            incompleteTally += 1;
+            final runningTime = now.difference(task.createdAt);
+            if (runningTime > longestRunningTaskTime) {
+              longestRunningTaskTime = runningTime;
+              longestIncompleteTask = task;
+            }
+          }
+        }
+        var averageInMilliseconds = 0;
+        if (completedTally > 0) {
+          averageInMilliseconds =
+              completionDurations.reduce((a, b) => a + b).inMilliseconds ~/ completedTally;
+        }
+        final averageCompletionTime = completedTally > 0 //
+            ? Duration(milliseconds: averageInMilliseconds)
+            : Duration.zero;
+        return TaskStats(
+          completedStats: completedStats,
+          incompleteStats: incompletedStats,
+          completedTally: completedTally,
+          incompleteTally: incompleteTally,
+          averageCompletionTime: averageCompletionTime,
+          longestCompletionTime: longestRunningTaskTime,
+          shortestCompletionTime: shortestCompletionTaskTime,
+          longestRunningTaskTime: longestRunningTaskTime,
+          longestCompletedTask: longestCompletedTask,
+          longestIncompleteTask: longestIncompleteTask,
+          shortestCompletedTask: shortestCompletedTask,
+        );
+      } catch (error, stackTrace) {
+        session.log(
+          'error in getTaskStats',
+          level: LogLevel.error,
+          exception: error,
+          stackTrace: stackTrace,
+        );
+        throw FetchException(message: 'failed to fetch task stats.');
+      }
+    });
+  }
+
   UserAbilityStats _addStats(UserAbilityStats a, UserAbilityStats b) {
     return UserAbilityStats(
       strengthExp: a.strengthExp + b.strengthExp,

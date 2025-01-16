@@ -26,6 +26,7 @@ import 'package:focus_server/src/generated/user_with_routine_record.dart'
 import 'package:focus_server/src/generated/task.dart' as _i12;
 import 'package:focus_server/src/generated/user_ability_stats.dart' as _i13;
 import 'package:focus_server/src/generated/user_with_task.dart' as _i14;
+import 'package:focus_server/src/generated/task_stats.dart' as _i15;
 import 'package:focus_server/src/generated/protocol.dart';
 import 'package:focus_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -642,6 +643,33 @@ class _TaskEndpoint {
           _localUniqueSession,
           _localCallContext.arguments,
         ) as _i3.Future<_i12.Task>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i15.TaskStats> getTaskStats(
+      _i1.TestSessionBuilder sessionBuilder) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'task',
+        method: 'getTaskStats',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'task',
+          methodName: 'getTaskStats',
+          parameters: _i1.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i15.TaskStats>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

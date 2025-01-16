@@ -4,7 +4,9 @@ import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/auth/repository/auth_repository.dart';
 import 'package:focus_flutter/features/stats/view/ability_level_progress_tiles.dart';
+import 'package:focus_flutter/features/stats/view/task_stats_tile.dart';
 import 'package:focus_flutter/features/stats/view/user_avatar.dart';
+import 'package:focus_flutter/features/widgets/scroll_shadow.dart';
 
 /// Stats Page.
 @immutable
@@ -15,12 +17,13 @@ class StatsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authRepositoryProvider).requireValue.user!;
-    return Padding(
-      padding: allPadding16,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        verticalMargin16,
+        Padding(
+          padding: horizontalPadding16,
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const UserAvatar(),
@@ -37,10 +40,23 @@ class StatsPage extends ConsumerWidget {
               ),
             ],
           ),
-          verticalMargin16,
-          const AbilityLevelProgressTiles(),
-        ],
-      ),
+        ),
+        verticalMargin16,
+        const ScrollShadow(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: horizontalPadding16,
+                child: AbilityLevelProgressTiles(),
+              ),
+              verticalMargin16,
+              TaskStatsTile(),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

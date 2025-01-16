@@ -404,6 +404,15 @@ class Endpoints extends _i1.EndpointDispatch {
             params['taskId'],
           ),
         ),
+        'getTaskStats': _i1.MethodConnector(
+          name: 'getTaskStats',
+          params: {},
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['task'] as _i5.TaskEndpoint).getTaskStats(session),
+        ),
       },
     );
   }
