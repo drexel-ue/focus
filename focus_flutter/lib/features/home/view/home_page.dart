@@ -74,10 +74,6 @@ class _HomePageState extends ConsumerState<HomePage> {
           context,
           barrierDismissible: false,
           (_, __) => const RunRoutineModal(),
-          constraints: const BoxConstraints(
-            maxWidth: 500.0,
-            maxHeight: 700.0,
-          ),
         );
       }
     }
