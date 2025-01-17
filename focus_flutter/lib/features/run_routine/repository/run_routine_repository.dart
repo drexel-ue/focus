@@ -41,7 +41,7 @@ class RunRoutineRepository extends AsyncNotifier<RunRoutineRepositoryState>
       });
       if (routineWithRecord == null) {
         state = const AsyncData(RunRoutineRepositoryState());
-        homeRepo.showPositiveSnack('No running routine found.');
+        homeRepo.showSnack('No running routine found.');
         return false;
       } else {
         state = AsyncData(
