@@ -3,7 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/stats/repository/stats_repository.dart';
+import 'package:focus_flutter/features/tasks/view/task_form.dart';
 import 'package:focus_flutter/features/widgets/ability_stats_display.dart';
+import 'package:focus_flutter/features/widgets/focus_button.dart';
+import 'package:focus_flutter/features/widgets/focus_modal.dart';
 
 /// Displays [TaskStats].
 @immutable
@@ -17,6 +20,15 @@ class TaskStatsExpansionTile extends ConsumerStatefulWidget {
 
 class _TaskStatsExpansionTileState extends ConsumerState<TaskStatsExpansionTile> {
   bool _isExpanded = false;
+
+  void _showTaskForm(BuildContext context, Task task) {
+    FocusModal.show(
+      context,
+      (BuildContext context, CloseModal closeModal) {
+        return TaskForm(task: task);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +54,41 @@ class _TaskStatsExpansionTileState extends ConsumerState<TaskStatsExpansionTile>
       expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
       onExpansionChanged: (bool expanded) => setState(() => _isExpanded = expanded),
       children: [
+        verticalMargin2,
+        Padding(
+          padding: horizontalPadding16,
+          child: Row(
+            children: [
+              Expanded(
+                child: FocusButton(
+                  onTap: stats.shortestCompletedTask != null
+                      ? () => _showTaskForm(context, stats.shortestCompletedTask!)
+                      : null,
+                  child: const Text('Quickest'),
+                ),
+              ),
+              horizontalMargin16,
+              Expanded(
+                child: FocusButton(
+                  onTap: stats.longestCompletedTask != null
+                      ? () => _showTaskForm(context, stats.longestCompletedTask!)
+                      : null,
+                  child: const Text('Longest'),
+                ),
+              ),
+              horizontalMargin16,
+              Expanded(
+                child: FocusButton(
+                  onTap: stats.longestIncompleteTask != null
+                      ? () => _showTaskForm(context, stats.longestIncompleteTask!)
+                      : null,
+                  child: const Text('Outstanding'),
+                ),
+              ),
+            ],
+          ),
+        ),
+        verticalMargin8,
         const Padding(
           padding: horizontalPadding16,
           child: Text('Completion time (shortest/avgerage/longest):'),
@@ -77,6 +124,20 @@ class _TaskStatsExpansionTileState extends ConsumerState<TaskStatsExpansionTile>
                 ),
               ),
             ],
+          ),
+        ),
+        verticalMargin8,
+        const Padding(
+          padding: horizontalPadding16,
+          child: Text('Longest open task time:'),
+        ),
+        Padding(
+          padding: leftPadding32 + rightPadding16,
+          child: Text(
+            stats.longestRunningTaskTime.asText,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.start,
           ),
         ),
         verticalMargin8,

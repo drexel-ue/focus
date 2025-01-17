@@ -1,9 +1,11 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/features/routines/repository/routines_repository.dart';
 import 'package:focus_flutter/features/routines/view/delete_routine_modal.dart';
 import 'package:focus_flutter/features/routines/view/routine_form.dart';
+import 'package:focus_flutter/features/run_routine/repository/run_routine_repository.dart';
+import 'package:focus_flutter/features/run_routine/view/run_routine_modal.dart';
 import 'package:focus_flutter/features/widgets/crud_list_item_view.dart';
 import 'package:focus_flutter/features/widgets/focus_modal.dart';
 
@@ -36,11 +38,22 @@ class _RoutinesPageState extends ConsumerState<RoutinesPage> {
   void _showDeleteModal(BuildContext context, Routine routine) => FocusModal.show(
         context,
         (_, __) => DeleteRoutineModal(routine: routine),
+      );
+
+  Future<void> _runRoutine(BuildContext context, Routine routine) async {
+    await ref.read(runRoutineRepositoryProvider.notifier).runRoutine(routine);
+    if (context.mounted) {
+      FocusModal.show(
+        context,
+        barrierDismissible: false,
+        (_, __) => const RunRoutineModal(),
         constraints: const BoxConstraints(
           maxWidth: 500.0,
           maxHeight: 700.0,
         ),
       );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +65,8 @@ class _RoutinesPageState extends ConsumerState<RoutinesPage> {
       onAddItem: () => _showRoutineForm(context),
       onDeleteItem: (routine) => _showDeleteModal(context, routine),
       onItemTapped: (routine) => _showRoutineForm(context, routine),
+      trailing: const Icon(Icons.play_arrow_outlined),
+      onTrailingTapped: (routine) => _runRoutine(context, routine),
     );
   }
 }

@@ -4,6 +4,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:focus_flutter/app/assets.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/app/routing.dart';
+import 'package:focus_flutter/features/run_routine/repository/run_routine_repository.dart';
+import 'package:focus_flutter/features/run_routine/view/run_routine_modal.dart';
 import 'package:focus_flutter/features/tools/view/tools_page.dart';
 import 'package:focus_flutter/features/goals/view/goals_page.dart';
 import 'package:focus_flutter/features/home/repository/home_repository.dart';
@@ -14,6 +16,7 @@ import 'package:focus_flutter/features/stats/view/stats_page.dart';
 import 'package:focus_flutter/features/tasks/view/tasks_page.dart';
 import 'package:focus_flutter/features/widgets/focus_border.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
+import 'package:focus_flutter/features/widgets/focus_modal.dart';
 import 'package:focus_flutter/features/widgets/focus_painter.dart';
 import 'package:focus_flutter/features/widgets/marquee_text.dart';
 import 'package:go_router/go_router.dart';
@@ -53,6 +56,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     _pageController = PageController(initialPage: ref.read(homeRepositoryProvider).tab.index);
     _layerLink = LayerLink();
     _overlayController = OverlayPortalController();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkForRunningRoutine());
   }
 
   void _homeRepositoryListener(HomeState? prev, HomeState next) {
@@ -60,6 +64,22 @@ class _HomePageState extends ConsumerState<HomePage> {
     final menuOpen = next.menuOpen;
     if (menuOpen && !_overlayController.isShowing) {
       _overlayController.show();
+    }
+  }
+
+  Future<void> _checkForRunningRoutine() async {
+    if (await ref.read(runRoutineRepositoryProvider.notifier).checkForRunningRoutine()) {
+      if (mounted) {
+        FocusModal.show(
+          context,
+          barrierDismissible: false,
+          (_, __) => const RunRoutineModal(),
+          constraints: const BoxConstraints(
+            maxWidth: 500.0,
+            maxHeight: 700.0,
+          ),
+        );
+      }
     }
   }
 

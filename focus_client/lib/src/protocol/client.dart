@@ -20,11 +20,12 @@ import 'package:focus_client/src/protocol/user_debuff.dart' as _i8;
 import 'package:focus_client/src/protocol/routine_record.dart' as _i9;
 import 'package:focus_client/src/protocol/user_with_routine_record.dart'
     as _i10;
-import 'package:focus_client/src/protocol/task.dart' as _i11;
-import 'package:focus_client/src/protocol/user_ability_stats.dart' as _i12;
-import 'package:focus_client/src/protocol/user_with_task.dart' as _i13;
-import 'package:focus_client/src/protocol/task_stats.dart' as _i14;
-import 'protocol.dart' as _i15;
+import 'package:focus_client/src/protocol/routine_with_record.dart' as _i11;
+import 'package:focus_client/src/protocol/task.dart' as _i12;
+import 'package:focus_client/src/protocol/user_ability_stats.dart' as _i13;
+import 'package:focus_client/src/protocol/user_with_task.dart' as _i14;
+import 'package:focus_client/src/protocol/task_stats.dart' as _i15;
+import 'protocol.dart' as _i16;
 
 /// Handles [AuthSession] creation.
 /// {@category Endpoint}
@@ -153,6 +154,14 @@ class EndpointRoutine extends _i1.EndpointRef {
         'abortRoutine',
         {'routineId': routineId},
       );
+
+  /// Checks for a running [Routine] and returns a [RoutineWithRecord] if found.
+  _i2.Future<_i11.RoutineWithRecord?> findRunningRoutine() =>
+      caller.callServerEndpoint<_i11.RoutineWithRecord?>(
+        'routine',
+        'findRunningRoutine',
+        {},
+      );
 }
 
 /// Handles work related to [Task]s.
@@ -164,20 +173,20 @@ class EndpointTask extends _i1.EndpointRef {
   String get name => 'task';
 
   /// Get tasks for a [User].
-  _i2.Future<List<_i11.Task>> getTasks(int page) =>
-      caller.callServerEndpoint<List<_i11.Task>>(
+  _i2.Future<List<_i12.Task>> getTasks(int page) =>
+      caller.callServerEndpoint<List<_i12.Task>>(
         'task',
         'getTasks',
         {'page': page},
       );
 
   /// Create a [Task].
-  _i2.Future<_i11.Task> createTask({
+  _i2.Future<_i12.Task> createTask({
     required String title,
     String? description,
-    required _i12.UserAbilityStats abilityExpValues,
+    required _i13.UserAbilityStats abilityExpValues,
   }) =>
-      caller.callServerEndpoint<_i11.Task>(
+      caller.callServerEndpoint<_i12.Task>(
         'task',
         'createTask',
         {
@@ -188,21 +197,21 @@ class EndpointTask extends _i1.EndpointRef {
       );
 
   /// Toggles the completion state of a [Task].
-  _i2.Future<_i13.UserWithTask> toggleTaskComplete(int taskId) =>
-      caller.callServerEndpoint<_i13.UserWithTask>(
+  _i2.Future<_i14.UserWithTask> toggleTaskComplete(int taskId) =>
+      caller.callServerEndpoint<_i14.UserWithTask>(
         'task',
         'toggleTaskComplete',
         {'taskId': taskId},
       );
 
   /// Update a [Task].
-  _i2.Future<_i11.Task> updateTask({
+  _i2.Future<_i12.Task> updateTask({
     required int taskId,
     required String title,
     String? description,
-    required _i12.UserAbilityStats abilityExpValues,
+    required _i13.UserAbilityStats abilityExpValues,
   }) =>
-      caller.callServerEndpoint<_i11.Task>(
+      caller.callServerEndpoint<_i12.Task>(
         'task',
         'updateTask',
         {
@@ -214,16 +223,16 @@ class EndpointTask extends _i1.EndpointRef {
       );
 
   /// Deletes a [Task].
-  _i2.Future<_i11.Task> deleteTask(int taskId) =>
-      caller.callServerEndpoint<_i11.Task>(
+  _i2.Future<_i12.Task> deleteTask(int taskId) =>
+      caller.callServerEndpoint<_i12.Task>(
         'task',
         'deleteTask',
         {'taskId': taskId},
       );
 
   /// Returns [TaskStats] for [User].
-  _i2.Future<_i14.TaskStats> getTaskStats() =>
-      caller.callServerEndpoint<_i14.TaskStats>(
+  _i2.Future<_i15.TaskStats> getTaskStats() =>
+      caller.callServerEndpoint<_i15.TaskStats>(
         'task',
         'getTaskStats',
         {},
@@ -246,7 +255,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
           host,
-          _i15.Protocol(),
+          _i16.Protocol(),
           securityContext: securityContext,
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,

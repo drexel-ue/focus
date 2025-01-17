@@ -22,6 +22,8 @@ class CrudListItemView<T> extends StatelessWidget {
     required this.onDeleteItem,
     required this.onItemTapped,
     this.onCheckboxTapped,
+    this.onTrailingTapped,
+    this.trailing,
   });
 
   /// Items to display.
@@ -44,6 +46,12 @@ class CrudListItemView<T> extends StatelessWidget {
 
   /// Callback to run when checkbox tapped. Only used for [Task]s.
   final ValueChanged<Task>? onCheckboxTapped;
+
+  /// Callback to run when trailing tapped.
+  final ValueChanged<T>? onTrailingTapped;
+
+  /// Trailing widget.
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -130,6 +138,23 @@ class CrudListItemView<T> extends StatelessWidget {
                                 ],
                               ),
                             ),
+                            if (trailing case Widget trailing) ...[
+                              horizontalMargin16,
+                              InkWell(
+                                onTap: onTrailingTapped != null //
+                                    ? () => onTrailingTapped!(item)
+                                    : null,
+                                child: SizedBox.square(
+                                  dimension: 48.0,
+                                  child: Center(
+                                    child: SizedBox.square(
+                                      dimension: 24.0,
+                                      child: trailing,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                             horizontalMargin16,
                           ],
                         ),

@@ -11,6 +11,7 @@ routine:
   - startRoutine:
   - completeRoutine:
   - abortRoutine:
+  - findRunningRoutine:
 task:
   - getTasks:
   - createTask:

@@ -1,0 +1,7 @@
+### Wrapper class for a [Routine] and a [RoutineRecord].
+class: RoutineWithRecord
+fields:
+  ### [Routine].
+  routine: Routine
+  ### [RoutineRecord].
+  record: RoutineRecord

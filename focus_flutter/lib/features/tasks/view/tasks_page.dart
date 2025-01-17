@@ -38,10 +38,6 @@ class _TasksPageState extends ConsumerState<TasksPage> {
   void _showDeleteModal(BuildContext context, Task task) => FocusModal.show(
         context,
         (_, __) => DeleteTaskModal(task: task),
-        constraints: const BoxConstraints(
-          maxWidth: 500.0,
-          maxHeight: 400.0,
-        ),
       );
 
   @override

@@ -28,7 +28,7 @@ class FocusButton extends StatelessWidget {
   final bool enabled;
 
   /// Callback to be ran on tap.
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   /// Child.
   final Widget child;
@@ -52,7 +52,7 @@ class FocusButton extends StatelessWidget {
                 : Colors.black,
       ),
       child: InkWell(
-        onTap: enabled ? () => onTap() : null,
+        onTap: enabled ? () => onTap?.call() : null,
         child: Center(
           child: Padding(
             padding: square ? allPadding4 : horizontalPadding10,

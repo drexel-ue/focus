@@ -214,6 +214,42 @@ class RoutineEndpoint extends Endpoint {
     });
   }
 
+  /// Checks for a running [Routine] and returns a [RoutineWithRecord] if found.
+  Future<RoutineWithRecord?> findRunningRoutine(Session session) async {
+    return await session.db.transaction((Transaction transaction) async {
+      try {
+        final user = await session.parseUserFromFocusSession(transaction);
+        final record = await RoutineRecord.db.findFirstRow(
+          session,
+          where: (table) {
+            return table.userId.equals(user.id!) & table.status.equals(RoutineRecordStatus.running);
+          },
+          transaction: transaction,
+        );
+        if (record == null) {
+          return null;
+        }
+        final routine = await Routine.db.findById(
+          session,
+          record.routineId,
+          transaction: transaction,
+        );
+        if (routine == null) {
+          throw NotFoundException(message: 'missing Routine');
+        }
+        return RoutineWithRecord(routine: routine, record: record);
+      } catch (error, stackTrace) {
+        session.log(
+          'error in findRunningRoutine',
+          level: LogLevel.error,
+          exception: error,
+          stackTrace: stackTrace,
+        );
+        rethrow;
+      }
+    });
+  }
+
   Future<UserWithRoutineRecord> _abortOrCompleteRoutine(
     Session session,
     Transaction transaction,

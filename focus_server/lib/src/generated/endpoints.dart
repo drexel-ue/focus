@@ -278,6 +278,16 @@ class Endpoints extends _i1.EndpointDispatch {
             params['routineId'],
           ),
         ),
+        'findRunningRoutine': _i1.MethodConnector(
+          name: 'findRunningRoutine',
+          params: {},
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['routine'] as _i4.RoutineEndpoint)
+                  .findRunningRoutine(session),
+        ),
       },
     );
     connectors['task'] = _i1.EndpointConnector(

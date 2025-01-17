@@ -30,10 +30,11 @@ class FocusModal<T> extends StatefulWidget {
     BuildContext context,
     ModalBuilder builder, {
     BoxConstraints constraints = const BoxConstraints(),
+    bool barrierDismissible = true,
   }) async {
     return await showGeneralDialog(
       context: context,
-      barrierDismissible: true,
+      barrierDismissible: barrierDismissible,
       barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
       transitionDuration: const Duration(milliseconds: 550),
       pageBuilder: (
