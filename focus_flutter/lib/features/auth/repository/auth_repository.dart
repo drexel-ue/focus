@@ -1,16 +1,13 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:clerk_auth/clerk_auth.dart' hide User;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/api/api_client.dart';
+import 'package:focus_flutter/app/persistence.dart';
 import 'package:focus_flutter/features/auth/repository/clerk_auth_provider.dart';
 import 'package:focus_flutter/features/home/repository/home_repository.dart';
 import 'package:focus_flutter/features/tasks/repository/tasks_repository.dart';
-import 'package:path_provider/path_provider.dart';
 
 /// A mixin that provides access to the [AuthRepository] instance.
 mixin AuthRepoRef<T> on AsyncNotifier<T> {
@@ -25,16 +22,12 @@ final authRepositoryProvider = AsyncNotifierProvider<AuthRepository, AuthSession
 
 /// Manages [AuthSession].
 class AuthRepository extends AsyncNotifier<AuthSession>
-    with ClerkAuthProviderRef, Logging, ApiClientRef, ChangeNotifier {
-  late File _file;
-  Timer? _saveTimer;
-
+    with ClerkAuthProviderRef, Logging, ApiClientRef, ChangeNotifier, PersistenceRepoRef {
   @override
   set state(AsyncValue<AuthSession> value) {
     super.state = value;
+    persistanceRepo.authSession = state.requireValue;
     notifyListeners();
-    _saveTimer?.cancel();
-    _saveTimer = Timer(const Duration(milliseconds: 400), _storeAuthSession);
   }
 
   set session(AuthSession session) => state = AsyncData(session);
@@ -73,13 +66,11 @@ class AuthRepository extends AsyncNotifier<AuthSession>
   /// Remove stored [AuthSession].
   Future<void> logout() async {
     try {
-      if (await _file.exists()) {
-        await _file.delete();
-      }
       state = AsyncData(AuthSession());
       ref.read(homeRepositoryProvider.notifier).logout();
       ref.read(taskRepositoryProvider.notifier).logout();
       api.authenticationKeyManager!.remove();
+      persistanceRepo.logout();
     } catch (error, stackTrace) {
       logSevere('error in logout', error, stackTrace);
       state = AsyncData(AuthSession());
@@ -89,31 +80,16 @@ class AuthRepository extends AsyncNotifier<AuthSession>
 
   Future<AuthSession> _maybeRestoreSession() async {
     try {
-      final directory = await getApplicationDocumentsDirectory();
-      _file = File('${directory.path}/auth_key_store.json');
-      if (await _file.exists()) {
-        final content = await _file.readAsString();
-        final jsonSerialization = json.decode(content);
-        final session = AuthSession.fromJson(jsonSerialization);
+      final session = persistanceRepo.authSession;
+      if (session != null) {
         api.authenticationKeyManager!.put(session.token!.accessToken);
         return session;
-      } else {
-        final jsonSerialization = json.encode(AuthSession().toJson());
-        await _file.writeAsString(jsonSerialization);
-        return AuthSession();
-      }
-    } catch (error, stackTrace) {
-      logSevere('error in _maybeRestoreSession', error, stackTrace);
-      if (await _file.exists()) {
-        await _file.delete();
       }
       return AuthSession();
+    } catch (error, stackTrace) {
+      logSevere('error in _maybeRestoreSession', error, stackTrace);
+      return AuthSession();
     }
-  }
-
-  Future<void> _storeAuthSession() async {
-    final jsonSerialization = json.encode(state.requireValue.toJson());
-    await _file.writeAsString(jsonSerialization);
   }
 
   @override
