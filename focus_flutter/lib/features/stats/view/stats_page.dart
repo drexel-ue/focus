@@ -6,6 +6,7 @@ import 'package:focus_flutter/features/auth/repository/auth_repository.dart';
 import 'package:focus_flutter/features/stats/view/ability_level_progress_tiles.dart';
 import 'package:focus_flutter/features/stats/view/task_stats_tile.dart';
 import 'package:focus_flutter/features/stats/view/user_avatar.dart';
+import 'package:focus_flutter/features/widgets/focus_choice_chip.dart';
 import 'package:focus_flutter/features/widgets/scroll_shadow.dart';
 
 /// Stats Page.
@@ -17,6 +18,7 @@ class StatsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authRepositoryProvider).requireValue.user!;
+    final modifiers = [...user.buffs, ...user.debuffs];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -35,6 +37,33 @@ class StatsPage extends ConsumerWidget {
                   children: [
                     Text(user.fullName),
                     Text('Lv. ${user.abilityStats.userLevel}'),
+                    SizedBox(
+                      height: 40.0,
+                      child: ScrollShadow(
+                        axis: Axis.horizontal,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: modifiers.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final modifier = modifiers[index];
+                            return Padding(
+                              padding: rightPadding8,
+                              child: FocusChoiceChip(
+                                label: modifier is UserBuff
+                                    ? modifier.name
+                                    : (modifier as UserDebuff).name,
+                                selected: true,
+                                selectedColor: modifier is UserBuff
+                                    ? modifier.color
+                                    : (modifier as UserDebuff).color,
+                                onSelected: (bool selected) {},
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
