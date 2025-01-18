@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart';
+import 'package:focus_flutter/features/home/repository/home_repository.dart';
 import 'package:focus_flutter/features/stats/repository/stats_repository.dart';
 import 'package:focus_flutter/features/stats/view/complete_incomplete_slider.dart';
 import 'package:focus_flutter/features/stats/view/task_stats_expansion_tile.dart';
@@ -30,18 +31,30 @@ class _TaskStatsTileState extends ConsumerState<TaskStatsTile> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(statsRepositoryProvider);
+    final stats = state.value?.taskStats;
+    final hasTasks = (stats?.completedTally ?? 0) > 0 || (stats?.incompleteTally ?? 0) > 0;
     return LoadingCover(
       loading: state.isLoading,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (state.value?.taskStats != null) ...[
+          if (stats != null && hasTasks) ...[
             const Padding(
               padding: horizontalPadding16,
               child: CompleteIncompleteSlider(),
             ),
             const TaskStatsExpansionTile(),
+          ] else if (stats != null) ...[
+            Center(
+              child: SizedBox(
+                width: 200.0,
+                child: FocusButton(
+                  onTap: () => ref.read(homeRepositoryProvider.notifier).tab = HomeTab.tasks,
+                  child: const Text('Go to tasks'),
+                ),
+              ),
+            ),
           ] else
             Center(
               child: SizedBox(
