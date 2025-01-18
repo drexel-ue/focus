@@ -32,8 +32,8 @@ class _RunRoutineModalState extends ConsumerState<RunRoutineModal> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(runRoutineRepositoryProvider);
-    final routine = state.requireValue.routine!;
-    final record = state.requireValue.record!;
+    final routine = state.requireValue.routine;
+    final record = state.requireValue.record;
     return LoadingCover(
       loading: state.isLoading,
       child: PageView(

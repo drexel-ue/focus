@@ -1,6 +1,7 @@
 import 'package:clerk_auth/clerk_auth.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/api/api_client.dart';
+import 'package:focus_flutter/features/auth/repository/auth_repository.dart';
 import 'package:focus_flutter/features/home/repository/home_repository.dart';
 import 'package:focus_flutter/features/run_routine/repository/run_routine_repository_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -15,7 +16,7 @@ final runRoutineRepositoryProvider =
 
 /// Manages the running of a [Routine].
 class RunRoutineRepository extends AsyncNotifier<RunRoutineRepositoryState>
-    with Logging, ApiClientRef, HomeRepoRef {
+    with Logging, ApiClientRef, HomeRepoRef, AuthRepoRef {
   /// Runs a [Routine].
   Future<void> runRoutine(Routine routine) async {
     try {
@@ -57,6 +58,25 @@ class RunRoutineRepository extends AsyncNotifier<RunRoutineRepositoryState>
       logSevere('error in findRunningRoutine', error, stackTrace);
       state = AsyncError<RunRoutineRepositoryState>(error, stackTrace).copyWithPrevious(state);
       return false;
+    }
+  }
+
+  /// Aborts a [Routine].
+  Future<void> abortRoutine() async {
+    try {
+      state = const AsyncLoading<RunRoutineRepositoryState>().copyWithPrevious(state);
+      homeRepo.showNegativeSnack('Aborting routine...');
+      state = const AsyncLoading<RunRoutineRepositoryState>().copyWithPrevious(state);
+      final routine = state.requireValue.routine!;
+      final userWithRoutineRecord = await refreshIfNeeded((api) async {
+        return await api.routine.abortRoutine(routine.id!);
+      });
+      homeRepo.showNegativeSnack('Aborted routine: ${routine.title}');
+      authRepo.user = userWithRoutineRecord!.user;
+      state = const AsyncData(RunRoutineRepositoryState());
+    } catch (error, stackTrace) {
+      logSevere('error in abortRoutine', error, stackTrace);
+      state = AsyncError<RunRoutineRepositoryState>(error, stackTrace).copyWithPrevious(state);
     }
   }
 

@@ -7,10 +7,11 @@ import 'package:focus_flutter/features/routines/repository/routines_repository.d
 import 'package:focus_flutter/features/routines/view/step_form.dart';
 import 'package:focus_flutter/features/widgets/focus_border.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
-import 'package:focus_flutter/features/widgets/focus_choice_chip.dart';
 import 'package:focus_flutter/features/widgets/focus_modal.dart';
 import 'package:focus_flutter/features/widgets/loading_cover.dart';
 import 'package:focus_flutter/features/widgets/scroll_shadow.dart';
+import 'package:focus_flutter/features/widgets/user_buff_wrap.dart';
+import 'package:focus_flutter/features/widgets/user_debuff_wrap.dart';
 
 /// Form for creating/editing a [Routine].
 @immutable
@@ -145,18 +146,10 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
             child: ExpansionTile(
               title: Text('Buffs ${_buffs.isNotEmpty ? '(${_buffs.length})' : ''}'),
               children: [
-                Wrap(
-                  spacing: 4.0,
-                  children: [
-                    for (final buff
-                        in UserBuff.values.whereNot((el) => el == UserBuff.disciplined)) //
-                      FocusChoiceChip(
-                        label: buff.name,
-                        selected: _buffs.contains(buff),
-                        selectedColor: buff.color,
-                        onSelected: (bool selected) => _onBuffSelected(selected, buff),
-                      ),
-                  ],
+                UserBuffWrap(
+                  buffs: UserBuff.values.whereNot((el) => el == UserBuff.disciplined).toList(),
+                  isSelected: (buff) => _buffs.contains(buff),
+                  onSelected: (bool selected, buff) => _onBuffSelected(selected, buff),
                 ),
               ],
             ),
@@ -166,17 +159,10 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
             child: ExpansionTile(
               title: Text('Debuffs ${_debuffs.isNotEmpty ? '(${_debuffs.length})' : ''}'),
               children: [
-                Wrap(
-                  spacing: 4.0,
-                  children: [
-                    for (final debuff in [UserDebuff.fatigued, UserDebuff.coldMuscle]) //
-                      FocusChoiceChip(
-                        label: debuff.name,
-                        selected: _debuffs.contains(debuff),
-                        selectedColor: debuff.color,
-                        onSelected: (bool selected) => _onDebuffSelected(selected, debuff),
-                      ),
-                  ],
+                UserDebuffWrap(
+                  debuffs: const [UserDebuff.fatigued, UserDebuff.coldMuscle],
+                  isSelected: (debuff) => _debuffs.contains(debuff),
+                  onSelected: (bool selected, debuff) => _onDebuffSelected(selected, debuff),
                 ),
               ],
             ),

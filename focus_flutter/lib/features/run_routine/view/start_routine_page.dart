@@ -3,10 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/run_routine/repository/run_routine_repository.dart';
+import 'package:focus_flutter/features/run_routine/view/abort_routine_modal.dart';
 import 'package:focus_flutter/features/widgets/ability_stats_display.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
-import 'package:focus_flutter/features/widgets/focus_choice_chip.dart';
+import 'package:focus_flutter/features/widgets/focus_modal.dart';
 import 'package:focus_flutter/features/widgets/scroll_shadow.dart';
+import 'package:focus_flutter/features/widgets/user_buff_wrap.dart';
+import 'package:focus_flutter/features/widgets/user_debuff_wrap.dart';
 
 /// Start Routine Page.
 @immutable
@@ -14,9 +17,25 @@ class StartRoutinePage extends ConsumerWidget {
   /// Constructs a const [StartRoutinePage].
   const StartRoutinePage({super.key});
 
+  Future<void> _showAbortModal(BuildContext context, WidgetRef ref) async {
+    final abort = await FocusModal.show<bool>(
+      context,
+      (BuildContext context, CloseModal closeModal) => AbortRoutineModal(closeModal: closeModal),
+    );
+    if (abort == true) {
+      await ref.read(runRoutineRepositoryProvider.notifier).abortRoutine();
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final routine = ref.watch(runRoutineRepositoryProvider).requireValue.routine!;
+    final routine = ref.watch(runRoutineRepositoryProvider).requireValue.routine;
+    if (routine == null) {
+      return emptyWidget;
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -43,17 +62,10 @@ class StartRoutinePage extends ConsumerWidget {
                     verticalMargin16,
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: Wrap(
-                        spacing: 4.0,
-                        children: [
-                          for (final buff in routine.buffs) //
-                            FocusChoiceChip(
-                              label: buff.name,
-                              selected: true,
-                              selectedColor: buff.color,
-                              onSelected: (bool selected) {},
-                            ),
-                        ],
+                      child: UserBuffWrap(
+                        buffs: routine.buffs,
+                        isSelected: (buff) => true,
+                        onSelected: (bool selected, buff) {},
                       ),
                     ),
                   ],
@@ -63,17 +75,10 @@ class StartRoutinePage extends ConsumerWidget {
                   children: [
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: Wrap(
-                        spacing: 4.0,
-                        children: [
-                          for (final debuff in routine.debuffs) //
-                            FocusChoiceChip(
-                              label: debuff.name,
-                              selected: true,
-                              selectedColor: debuff.color,
-                              onSelected: (bool selected) {},
-                            ),
-                        ],
+                      child: UserDebuffWrap(
+                        debuffs: routine.debuffs,
+                        isSelected: (debuff) => true,
+                        onSelected: (bool selected, debuff) {},
                       ),
                     ),
                   ],
@@ -88,7 +93,7 @@ class StartRoutinePage extends ConsumerWidget {
             children: [
               Expanded(
                 child: FocusButton(
-                  onTap: () {},
+                  onTap: () => _showAbortModal(context, ref),
                   child: const Text('Abort'),
                 ),
               ),
