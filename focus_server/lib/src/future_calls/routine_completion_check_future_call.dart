@@ -28,6 +28,9 @@ class RoutineCompletionCheckFutureCall extends FutureCall<Routine> {
           }
           user.debuffs.addAll(object.debuffs);
           await User.db.updateRow(session, user, transaction: transaction);
+          record.status = RoutineRecordStatus.timedOut;
+          await RoutineRecord.db.updateRow(session, record, transaction: transaction);
+          // FIXME(drexel-ue): add future call to remove debuff(s).
         }
       } catch (error, stackTrace) {
         session.log(
