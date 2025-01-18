@@ -31,7 +31,7 @@ class RoutineCompletionCheckFutureCall extends FutureCall<Routine> {
           for (final debuff in object.debuffs) {
             final identifier = 'remove-user-debuff-${user.id}-${debuff.name}';
             await session.serverpod.cancelFutureCall(identifier);
-            user.debuffs.add(debuff);
+            user.debuffs = {...user.debuffs, debuff}.toList();
             await session.serverpod.futureCallWithDelay(
               RemoveUserDebuffFutureCall.callName,
               UserIdWithUserDebuff(userId: user.id!, debuff: debuff),

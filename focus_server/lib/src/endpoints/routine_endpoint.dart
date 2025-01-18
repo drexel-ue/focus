@@ -1,7 +1,5 @@
 import 'package:focus_server/src/custom_scope.dart';
 import 'package:focus_server/src/extensions/session_extension.dart';
-import 'package:focus_server/src/extensions/user_buff.dart';
-import 'package:focus_server/src/extensions/user_debuff.dart';
 import 'package:focus_server/src/future_calls/remove_user_buff_future_call.dart';
 import 'package:focus_server/src/future_calls/remove_user_debuff_future_call.dart';
 import 'package:focus_server/src/future_calls/routine_completion_check_future_call.dart';
@@ -278,12 +276,12 @@ class RoutineEndpoint extends Endpoint {
     if (status == RoutineRecordStatus.completed) {
       for (final buff in routine.buffs) {
         await RemoveUserBuffFutureCall.schedule(session, transaction, user, buff);
-        user.buffs.add(buff);
+        user.buffs = {...user.buffs, buff}.toList();
       }
     } else {
       for (final debuff in routine.debuffs) {
         await RemoveUserDebuffFutureCall.schedule(session, transaction, user, debuff);
-        user.debuffs.add(debuff);
+        user.debuffs = {...user.debuffs, debuff}.toList();
       }
     }
     user = await User.db.updateRow(session, user, transaction: transaction);
