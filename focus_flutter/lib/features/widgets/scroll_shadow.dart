@@ -9,6 +9,7 @@ class ScrollShadow extends StatefulWidget {
     super.key,
     this.controller,
     this.padding,
+    this.axis = Axis.vertical,
     required this.child,
   });
 
@@ -17,6 +18,9 @@ class ScrollShadow extends StatefulWidget {
 
   /// Optional padding passed to the underlying scroll view.
   final EdgeInsets? padding;
+
+  /// Axis.
+  final Axis axis;
 
   /// Child.
   final Widget child;
@@ -28,24 +32,6 @@ class ScrollShadow extends StatefulWidget {
 class _ScrollShadowState extends State<ScrollShadow> {
   static final _transparentWhite = AppColors.white.withAlpha(0);
   static const _white = AppColors.white;
-  static final _startGradient = DecoratedBox(
-    decoration: BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.bottomCenter,
-        end: Alignment.topCenter,
-        colors: [_transparentWhite, _white],
-      ),
-    ),
-  );
-  static final _endGradient = DecoratedBox(
-    decoration: BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.bottomCenter,
-        end: Alignment.topCenter,
-        colors: [_white, _transparentWhite],
-      ),
-    ),
-  );
   static const _shadowHeight = 12.0;
 
   bool _atStart = true;
@@ -65,6 +51,24 @@ class _ScrollShadowState extends State<ScrollShadow> {
 
   @override
   Widget build(BuildContext context) {
+    final startGradient = DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: widget.axis == Axis.vertical ? Alignment.topCenter : Alignment.centerLeft,
+          end: widget.axis == Axis.vertical ? Alignment.bottomCenter : Alignment.centerRight,
+          colors: [_white, _transparentWhite],
+        ),
+      ),
+    );
+    final endGradient = DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: widget.axis == Axis.vertical ? Alignment.bottomCenter : Alignment.centerRight,
+          end: widget.axis == Axis.vertical ? Alignment.topCenter : Alignment.centerLeft,
+          colors: [_white, _transparentWhite],
+        ),
+      ),
+    );
     return Stack(
       children: [
         NotificationListener<ScrollMetricsNotification>(
@@ -78,26 +82,45 @@ class _ScrollShadowState extends State<ScrollShadow> {
             child: SingleChildScrollView(
               controller: widget.controller,
               padding: widget.padding,
+              scrollDirection: widget.axis,
               child: widget.child,
             ),
           ),
         ),
-        if (!_atStart) //
-          Positioned(
-            top: 0.0,
-            left: 0.0,
-            right: 0.0,
-            height: _shadowHeight,
-            child: _startGradient,
-          ),
-        if (!_atEnd) //
-          Positioned(
-            bottom: 0.0,
-            left: 0.0,
-            right: 0.0,
-            height: _shadowHeight,
-            child: _endGradient,
-          ),
+        if (!_atStart)
+          if (widget.axis == Axis.vertical)
+            Positioned(
+              top: 0.0,
+              left: 0.0,
+              right: 0.0,
+              height: _shadowHeight,
+              child: startGradient,
+            )
+          else
+            Positioned(
+              top: 0.0,
+              left: 0.0,
+              bottom: 0.0,
+              width: _shadowHeight,
+              child: startGradient,
+            ),
+        if (!_atEnd)
+          if (widget.axis == Axis.vertical)
+            Positioned(
+              bottom: 0.0,
+              left: 0.0,
+              right: 0.0,
+              height: _shadowHeight,
+              child: endGradient,
+            )
+          else
+            Positioned(
+              bottom: 0.0,
+              right: 0.0,
+              top: 0.0,
+              width: _shadowHeight,
+              child: endGradient,
+            ),
       ],
     );
   }
