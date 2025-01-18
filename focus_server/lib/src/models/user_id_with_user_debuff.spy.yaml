@@ -1,0 +1,7 @@
+### Wrapper class for a user id and a [UserDebuff].
+class: UserIdWithUserDebuff
+fields:
+  ### User id.
+  userId: int
+  ### [UserDebuff].
+  debuff: UserDebuff

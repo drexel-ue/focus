@@ -37,13 +37,15 @@ import 'user.dart' as _i25;
 import 'user_ability_stats.dart' as _i26;
 import 'user_buff.dart' as _i27;
 import 'user_debuff.dart' as _i28;
-import 'user_with_routine_record.dart' as _i29;
-import 'user_with_task.dart' as _i30;
-import 'package:focus_client/src/protocol/routine.dart' as _i31;
-import 'package:focus_client/src/protocol/routine_step.dart' as _i32;
-import 'package:focus_client/src/protocol/user_buff.dart' as _i33;
-import 'package:focus_client/src/protocol/user_debuff.dart' as _i34;
-import 'package:focus_client/src/protocol/task.dart' as _i35;
+import 'user_id_with_user_buff.dart' as _i29;
+import 'user_id_with_user_debuff.dart' as _i30;
+import 'user_with_routine_record.dart' as _i31;
+import 'user_with_task.dart' as _i32;
+import 'package:focus_client/src/protocol/routine.dart' as _i33;
+import 'package:focus_client/src/protocol/routine_step.dart' as _i34;
+import 'package:focus_client/src/protocol/user_buff.dart' as _i35;
+import 'package:focus_client/src/protocol/user_debuff.dart' as _i36;
+import 'package:focus_client/src/protocol/task.dart' as _i37;
 export 'ability.dart';
 export 'ability_experience_value.dart';
 export 'auth_exception.dart';
@@ -71,6 +73,8 @@ export 'user.dart';
 export 'user_ability_stats.dart';
 export 'user_buff.dart';
 export 'user_debuff.dart';
+export 'user_id_with_user_buff.dart';
+export 'user_id_with_user_debuff.dart';
 export 'user_with_routine_record.dart';
 export 'user_with_task.dart';
 export 'client.dart';
@@ -169,11 +173,17 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i28.UserDebuff) {
       return _i28.UserDebuff.fromJson(data) as T;
     }
-    if (t == _i29.UserWithRoutineRecord) {
-      return _i29.UserWithRoutineRecord.fromJson(data) as T;
+    if (t == _i29.UserIdWithUserBuff) {
+      return _i29.UserIdWithUserBuff.fromJson(data) as T;
     }
-    if (t == _i30.UserWithTask) {
-      return _i30.UserWithTask.fromJson(data) as T;
+    if (t == _i30.UserIdWithUserDebuff) {
+      return _i30.UserIdWithUserDebuff.fromJson(data) as T;
+    }
+    if (t == _i31.UserWithRoutineRecord) {
+      return _i31.UserWithRoutineRecord.fromJson(data) as T;
+    }
+    if (t == _i32.UserWithTask) {
+      return _i32.UserWithTask.fromJson(data) as T;
     }
     if (t == _i1.getType<_i2.Ability?>()) {
       return (data != null ? _i2.Ability.fromJson(data) : null) as T;
@@ -262,12 +272,20 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i28.UserDebuff?>()) {
       return (data != null ? _i28.UserDebuff.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i29.UserWithRoutineRecord?>()) {
-      return (data != null ? _i29.UserWithRoutineRecord.fromJson(data) : null)
+    if (t == _i1.getType<_i29.UserIdWithUserBuff?>()) {
+      return (data != null ? _i29.UserIdWithUserBuff.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i30.UserWithTask?>()) {
-      return (data != null ? _i30.UserWithTask.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i30.UserIdWithUserDebuff?>()) {
+      return (data != null ? _i30.UserIdWithUserDebuff.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i31.UserWithRoutineRecord?>()) {
+      return (data != null ? _i31.UserWithRoutineRecord.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i32.UserWithTask?>()) {
+      return (data != null ? _i32.UserWithTask.fromJson(data) : null) as T;
     }
     if (t == List<_i18.RoutineStep>) {
       return (data as List)
@@ -282,25 +300,25 @@ class Protocol extends _i1.SerializationManager {
       return (data as List).map((e) => deserialize<_i28.UserDebuff>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i31.Routine>) {
-      return (data as List).map((e) => deserialize<_i31.Routine>(e)).toList()
+    if (t == List<_i33.Routine>) {
+      return (data as List).map((e) => deserialize<_i33.Routine>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i32.RoutineStep>) {
+    if (t == List<_i34.RoutineStep>) {
       return (data as List)
-          .map((e) => deserialize<_i32.RoutineStep>(e))
+          .map((e) => deserialize<_i34.RoutineStep>(e))
           .toList() as dynamic;
     }
-    if (t == List<_i33.UserBuff>) {
-      return (data as List).map((e) => deserialize<_i33.UserBuff>(e)).toList()
+    if (t == List<_i35.UserBuff>) {
+      return (data as List).map((e) => deserialize<_i35.UserBuff>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i34.UserDebuff>) {
-      return (data as List).map((e) => deserialize<_i34.UserDebuff>(e)).toList()
+    if (t == List<_i36.UserDebuff>) {
+      return (data as List).map((e) => deserialize<_i36.UserDebuff>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i35.Task>) {
-      return (data as List).map((e) => deserialize<_i35.Task>(e)).toList()
+    if (t == List<_i37.Task>) {
+      return (data as List).map((e) => deserialize<_i37.Task>(e)).toList()
           as dynamic;
     }
     return super.deserialize<T>(data, t);
@@ -391,10 +409,16 @@ class Protocol extends _i1.SerializationManager {
     if (data is _i28.UserDebuff) {
       return 'UserDebuff';
     }
-    if (data is _i29.UserWithRoutineRecord) {
+    if (data is _i29.UserIdWithUserBuff) {
+      return 'UserIdWithUserBuff';
+    }
+    if (data is _i30.UserIdWithUserDebuff) {
+      return 'UserIdWithUserDebuff';
+    }
+    if (data is _i31.UserWithRoutineRecord) {
       return 'UserWithRoutineRecord';
     }
-    if (data is _i30.UserWithTask) {
+    if (data is _i32.UserWithTask) {
       return 'UserWithTask';
     }
     return null;
@@ -487,11 +511,17 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName == 'UserDebuff') {
       return deserialize<_i28.UserDebuff>(data['data']);
     }
+    if (dataClassName == 'UserIdWithUserBuff') {
+      return deserialize<_i29.UserIdWithUserBuff>(data['data']);
+    }
+    if (dataClassName == 'UserIdWithUserDebuff') {
+      return deserialize<_i30.UserIdWithUserDebuff>(data['data']);
+    }
     if (dataClassName == 'UserWithRoutineRecord') {
-      return deserialize<_i29.UserWithRoutineRecord>(data['data']);
+      return deserialize<_i31.UserWithRoutineRecord>(data['data']);
     }
     if (dataClassName == 'UserWithTask') {
-      return deserialize<_i30.UserWithTask>(data['data']);
+      return deserialize<_i32.UserWithTask>(data['data']);
     }
     return super.deserializeByClassName(data);
   }

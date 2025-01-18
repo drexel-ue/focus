@@ -6,14 +6,10 @@ extension UserBuffX on UserBuff {
   Duration get duration {
     return switch (this) {
       UserBuff.rested => const Duration(hours: 16),
-      // TODO: Handle this case.
-      UserBuff.warmedUp => throw UnimplementedError(),
-      // TODO: Handle this case.
-      UserBuff.disciplined => throw UnimplementedError(),
-      // TODO: Handle this case.
-      UserBuff.studied => throw UnimplementedError(),
-      // TODO: Handle this case.
-      UserBuff.trained => throw UnimplementedError(),
+      UserBuff.warmedUp => const Duration(hours: 2),
+      UserBuff.disciplined => const Duration(hours: 24),
+      UserBuff.studied => const Duration(hours: 4),
+      UserBuff.trained => const Duration(hours: 8),
     };
   }
 }

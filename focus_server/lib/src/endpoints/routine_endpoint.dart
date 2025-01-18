@@ -1,5 +1,9 @@
 import 'package:focus_server/src/custom_scope.dart';
 import 'package:focus_server/src/extensions/session_extension.dart';
+import 'package:focus_server/src/extensions/user_buff.dart';
+import 'package:focus_server/src/extensions/user_debuff.dart';
+import 'package:focus_server/src/future_calls/remove_user_buff_future_call.dart';
+import 'package:focus_server/src/future_calls/remove_user_debuff_future_call.dart';
 import 'package:focus_server/src/future_calls/routine_completion_check_future_call.dart';
 import 'package:focus_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
@@ -272,9 +276,15 @@ class RoutineEndpoint extends Endpoint {
       ..lastModifiedAt = DateTime.timestamp();
     record = await RoutineRecord.db.updateRow(session, record, transaction: transaction);
     if (status == RoutineRecordStatus.completed) {
-      user.buffs.addAll(routine.buffs);
+      for (final buff in routine.buffs) {
+        await RemoveUserBuffFutureCall.schedule(session, transaction, user, buff);
+        user.buffs.add(buff);
+      }
     } else {
-      user.debuffs.addAll(routine.debuffs);
+      for (final debuff in routine.debuffs) {
+        await RemoveUserDebuffFutureCall.schedule(session, transaction, user, debuff);
+        user.debuffs.add(debuff);
+      }
     }
     user = await User.db.updateRow(session, user, transaction: transaction);
     await session.serverpod.cancelFutureCall('${record.id}');

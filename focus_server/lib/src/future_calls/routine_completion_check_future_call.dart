@@ -1,3 +1,5 @@
+import 'package:focus_server/src/extensions/user_debuff.dart';
+import 'package:focus_server/src/future_calls/remove_user_debuff_future_call.dart';
 import 'package:focus_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
 
@@ -26,11 +28,20 @@ class RoutineCompletionCheckFutureCall extends FutureCall<Routine> {
           if (user == null) {
             throw NotFoundException(message: 'missing User');
           }
-          user.debuffs.addAll(object.debuffs);
+          for (final debuff in object.debuffs) {
+            final identifier = 'remove-user-debuff-${user.id}-${debuff.name}';
+            await session.serverpod.cancelFutureCall(identifier);
+            user.debuffs.add(debuff);
+            await session.serverpod.futureCallWithDelay(
+              RemoveUserDebuffFutureCall.callName,
+              UserIdWithUserDebuff(userId: user.id!, debuff: debuff),
+              debuff.duration,
+              identifier: identifier,
+            );
+          }
           await User.db.updateRow(session, user, transaction: transaction);
           record.status = RoutineRecordStatus.timedOut;
           await RoutineRecord.db.updateRow(session, record, transaction: transaction);
-          // FIXME(drexel-ue): add future call to remove debuff(s).
         }
       } catch (error, stackTrace) {
         session.log(

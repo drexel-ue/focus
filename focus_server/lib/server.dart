@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:focus_server/src/custom_scope.dart';
+import 'package:focus_server/src/future_calls/remove_user_buff_future_call.dart';
+import 'package:focus_server/src/future_calls/remove_user_debuff_future_call.dart';
 import 'package:focus_server/src/future_calls/routine_completion_check_future_call.dart';
 import 'package:serverpod/serverpod.dart';
 
@@ -36,6 +38,14 @@ void run(List<String> args) async {
   pod.registerFutureCall(
     RoutineCompletionCheckFutureCall(),
     RoutineCompletionCheckFutureCall.callName,
+  );
+  pod.registerFutureCall(
+    RemoveUserBuffFutureCall(),
+    RemoveUserBuffFutureCall.callName,
+  );
+  pod.registerFutureCall(
+    RemoveUserDebuffFutureCall(),
+    RemoveUserDebuffFutureCall.callName,
   );
 
   // Setup a default page at the web root.
