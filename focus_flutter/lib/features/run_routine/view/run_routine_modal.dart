@@ -5,11 +5,9 @@ import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/run_routine/repository/run_routine_repository.dart';
 import 'package:focus_flutter/features/run_routine/view/binary_step_page.dart';
 import 'package:focus_flutter/features/run_routine/view/duration_step_page.dart';
-import 'package:focus_flutter/features/run_routine/view/rest_modal.dart';
 import 'package:focus_flutter/features/run_routine/view/start_routine_page.dart';
 import 'package:focus_flutter/features/run_routine/view/tally_step_page.dart';
 import 'package:focus_flutter/features/run_routine/view/time_out_countdown.dart';
-import 'package:focus_flutter/features/widgets/focus_modal.dart';
 import 'package:focus_flutter/features/widgets/loading_cover.dart';
 
 /// Runs a [Routine].

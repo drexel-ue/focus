@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:duration_picker/duration_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_flutter/app/layout.dart';
