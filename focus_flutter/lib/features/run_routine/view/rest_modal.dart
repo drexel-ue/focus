@@ -58,6 +58,7 @@ class RestModal extends ConsumerWidget {
           ],
           FocusCountdownTimer(
             duration: ref.watch(runRoutineRepositoryProvider).requireValue.restDuration,
+            onFinished: () => closeModal(),
           ),
           verticalMargin16,
           FocusButton(

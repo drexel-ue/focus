@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/run_routine/repository/run_routine_repository.dart';
-import 'package:focus_flutter/features/run_routine/view/abort_routine_modal.dart';
 import 'package:focus_flutter/features/run_routine/view/rest_modal.dart';
-import 'package:focus_flutter/features/widgets/focus_button.dart';
+import 'package:focus_flutter/features/run_routine/view/step_actions.dart';
+import 'package:focus_flutter/features/run_routine/view/step_title_and_iteration.dart';
 
 /// Binary step page.
 @immutable
@@ -30,6 +30,8 @@ class BinaryStepPage extends ConsumerStatefulWidget {
 class _BinaryStepPageState extends ConsumerState<BinaryStepPage> {
   final _iteration = ValueNotifier(0);
 
+  bool get isDone => _iteration.value >= widget.step.repeats;
+
   Future<void> _done() async {
     final steps = ref.read(runRoutineRepositoryProvider).requireValue.routine!.steps;
     final currentIndex = steps.indexOf(widget.step);
@@ -49,8 +51,6 @@ class _BinaryStepPageState extends ConsumerState<BinaryStepPage> {
       widget.onComplete();
     }
   }
-
-  bool get isDone => _iteration.value >= widget.step.repeats;
 
   String get buttonText {
     if (isDone) {
@@ -72,49 +72,17 @@ class _BinaryStepPageState extends ConsumerState<BinaryStepPage> {
           spacer,
           Padding(
             padding: horizontalPadding16,
-            child: Text(
-              widget.step.title,
-              style: TextTheme.of(context).titleMedium,
-              textAlign: TextAlign.center,
-            ),
-          ),
-          verticalMargin16,
-          Padding(
-            padding: horizontalPadding16,
-            child: ValueListenableBuilder(
-              valueListenable: _iteration,
-              builder: (BuildContext context, int value, Widget? child) {
-                return Text(
-                  '${_iteration.value + 1}/${widget.step.repeats + 1}',
-                  style: TextTheme.of(context).titleMedium,
-                  textAlign: TextAlign.center,
-                );
-              },
+            child: StepTitleAndIteration(
+              title: widget.step.title,
+              iteration: _iteration,
+              repeats: widget.step.repeats,
             ),
           ),
           spacer,
-          Row(
-            children: [
-              Expanded(
-                child: FocusButton(
-                  onTap: () => AbortRoutineModal.show(context, ref),
-                  child: const Text('Abort'),
-                ),
-              ),
-              horizontalMargin16,
-              Expanded(
-                child: FocusButton(
-                  onTap: () => _done(),
-                  filled: true,
-                  child: ValueListenableBuilder(
-                    valueListenable: _iteration,
-                    builder: (BuildContext context, int value, Widget? child) {
-                      return Text(buttonText);
-                    },
-                  ),
-                ),
-              ),
-            ],
+          StepActions(
+            done: _done,
+            iteration: _iteration,
+            repeats: widget.step.repeats,
           ),
         ],
       ),

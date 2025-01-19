@@ -25,21 +25,19 @@ class FocusCountdownTimer extends StatefulWidget {
 
 class _FocusCountdownTimerState extends State<FocusCountdownTimer> {
   late final Timer _timer;
-  final _stopwatch = Stopwatch();
   late final _secondsRemaining = ValueNotifier<int>(widget.duration.inSeconds);
 
   @override
   void initState() {
     super.initState();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (_stopwatch.elapsed < widget.duration) {
+      if (_secondsRemaining.value > 0) {
         _secondsRemaining.value -= 1;
       } else {
         _timer.cancel();
         widget.onFinished?.call();
       }
     });
-    _stopwatch.start();
   }
 
   @override
