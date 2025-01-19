@@ -6,11 +6,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/run_routine/repository/run_routine_repository.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
+import 'package:focus_flutter/features/widgets/focus_countdown_timer.dart';
 import 'package:focus_flutter/features/widgets/focus_modal.dart';
 
 /// Rest modal.
 @immutable
-class RestModal extends ConsumerStatefulWidget {
+class RestModal extends ConsumerWidget {
   /// Constructs a const [RestModal].
   const RestModal({
     super.key,
@@ -36,40 +37,7 @@ class RestModal extends ConsumerStatefulWidget {
   final CloseModal closeModal;
 
   @override
-  ConsumerState<RestModal> createState() => _RestModalState();
-}
-
-class _RestModalState extends ConsumerState<RestModal> {
-  late final Timer _timer;
-  final _stopwatch = Stopwatch();
-  late final _secondsRemaining = ValueNotifier<int>(restTime);
-
-  int get restTime => ref.read(runRoutineRepositoryProvider).requireValue.restDuration.inSeconds;
-
-  @override
-  void initState() {
-    super.initState();
-    _stopwatch.start();
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (_stopwatch.elapsed < Duration(seconds: restTime)) {
-        _secondsRemaining.value -= 1;
-      } else {
-        _timer.cancel();
-        widget.closeModal();
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    if (_timer.isActive) {
-      _timer.cancel();
-    }
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: allPadding16,
       child: Column(
@@ -82,27 +50,19 @@ class _RestModalState extends ConsumerState<RestModal> {
             style: TextTheme.of(context).titleMedium,
           ),
           verticalMargin16,
-          if (widget.nextStep case String nextStep) ...[
+          if (nextStep case String nextStep) ...[
             Text(
               'Up next: $nextStep',
               textAlign: TextAlign.center,
             ),
             verticalMargin16,
           ],
-          ValueListenableBuilder(
-            valueListenable: _secondsRemaining,
-            builder: (BuildContext context, int value, Widget? child) {
-              final baseUnit = value < 60 ? BaseUnit.second : BaseUnit.minute;
-              return DurationPicker(
-                duration: Duration(seconds: value),
-                baseUnit: baseUnit,
-                onChange: (Duration duration) => {},
-              );
-            },
+          FocusCountdownTimer(
+            duration: ref.watch(runRoutineRepositoryProvider).requireValue.restDuration,
           ),
           verticalMargin16,
           FocusButton(
-            onTap: () => widget.closeModal(),
+            onTap: () => closeModal(),
             filled: true,
             child: const Text('Skip'),
           ),
