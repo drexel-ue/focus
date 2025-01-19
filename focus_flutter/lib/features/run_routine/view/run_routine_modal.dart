@@ -32,7 +32,7 @@ class _RunRoutineModalState extends ConsumerState<RunRoutineModal> {
   }
 
   void _moveToNext() => _pageController.nextPage(
-        duration: const Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 250),
         curve: Curves.easeOut,
       );
 
@@ -64,7 +64,7 @@ class _RunRoutineModalState extends ConsumerState<RunRoutineModal> {
               controller: _pageController,
               physics: const NeverScrollableScrollPhysics(),
               onPageChanged: (int page) =>
-                  ref.read(runRoutineRepositoryProvider.notifier).currentStep = page,
+                  ref.read(runRoutineRepositoryProvider.notifier).currentStep = page - 1,
               children: [
                 StartRoutinePage(onStart: _moveToNext),
                 for (final step in routine.steps) //

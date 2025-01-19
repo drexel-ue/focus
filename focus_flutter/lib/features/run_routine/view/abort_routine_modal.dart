@@ -10,10 +10,21 @@ import 'package:focus_flutter/features/widgets/user_debuff_wrap.dart';
 @immutable
 class AbortRoutineModal extends ConsumerWidget {
   /// Constructs a const [AbortRoutineModal].
-  const AbortRoutineModal({
-    super.key,
-    required this.closeModal,
-  });
+  const AbortRoutineModal._({required this.closeModal});
+
+  /// Shows the [AbortRoutineModal].
+  static Future<void> show(BuildContext context, WidgetRef ref) async {
+    final abort = await FocusModal.show<bool>(
+      context,
+      (BuildContext context, CloseModal closeModal) => AbortRoutineModal._(closeModal: closeModal),
+    );
+    if (abort == true) {
+      await ref.read(runRoutineRepositoryProvider.notifier).abortRoutine();
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+    }
+  }
 
   /// Callback to run when modal is closed.
   final CloseModal closeModal;

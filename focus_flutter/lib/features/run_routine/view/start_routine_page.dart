@@ -8,7 +8,6 @@ import 'package:focus_flutter/features/run_routine/view/abort_routine_modal.dart
 import 'package:focus_flutter/features/widgets/ability_stats_display.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
 import 'package:focus_flutter/features/widgets/focus_checkbox.dart';
-import 'package:focus_flutter/features/widgets/focus_modal.dart';
 import 'package:focus_flutter/features/widgets/scroll_shadow.dart';
 import 'package:focus_flutter/features/widgets/user_buff_wrap.dart';
 import 'package:focus_flutter/features/widgets/user_debuff_wrap.dart';
@@ -33,19 +32,6 @@ class _StartRoutinePageState extends ConsumerState<StartRoutinePage> {
   final _withTimer = ValueNotifier<bool>(false);
   final _baseUnit = ValueNotifier<BaseUnit>(BaseUnit.second);
   final _duration = ValueNotifier<Duration>(Duration.zero);
-
-  Future<void> _showAbortModal(BuildContext context, WidgetRef ref) async {
-    final abort = await FocusModal.show<bool>(
-      context,
-      (BuildContext context, CloseModal closeModal) => AbortRoutineModal(closeModal: closeModal),
-    );
-    if (abort == true) {
-      await ref.read(runRoutineRepositoryProvider.notifier).abortRoutine();
-      if (context.mounted) {
-        Navigator.of(context).pop();
-      }
-    }
-  }
 
   void _start() {
     if (_withTimer.value) {
@@ -187,7 +173,7 @@ class _StartRoutinePageState extends ConsumerState<StartRoutinePage> {
             children: [
               Expanded(
                 child: FocusButton(
-                  onTap: () => _showAbortModal(context, ref),
+                  onTap: () => AbortRoutineModal.show(context, ref),
                   child: const Text('Abort'),
                 ),
               ),

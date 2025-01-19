@@ -2,35 +2,32 @@ import 'dart:async';
 
 import 'package:duration_picker/duration_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_flutter/app/layout.dart';
+import 'package:focus_flutter/features/run_routine/repository/run_routine_repository.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
 import 'package:focus_flutter/features/widgets/focus_modal.dart';
 
 /// Rest modal.
 @immutable
-class RestModal extends StatefulWidget {
+class RestModal extends ConsumerStatefulWidget {
   /// Constructs a const [RestModal].
   const RestModal({
     super.key,
-    required this.duration,
     this.nextStep,
     required this.closeModal,
   });
 
   /// Shows a [RestModal].
-  static Future<void> show(BuildContext context, String? nextStep) async {
+  static Future<void> show(BuildContext context, [String? nextStep]) async {
     await FocusModal.show<void>(
       context,
       (BuildContext context, CloseModal closeModal) => RestModal(
-        duration: const Duration(seconds: 30),
         nextStep: nextStep,
         closeModal: closeModal,
       ),
     );
   }
-
-  /// Duration to rest.
-  final Duration duration;
 
   /// Next step.
   final String? nextStep;
@@ -39,20 +36,22 @@ class RestModal extends StatefulWidget {
   final CloseModal closeModal;
 
   @override
-  State<RestModal> createState() => _RestModalState();
+  ConsumerState<RestModal> createState() => _RestModalState();
 }
 
-class _RestModalState extends State<RestModal> {
+class _RestModalState extends ConsumerState<RestModal> {
   late final Timer _timer;
   final _stopwatch = Stopwatch();
-  late final _secondsRemaining = ValueNotifier<int>(widget.duration.inSeconds);
+  late final _secondsRemaining = ValueNotifier<int>(restTime);
+
+  int get restTime => ref.read(runRoutineRepositoryProvider).requireValue.restDuration.inSeconds;
 
   @override
   void initState() {
     super.initState();
     _stopwatch.start();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (_stopwatch.elapsed < widget.duration) {
+      if (_stopwatch.elapsed < Duration(seconds: restTime)) {
         _secondsRemaining.value -= 1;
       } else {
         _timer.cancel();
@@ -104,6 +103,7 @@ class _RestModalState extends State<RestModal> {
           verticalMargin16,
           FocusButton(
             onTap: () => widget.closeModal(),
+            filled: true,
             child: const Text('Skip'),
           ),
         ],
