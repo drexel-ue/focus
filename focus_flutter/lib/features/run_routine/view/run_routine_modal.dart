@@ -8,6 +8,7 @@ import 'package:focus_flutter/features/run_routine/view/duration_step_page.dart'
 import 'package:focus_flutter/features/run_routine/view/rest_modal.dart';
 import 'package:focus_flutter/features/run_routine/view/start_routine_page.dart';
 import 'package:focus_flutter/features/run_routine/view/tally_step_page.dart';
+import 'package:focus_flutter/features/run_routine/view/time_out_countdown.dart';
 import 'package:focus_flutter/features/widgets/focus_modal.dart';
 import 'package:focus_flutter/features/widgets/loading_cover.dart';
 
@@ -23,12 +24,11 @@ class RunRoutineModal extends ConsumerStatefulWidget {
 
 class _RunRoutineModalState extends ConsumerState<RunRoutineModal> {
   late final PageController _pageController;
-  int _page = 0;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: _page);
+    _pageController = PageController();
   }
 
   void _moveToNext() => _pageController.nextPage(
@@ -46,25 +46,37 @@ class _RunRoutineModalState extends ConsumerState<RunRoutineModal> {
   Widget build(BuildContext context) {
     final state = ref.watch(runRoutineRepositoryProvider);
     final routine = state.requireValue.routine;
-    final record = state.requireValue.record;
     if (routine == null) {
       return emptyWidget;
     }
     return LoadingCover(
       loading: state.isLoading,
-      child: PageView(
-        controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(),
-        onPageChanged: (int page) => _page = page,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const StartRoutinePage(),
-          for (final step in routine.steps) //
-            if (step.type == RoutineStepType.binary) //
-              BinaryStepPage(step: step, onComplete: _moveToNext)
-            else if (step.type == RoutineStepType.duration) //
-              DurationStepPage(step: step, onComplete: _moveToNext)
-            else if (step.type == RoutineStepType.tally) //
-              TallyStepPage(step: step, onComplete: _moveToNext),
+          verticalMargin16,
+          const Padding(
+            padding: horizontalPadding16,
+            child: TimeOutCountdown(),
+          ),
+          Expanded(
+            child: PageView(
+              controller: _pageController,
+              physics: const NeverScrollableScrollPhysics(),
+              onPageChanged: (int page) =>
+                  ref.read(runRoutineRepositoryProvider.notifier).currentStep = page,
+              children: [
+                StartRoutinePage(onStart: _moveToNext),
+                for (final step in routine.steps) //
+                  if (step.type == RoutineStepType.binary) //
+                    BinaryStepPage(step: step, onComplete: _moveToNext)
+                  else if (step.type == RoutineStepType.duration) //
+                    DurationStepPage(step: step, onComplete: _moveToNext)
+                  else if (step.type == RoutineStepType.tally) //
+                    TallyStepPage(step: step, onComplete: _moveToNext),
+              ],
+            ),
+          ),
         ],
       ),
     );

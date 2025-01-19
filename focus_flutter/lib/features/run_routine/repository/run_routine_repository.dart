@@ -84,6 +84,10 @@ class RunRoutineRepository extends AsyncNotifier<RunRoutineRepositoryState>
         state.requireValue.copyWith(restDuration: value),
       );
 
+  set currentStep(int? value) => state = AsyncData(
+        state.requireValue.copyWith(currentStep: value),
+      );
+
   @override
   FutureOr<RunRoutineRepositoryState> build() async {
     return const RunRoutineRepositoryState();

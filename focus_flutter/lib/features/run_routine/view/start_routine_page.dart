@@ -17,7 +17,13 @@ import 'package:focus_flutter/features/widgets/user_debuff_wrap.dart';
 @immutable
 class StartRoutinePage extends ConsumerStatefulWidget {
   /// Constructs a const [StartRoutinePage].
-  const StartRoutinePage({super.key});
+  const StartRoutinePage({
+    super.key,
+    required this.onStart,
+  });
+
+  /// Calllback to start the [Routine].
+  final VoidCallback onStart;
 
   @override
   ConsumerState<StartRoutinePage> createState() => _StartRoutinePageState();
@@ -39,6 +45,13 @@ class _StartRoutinePageState extends ConsumerState<StartRoutinePage> {
         Navigator.of(context).pop();
       }
     }
+  }
+
+  void _start() {
+    if (_withTimer.value) {
+      ref.read(runRoutineRepositoryProvider.notifier).restDuration = _duration.value;
+    }
+    widget.onStart();
   }
 
   @override
@@ -187,7 +200,7 @@ class _StartRoutinePageState extends ConsumerState<StartRoutinePage> {
                       valueListenable: _duration,
                       builder: (BuildContext context, Duration value, Widget? child) {
                         return FocusButton(
-                          onTap: () {},
+                          onTap: () => _start(),
                           enabled: _withTimer.value ? _duration.value > Duration.zero : true,
                           filled: true,
                           child: const Text('Start'),
