@@ -37,6 +37,7 @@ class StatsPage extends ConsumerWidget {
                   children: [
                     Text(user.fullName),
                     Text('Lv. ${user.abilityStats.userLevel}'),
+                    verticalMargin4,
                     SizedBox(
                       height: 40.0,
                       child: ScrollShadow(
@@ -48,7 +49,9 @@ class StatsPage extends ConsumerWidget {
                           itemBuilder: (BuildContext context, int index) {
                             final modifier = modifiers[index];
                             return Padding(
-                              padding: rightPadding8,
+                              padding: index < modifiers.length - 1 //
+                                  ? rightPadding8
+                                  : EdgeInsets.zero,
                               child: FocusChoiceChip(
                                 label: modifier is UserBuff
                                     ? modifier.name
