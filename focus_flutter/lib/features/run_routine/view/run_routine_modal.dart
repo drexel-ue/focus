@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:focus_client/focus_client.dart';
+import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/run_routine/repository/run_routine_repository.dart';
+import 'package:focus_flutter/features/run_routine/view/binary_step_page.dart';
+import 'package:focus_flutter/features/run_routine/view/duration_step_page.dart';
 import 'package:focus_flutter/features/run_routine/view/start_routine_page.dart';
+import 'package:focus_flutter/features/run_routine/view/tally_step_page.dart';
 import 'package:focus_flutter/features/widgets/loading_cover.dart';
 
 /// Runs a [Routine].
@@ -34,13 +39,23 @@ class _RunRoutineModalState extends ConsumerState<RunRoutineModal> {
     final state = ref.watch(runRoutineRepositoryProvider);
     final routine = state.requireValue.routine;
     final record = state.requireValue.record;
+    if (routine == null) {
+      return emptyWidget;
+    }
     return LoadingCover(
       loading: state.isLoading,
       child: PageView(
         controller: _pageController,
         physics: const NeverScrollableScrollPhysics(),
-        children: const [
-          StartRoutinePage(),
+        children: [
+          const StartRoutinePage(),
+          for (final step in routine.steps) //
+            if (step.type == RoutineStepType.binary) //
+              BinaryStepPage(step: step)
+            else if (step.type == RoutineStepType.duration) //
+              DurationStepPage(step: step)
+            else if (step.type == RoutineStepType.tally) //
+              TallyStepPage(step: step),
         ],
       ),
     );
