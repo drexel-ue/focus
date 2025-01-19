@@ -5,6 +5,7 @@ import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/run_routine/repository/run_routine_repository.dart';
 import 'package:focus_flutter/features/run_routine/view/binary_step_page.dart';
 import 'package:focus_flutter/features/run_routine/view/duration_step_page.dart';
+import 'package:focus_flutter/features/run_routine/view/routine_complete_page.dart';
 import 'package:focus_flutter/features/run_routine/view/start_routine_page.dart';
 import 'package:focus_flutter/features/run_routine/view/tally_step_page.dart';
 import 'package:focus_flutter/features/run_routine/view/time_out_countdown.dart';
@@ -72,6 +73,7 @@ class _RunRoutineModalState extends ConsumerState<RunRoutineModal> {
                     DurationStepPage(step: step, onComplete: _moveToNext)
                   else if (step.type == RoutineStepType.tally) //
                     TallyStepPage(step: step, onComplete: _moveToNext),
+                const RoutineCompletePage(),
               ],
             ),
           ),

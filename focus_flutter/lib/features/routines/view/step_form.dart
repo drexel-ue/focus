@@ -1,4 +1,3 @@
-import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:collection/collection.dart';
 import 'package:duration_picker/duration_picker.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart';
+import 'package:focus_flutter/features/run_routine/view/focus_tally_counter.dart';
 import 'package:focus_flutter/features/tasks/repository/tasks_repository.dart';
 import 'package:focus_flutter/features/widgets/digits_only_input_formatter.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
@@ -243,68 +243,9 @@ class _StepFormState extends ConsumerState<StepForm> {
                   ],
                   if (_type == RoutineStepType.tally) ...[
                     verticalMargin16,
-                    AnimatedFlipCounter(
-                      value: _tally ?? 0,
-                      textStyle: const TextStyle(fontSize: 72.0),
-                    ),
-                    verticalMargin16,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        FocusButton(
-                          onTap: () {
-                            if (_tally case int tally) {
-                              setState(() {
-                                _tally = (tally - 10).clamp(0, tally);
-                              });
-                            }
-                          },
-                          square: true,
-                          child: const Text('-10'),
-                        ),
-                        FocusButton(
-                          onTap: () {
-                            if (_tally case int tally) {
-                              setState(() {
-                                _tally = (tally - 1).clamp(0, tally);
-                              });
-                            }
-                          },
-                          square: true,
-                          child: const Text('-1'),
-                        ),
-                        FocusButton(
-                          onTap: () => setState(() => _tally = 0),
-                          square: true,
-                          child: const Text('0'),
-                        ),
-                        FocusButton(
-                          onTap: () {
-                            setState(() {
-                              if (_tally case int tally) {
-                                _tally = tally + 1;
-                              } else {
-                                _tally = 1;
-                              }
-                            });
-                          },
-                          square: true,
-                          child: const Text('+1'),
-                        ),
-                        FocusButton(
-                          onTap: () {
-                            setState(() {
-                              if (_tally case int tally) {
-                                _tally = tally + 10;
-                              } else {
-                                _tally = 10;
-                              }
-                            });
-                          },
-                          square: true,
-                          child: const Text('+10'),
-                        ),
-                      ],
+                    FocusTallyCounter(
+                      tally: _tally ?? 0,
+                      onChanged: (int tally) => setState(() => _tally = tally),
                     ),
                   ],
                 ],

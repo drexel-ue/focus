@@ -42,7 +42,8 @@ class _BinaryStepPageState extends ConsumerState<BinaryStepPage> {
     } else if (!isLastStep) {
       nextStep = steps[currentIndex + 1].title;
     }
-    if (ref.read(runRoutineRepositoryProvider).requireValue.restDuration > Duration.zero) {
+    if (ref.read(runRoutineRepositoryProvider).requireValue.restDuration > Duration.zero &&
+        _iteration.value < widget.step.repeats) {
       await RestModal.show(context, nextStep);
     }
     if (!isDone) {
