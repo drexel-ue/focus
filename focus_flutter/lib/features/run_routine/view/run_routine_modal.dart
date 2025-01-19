@@ -5,8 +5,10 @@ import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/run_routine/repository/run_routine_repository.dart';
 import 'package:focus_flutter/features/run_routine/view/binary_step_page.dart';
 import 'package:focus_flutter/features/run_routine/view/duration_step_page.dart';
+import 'package:focus_flutter/features/run_routine/view/rest_modal.dart';
 import 'package:focus_flutter/features/run_routine/view/start_routine_page.dart';
 import 'package:focus_flutter/features/run_routine/view/tally_step_page.dart';
+import 'package:focus_flutter/features/widgets/focus_modal.dart';
 import 'package:focus_flutter/features/widgets/loading_cover.dart';
 
 /// Runs a [Routine].
@@ -21,12 +23,18 @@ class RunRoutineModal extends ConsumerStatefulWidget {
 
 class _RunRoutineModalState extends ConsumerState<RunRoutineModal> {
   late final PageController _pageController;
+  int _page = 0;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: 0);
+    _pageController = PageController(initialPage: _page);
   }
+
+  void _moveToNext() => _pageController.nextPage(
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeOut,
+      );
 
   @override
   void dispose() {
@@ -47,15 +55,16 @@ class _RunRoutineModalState extends ConsumerState<RunRoutineModal> {
       child: PageView(
         controller: _pageController,
         physics: const NeverScrollableScrollPhysics(),
+        onPageChanged: (int page) => _page = page,
         children: [
           const StartRoutinePage(),
           for (final step in routine.steps) //
             if (step.type == RoutineStepType.binary) //
-              BinaryStepPage(step: step)
+              BinaryStepPage(step: step, onComplete: _moveToNext)
             else if (step.type == RoutineStepType.duration) //
-              DurationStepPage(step: step)
+              DurationStepPage(step: step, onComplete: _moveToNext)
             else if (step.type == RoutineStepType.tally) //
-              TallyStepPage(step: step),
+              TallyStepPage(step: step, onComplete: _moveToNext),
         ],
       ),
     );

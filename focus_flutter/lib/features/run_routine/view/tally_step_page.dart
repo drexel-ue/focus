@@ -9,10 +9,14 @@ class TallyStepPage extends ConsumerStatefulWidget {
   const TallyStepPage({
     super.key,
     required this.step,
+    required this.onComplete,
   });
 
   /// [RoutineStep].
   final RoutineStep step;
+
+  /// Callback to run when tally step is completed.
+  final VoidCallback onComplete;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _TallyStepPageState();

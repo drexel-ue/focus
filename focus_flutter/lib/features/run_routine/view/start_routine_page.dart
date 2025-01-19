@@ -1,3 +1,4 @@
+import 'package:duration_picker/duration_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
@@ -6,6 +7,7 @@ import 'package:focus_flutter/features/run_routine/repository/run_routine_reposi
 import 'package:focus_flutter/features/run_routine/view/abort_routine_modal.dart';
 import 'package:focus_flutter/features/widgets/ability_stats_display.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
+import 'package:focus_flutter/features/widgets/focus_checkbox.dart';
 import 'package:focus_flutter/features/widgets/focus_modal.dart';
 import 'package:focus_flutter/features/widgets/scroll_shadow.dart';
 import 'package:focus_flutter/features/widgets/user_buff_wrap.dart';
@@ -13,9 +15,18 @@ import 'package:focus_flutter/features/widgets/user_debuff_wrap.dart';
 
 /// Start Routine Page.
 @immutable
-class StartRoutinePage extends ConsumerWidget {
+class StartRoutinePage extends ConsumerStatefulWidget {
   /// Constructs a const [StartRoutinePage].
   const StartRoutinePage({super.key});
+
+  @override
+  ConsumerState<StartRoutinePage> createState() => _StartRoutinePageState();
+}
+
+class _StartRoutinePageState extends ConsumerState<StartRoutinePage> {
+  final _withTimer = ValueNotifier<bool>(false);
+  final _baseUnit = ValueNotifier<BaseUnit>(BaseUnit.second);
+  final _duration = ValueNotifier<Duration>(Duration.zero);
 
   Future<void> _showAbortModal(BuildContext context, WidgetRef ref) async {
     final abort = await FocusModal.show<bool>(
@@ -31,8 +42,9 @@ class StartRoutinePage extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final routine = ref.watch(runRoutineRepositoryProvider).requireValue.routine;
+  Widget build(BuildContext context) {
+    final state = ref.watch(runRoutineRepositoryProvider).requireValue;
+    final routine = state.routine;
     if (routine == null) {
       return emptyWidget;
     }
@@ -83,6 +95,75 @@ class StartRoutinePage extends ConsumerWidget {
                     ),
                   ],
                 ),
+                verticalMargin16,
+                ValueListenableBuilder(
+                  valueListenable: _withTimer,
+                  builder: (BuildContext context, bool value, Widget? child) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          children: [
+                            FocusCheckbox(
+                              selected: _withTimer.value,
+                              onTap: () => _withTimer.value = !_withTimer.value,
+                            ),
+                            const Expanded(
+                              child: Text('Rest'),
+                            ),
+                          ],
+                        ),
+                        if (_withTimer.value) ...[
+                          verticalMargin16,
+                          ValueListenableBuilder(
+                            valueListenable: _baseUnit,
+                            builder: (BuildContext context, BaseUnit value, Widget? child) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SegmentedButton<BaseUnit>(
+                                    showSelectedIcon: false,
+                                    selected: {_baseUnit.value},
+                                    segments: [
+                                      for (final unit in [
+                                        BaseUnit.second,
+                                        BaseUnit.minute,
+                                        BaseUnit.hour
+                                      ]) //
+                                        ButtonSegment(
+                                          value: unit,
+                                          label: Text(
+                                            unit.name,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                    ],
+                                    onSelectionChanged: (values) => _baseUnit.value = values.first,
+                                  ),
+                                  verticalMargin16,
+                                  ValueListenableBuilder(
+                                    valueListenable: _duration,
+                                    builder: (BuildContext context, Duration value, Widget? child) {
+                                      return DurationPicker(
+                                        duration: _duration.value,
+                                        baseUnit: _baseUnit.value,
+                                        onChange: (Duration duration) => _duration.value = duration,
+                                      );
+                                    },
+                                  ),
+                                  verticalMargin16,
+                                ],
+                              );
+                            },
+                          ),
+                        ],
+                      ],
+                    );
+                  },
+                ),
               ],
             ),
           ),
@@ -99,10 +180,21 @@ class StartRoutinePage extends ConsumerWidget {
               ),
               horizontalMargin16,
               Expanded(
-                child: FocusButton(
-                  onTap: () {},
-                  filled: true,
-                  child: const Text('Start'),
+                child: ValueListenableBuilder(
+                  valueListenable: _withTimer,
+                  builder: (BuildContext context, bool value, Widget? child) {
+                    return ValueListenableBuilder(
+                      valueListenable: _duration,
+                      builder: (BuildContext context, Duration value, Widget? child) {
+                        return FocusButton(
+                          onTap: () {},
+                          enabled: _withTimer.value ? _duration.value > Duration.zero : true,
+                          filled: true,
+                          child: const Text('Start'),
+                        );
+                      },
+                    );
+                  },
                 ),
               ),
             ],

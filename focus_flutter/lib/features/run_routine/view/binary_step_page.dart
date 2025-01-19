@@ -9,10 +9,14 @@ class BinaryStepPage extends ConsumerStatefulWidget {
   const BinaryStepPage({
     super.key,
     required this.step,
+    required this.onComplete,
   });
 
   /// [RoutineStep].
   final RoutineStep step;
+
+  /// Callback to run when binary step is completed.
+  final VoidCallback onComplete;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _BinaryStepPageState();

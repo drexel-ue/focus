@@ -8,6 +8,7 @@ class RunRoutineRepositoryState {
   const RunRoutineRepositoryState({
     this.routine,
     this.record,
+    this.restDuration = Duration.zero,
   });
 
   /// [Routine] to run.
@@ -16,14 +17,19 @@ class RunRoutineRepositoryState {
   /// [RoutineRecord].
   final RoutineRecord? record;
 
+  /// Rest duration.
+  final Duration restDuration;
+
   /// Creates a new [RunRoutineRepositoryState] while preserving data.
   RunRoutineRepositoryState copyWith({
     Routine? routine,
     RoutineRecord? record,
+    Duration? restDuration,
   }) {
     return RunRoutineRepositoryState(
       routine: routine ?? this.routine,
       record: record ?? this.record,
+      restDuration: restDuration ?? this.restDuration,
     );
   }
 
