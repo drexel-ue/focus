@@ -1,5 +1,6 @@
 import 'package:focus_server/src/custom_scope.dart';
 import 'package:focus_server/src/extensions/session_extension.dart';
+import 'package:focus_server/src/extensions/user_ability_stats.dart';
 import 'package:focus_server/src/future_calls/remove_user_buff_future_call.dart';
 import 'package:focus_server/src/future_calls/remove_user_debuff_future_call.dart';
 import 'package:focus_server/src/future_calls/routine_completion_check_future_call.dart';
@@ -278,6 +279,17 @@ class RoutineEndpoint extends Endpoint {
         await RemoveUserBuffFutureCall.schedule(session, transaction, user, buff);
         user.buffs = {...user.buffs, buff}.toList();
       }
+      var stats = UserAbilityStats(
+        strengthExp: 0,
+        vitalityExp: 0,
+        agilityExp: 0,
+        intelligenceExp: 0,
+        perceptionExp: 0,
+      );
+      for (final step in routine.steps) {
+        stats = stats + step.abilityExpValues;
+      }
+      user.abilityStats = user.abilityStats + stats;
     } else {
       for (final debuff in routine.debuffs) {
         await RemoveUserDebuffFutureCall.schedule(session, transaction, user, debuff);

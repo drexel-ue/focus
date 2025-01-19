@@ -62,8 +62,6 @@ class _RunRoutineModalState extends ConsumerState<RunRoutineModal> {
             child: PageView(
               controller: _pageController,
               physics: const NeverScrollableScrollPhysics(),
-              onPageChanged: (int page) =>
-                  ref.read(runRoutineRepositoryProvider.notifier).currentStep = page - 1,
               children: [
                 StartRoutinePage(onStart: _moveToNext),
                 for (final step in routine.steps) //

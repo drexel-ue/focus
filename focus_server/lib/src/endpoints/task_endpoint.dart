@@ -1,5 +1,6 @@
 import 'package:focus_server/src/custom_scope.dart';
 import 'package:focus_server/src/extensions/session_extension.dart';
+import 'package:focus_server/src/extensions/user_ability_stats.dart';
 import 'package:focus_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
 
@@ -83,8 +84,8 @@ class TaskEndpoint extends Endpoint {
         }
         task.completed = !task.completed;
         user.abilityStats = task.completed
-            ? _addStats(user.abilityStats, task.abilityExpValues)
-            : _substractStats(user.abilityStats, task.abilityExpValues);
+            ? user.abilityStats + task.abilityExpValues
+            : user.abilityStats - task.abilityExpValues;
         task.lastModifiedAt = DateTime.timestamp();
         final updatedUser = await User.db.updateRow(session, user);
         final updatedTask = await Task.db.updateRow(session, task, transaction: transaction);
@@ -203,7 +204,7 @@ class TaskEndpoint extends Endpoint {
         final now = DateTime.timestamp();
         for (final task in tasks) {
           if (task.completed) {
-            completedStats = _addStats(completedStats, task.abilityExpValues);
+            completedStats = completedStats + task.abilityExpValues;
             completedTally += 1;
             final completionTime = task.lastModifiedAt.difference(task.createdAt);
             if (completionTime > longestRunningTaskTime) {
@@ -216,7 +217,7 @@ class TaskEndpoint extends Endpoint {
             }
             completionDurations.add(completionTime);
           } else {
-            incompletedStats = _addStats(incompletedStats, task.abilityExpValues);
+            incompletedStats = incompletedStats + task.abilityExpValues;
             incompleteTally += 1;
             final runningTime = now.difference(task.createdAt);
             if (runningTime > longestRunningTaskTime) {
@@ -256,25 +257,5 @@ class TaskEndpoint extends Endpoint {
         throw FetchException(message: 'failed to fetch task stats.');
       }
     });
-  }
-
-  UserAbilityStats _addStats(UserAbilityStats a, UserAbilityStats b) {
-    return UserAbilityStats(
-      strengthExp: a.strengthExp + b.strengthExp,
-      vitalityExp: a.vitalityExp + b.vitalityExp,
-      agilityExp: a.agilityExp + b.agilityExp,
-      intelligenceExp: a.intelligenceExp + b.intelligenceExp,
-      perceptionExp: a.perceptionExp + b.perceptionExp,
-    );
-  }
-
-  UserAbilityStats _substractStats(UserAbilityStats a, UserAbilityStats b) {
-    return UserAbilityStats(
-      strengthExp: a.strengthExp - b.strengthExp,
-      vitalityExp: a.vitalityExp - b.vitalityExp,
-      agilityExp: a.agilityExp - b.agilityExp,
-      intelligenceExp: a.intelligenceExp - b.intelligenceExp,
-      perceptionExp: a.perceptionExp - b.perceptionExp,
-    );
   }
 }

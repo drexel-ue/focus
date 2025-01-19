@@ -17,6 +17,10 @@ final runRoutineRepositoryProvider =
 /// Manages the running of a [Routine].
 class RunRoutineRepository extends AsyncNotifier<RunRoutineRepositoryState>
     with Logging, ApiClientRef, HomeRepoRef, AuthRepoRef {
+  set restDuration(Duration value) => state = AsyncData(
+        state.requireValue.copyWith(restDuration: value),
+      );
+
   /// Runs a [Routine].
   Future<void> runRoutine(Routine routine) async {
     try {
@@ -80,13 +84,23 @@ class RunRoutineRepository extends AsyncNotifier<RunRoutineRepositoryState>
     }
   }
 
-  set restDuration(Duration value) => state = AsyncData(
-        state.requireValue.copyWith(restDuration: value),
-      );
-
-  set currentStep(int? value) => state = AsyncData(
-        state.requireValue.copyWith(currentStep: value),
-      );
+  /// Completes a [Routine].
+  Future<void> completeRoutine() async {
+    try {
+      homeRepo.showSnack('Completing routine...');
+      state = const AsyncLoading<RunRoutineRepositoryState>().copyWithPrevious(state);
+      final routine = state.requireValue.routine!;
+      final userWithRoutineRecord = await refreshIfNeeded((api) async {
+        return await api.routine.completeRoutine(routine.id!);
+      });
+      homeRepo.showPositiveSnack('Completed routine: ${routine.title}');
+      authRepo.user = userWithRoutineRecord!.user;
+      state = const AsyncData(RunRoutineRepositoryState());
+    } catch (error, stackTrace) {
+      logSevere('error in completeRoutine', error, stackTrace);
+      state = AsyncError<RunRoutineRepositoryState>(error, stackTrace).copyWithPrevious(state);
+    }
+  }
 
   @override
   FutureOr<RunRoutineRepositoryState> build() async {
