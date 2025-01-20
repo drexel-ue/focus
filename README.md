@@ -30,23 +30,23 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/github_username/repo_name">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  <a href="https://github.com/drexel-ue/focus">
+    <img src="focus_flutter/assets/icon/icon.png" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">project_title</h3>
+<h3 align="center">Focus</h3>
 
   <p align="center">
-    project_description
+    A Solo Leveling inspired Life Management app.
     <br />
-    <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/drexel-ue/focus"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/github_username/repo_name">View Demo</a>
+    <a href="https://github.com/drexel-ue/focus">View Demo</a>
     &middot;
-    <a href="https://github.com/github_username/repo_name/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
+    <a href="https://github.com/drexel-ue/focus/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     &middot;
-    <a href="https://github.com/github_username/repo_name/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+    <a href="https://github.com/drexel-ue/focus/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
   </p>
 </div>
 
@@ -83,9 +83,9 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+[![Focus Screen Shot][product-screenshot]](https://example.com)
 
-Here's a blank template to get started. To avoid retyping too much info, do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`, `project_license`
+<!-- Here's a blank template to get started. To avoid retyping too much info, do a search and replace with your text editor for the following: `drexel-ue`, `focus`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`, `project_license` -->
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -93,14 +93,13 @@ Here's a blank template to get started. To avoid retyping too much info, do a se
 
 ### Built With
 
-* [![Next][Next.js]][Next-url]
-* [![React][React.js]][React-url]
-* [![Vue][Vue.js]][Vue-url]
-* [![Angular][Angular.io]][Angular-url]
-* [![Svelte][Svelte.dev]][Svelte-url]
-* [![Laravel][Laravel.com]][Laravel-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-* [![JQuery][JQuery.com]][JQuery-url]
+* [![Dart][Dart.dev]][Dart-url]
+* [![Flutter][Flutter.dev]][Flutter-url]
+* [![Serverpod][Serverpod.dev]][Serverpod-url]
+* [![Docker][Docker.com]][Docker-url]
+* [![Postgres][Postgres.com]][Postgres-url]
+* [![Redis][Redis.com]][Redis-url]
+* [![Clerk][Clerk.dev]][Clerk-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -109,35 +108,36 @@ Here's a blank template to get started. To avoid retyping too much info, do a se
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
 To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+Things you need to use the software and how to install them.
+* [Dart SDK][Dart-install-url]
+* [Flutter SDK][Flutter-install-url]
+* [Serverpod CLI][Serverpod-url]
+* [Docker][Docker-url]
 
 ### Installation
 
-1. Get a free API Key at [https://example.com](https://example.com)
+1. Get a free API Key at [Clerk.dev][Clerk-url]
 2. Clone the repo
    ```sh
-   git clone https://github.com/github_username/repo_name.git
+   git clone https://github.com/drexel-ue/focus.git
    ```
-3. Install NPM packages
+3. Install Dart packages
    ```sh
-   npm install
+   dart pub get
    ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
+4. Create `.env` file in /focus_flutter
+5. Add your Clerk API key and localhost to the `.env` file
+   ```
+   HOST=http://localhost:8080
+   CLERK_PUBLISHABLE_KEY=api_key
    ```
 5. Change git remote url to avoid accidental pushes to base project
    ```sh
-   git remote set-url origin github_username/repo_name
+   git remote set-url origin drexel-ue/focus
    git remote -v # confirm the changes
    ```
 
@@ -159,12 +159,61 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
+- [ ] Stat display
+  - [x] Displays Player stats
+  - [x] Displays stats for completed and incomplete tasks
+  - [ ] Displays stats for completed, aborted, and timed out routines
+  - [ ] Displays stats for completed and ongoing goals
+- [ ] Goals
+  - [ ] Create goals
+    - [ ] Create milestones
+  - [ ] Edit goals
+    - [ ] Edit milestones
+- [ ] Routines
+  - [x] Create routines
+    - [x] Create steps
+      - [x] Binary
+      - [x] Duration
+      - [x] Tally
+    - [x] Add buffs
+    - [x] Add debuffs
+  - [x] Edit routines
+    - [x] Edit steps
+  - [x] Run routines
+    - [x] Start
+    - [x] Abort
+      - [x] Show abort modal
+        - [x] Confirm abort
+        - [x] Cancel abort
+  - [x] Delete routines
+  - [ ] Sort routines
+    - [ ] By title
+    - [ ] By stats
+  - [ ] Search routines
+    - [ ] By title
+    - [ ] By stats
+- [ ] Tasks
+  - [x] Create tasks
+  - [x] Edit tasks
+  - [x] Toggle tasks
+  - [x] Delete tasks
+  - [ ] Sort tasks
+      - [ ] By completed
+      - [ ] By incomplete
+      - [ ] By oldest
+      - [ ] By newest
+      - [ ] By stats
+  - [ ] Search tasks
+    - [ ] By title
+    - [ ] By description
+- [ ] Settings
+  - [x] Logout
+  - [ ] Add peripherals
+    - [ ] Brilliant Labs Frame AR Glasses
+    - [ ] Apple Watch
+    - [ ] WearOS
 
-See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/drexel-ue/focus/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -179,7 +228,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 Don't forget to give the project a star! Thanks again!
 
 1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+2. Create your Feature Branch (`git checkout -b feat/AmazingFeature`)
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
@@ -188,8 +237,8 @@ Don't forget to give the project a star! Thanks again!
 
 ### Top contributors:
 
-<a href="https://github.com/github_username/repo_name/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=github_username/repo_name" alt="contrib.rocks image" />
+<a href="https://github.com/drexel-ue/focus/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=drexel-ue/focus" alt="contrib.rocks image" />
 </a>
 
 
@@ -206,9 +255,9 @@ Distributed under the project_license. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
+IKesh Pack - packappsforyou@gmail.com
 
-Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
+Project Link: [https://github.com/drexel-ue/focus](https://github.com/drexel-ue/focus)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -227,19 +276,37 @@ Project Link: [https://github.com/github_username/repo_name](https://github.com/
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo_name.svg?style=for-the-badge
-[contributors-url]: https://github.com/github_username/repo_name/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/github_username/repo_name.svg?style=for-the-badge
-[forks-url]: https://github.com/github_username/repo_name/network/members
-[stars-shield]: https://img.shields.io/github/stars/github_username/repo_name.svg?style=for-the-badge
-[stars-url]: https://github.com/github_username/repo_name/stargazers
-[issues-shield]: https://img.shields.io/github/issues/github_username/repo_name.svg?style=for-the-badge
-[issues-url]: https://github.com/github_username/repo_name/issues
-[license-shield]: https://img.shields.io/github/license/github_username/repo_name.svg?style=for-the-badge
-[license-url]: https://github.com/github_username/repo_name/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/drexel-ue/focus.svg?style=for-the-badge
+[contributors-url]: https://github.com/drexel-ue/focus/graphs/contributors
+[Clerk.dev]: https://img.shields.io/badge/clerk-363737?style=for-the-badge&logo=clerk&logoColor=white
+[Clerk-url]: https://clerk.dev/
+[Clerk-install-url]: https://clerk.dev/docs/getting-started/installation
+[Dart.dev]: https://img.shields.io/badge/dart-0175C2?style=for-the-badge&logo=dart&logoColor=white
+[Dart-url]: https://dart.dev/
+[Dart-install-url]: https://dart.dev/get-dart
+[Docker.com]: https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white
+[Docker-url]: https://www.docker.com/
+[forks-shield]: https://img.shields.io/github/forks/drexel-ue/focus.svg?style=for-the-badge
+[Flutter.dev]: https://img.shields.io/badge/flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white
+[Flutter-url]: https://flutter.dev/
+[Flutter-install-url]: https://docs.flutter.dev/get-started/install
+[Serverpod.dev]: https://img.shields.io/badge/serverpod-F26135?style=for-the-badge&logo=serverpod&logoColor=white
+[Serverpod-url]: https://serverpod.dev/
+[Serverpod-install-url]: https://docs.serverpod.dev/
+[Postgres.com]: https://img.shields.io/badge/postgres-316192?style=for-the-badge&logo=postgresql&logoColor=white
+[Postgres-url]: https://www.postgresql.org/
+[Redis.com]: https://img.shields.io/badge/redis-DC382D?style=for-the-badge&logo=redis&logoColor=white
+[Redis-url]: https://redis.io/
+[forks-url]: https://github.com/drexel-ue/focus/network/members
+[stars-shield]: https://img.shields.io/github/stars/drexel-ue/focus.svg?style=for-the-badge
+[stars-url]: https://github.com/drexel-ue/focus/stargazers
+[issues-shield]: https://img.shields.io/github/issues/drexel-ue/focus.svg?style=for-the-badge
+[issues-url]: https://github.com/drexel-ue/focus/issues
+[license-shield]: https://img.shields.io/github/license/drexel-ue/focus.svg?style=for-the-badge
+[license-url]: https://github.com/drexel-ue/focus/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/linkedin_username
-[product-screenshot]: images/screenshot.png
+[linkedin-url]: https://www.linkedin.com/in/ikesh-pack-96262b192/
+[product-screenshot]: images/product-screenshot.png
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [Next-url]: https://nextjs.org/
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
