@@ -2,6 +2,7 @@ import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
+import 'package:focus_flutter/features/widgets/focus_painter.dart';
 
 /// Focus themed tally counter.
 @immutable
@@ -10,11 +11,15 @@ class FocusTallyCounter extends StatefulWidget {
   const FocusTallyCounter({
     super.key,
     required this.tally,
+    this.outOf,
     required this.onChanged,
   });
 
   /// Tally.
   final int tally;
+
+  /// Out of.
+  final int? outOf;
 
   /// Callback to run when tally is changed.
   final ValueChanged<int> onChanged;
@@ -32,14 +37,35 @@ class _FocusTallyCounterState extends State<FocusTallyCounter> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        ValueListenableBuilder(
-          valueListenable: _tally,
-          builder: (BuildContext context, int value, Widget? child) {
-            return AnimatedFlipCounter(
-              value: _tally.value,
-              textStyle: const TextStyle(fontSize: 72.0),
-            );
-          },
+        Center(
+          child: CustomPaint(
+            painter: FocusPainter(),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  ValueListenableBuilder(
+                    valueListenable: _tally,
+                    builder: (BuildContext context, int value, Widget? child) {
+                      return AnimatedFlipCounter(
+                        value: _tally.value.clamp(0, widget.outOf ?? _tally.value),
+                        textStyle: const TextStyle(fontSize: 72.0, height: 1.0),
+                      );
+                    },
+                  ),
+                  if (widget.outOf case int outOf) ...[
+                    horizontalMargin16,
+                    Text(
+                      '/$outOf',
+                      style: const TextStyle(fontSize: 36.0),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
         ),
         verticalMargin16,
         Row(

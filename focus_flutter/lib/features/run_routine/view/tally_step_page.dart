@@ -88,6 +88,7 @@ class _TallyStepPageState extends ConsumerState<TallyStepPage> {
               return FocusTallyCounter(
                 key: UniqueKey(),
                 tally: _tally.value,
+                outOf: widget.step.tally!,
                 onChanged: _onTallyChanged,
               );
             },
