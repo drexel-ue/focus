@@ -6,6 +6,8 @@ import 'package:focus_flutter/features/auth/repository/auth_repository.dart';
 import 'package:focus_flutter/features/stats/view/ability_level_progress_tiles.dart';
 import 'package:focus_flutter/features/stats/view/task_stats_tile.dart';
 import 'package:focus_flutter/features/stats/view/user_avatar.dart';
+import 'package:focus_flutter/features/widgets/buff_modal.dart';
+import 'package:focus_flutter/features/widgets/debuff_modal.dart';
 import 'package:focus_flutter/features/widgets/focus_choice_chip.dart';
 import 'package:focus_flutter/features/widgets/scroll_shadow.dart';
 
@@ -60,7 +62,14 @@ class StatsPage extends ConsumerWidget {
                                 selectedColor: modifier is UserBuff
                                     ? modifier.color
                                     : (modifier as UserDebuff).color,
-                                onSelected: (bool selected) {},
+                                onLongPress: () {
+                                  if (modifier is UserBuff) {
+                                    BuffModal.show(context, modifier);
+                                  }
+                                  if (modifier is UserDebuff) {
+                                    DebuffModal.show(context, modifier);
+                                  }
+                                },
                               ),
                             );
                           },

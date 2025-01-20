@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:focus_client/focus_client.dart';
+import 'package:focus_flutter/features/widgets/buff_modal.dart';
 import 'package:focus_flutter/features/widgets/focus_choice_chip.dart';
 
 /// Displays a list of [UserBuff]s in a wrap.
@@ -33,6 +34,7 @@ class UserBuffWrap extends StatelessWidget {
             selected: isSelected(buff),
             selectedColor: buff.color,
             onSelected: (bool selected) => onSelected(selected, buff),
+            onLongPress: () => BuffModal.show(context, buff),
           ),
       ],
     );

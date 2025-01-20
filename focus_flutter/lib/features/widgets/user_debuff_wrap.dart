@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:focus_client/focus_client.dart';
+import 'package:focus_flutter/features/widgets/debuff_modal.dart';
 import 'package:focus_flutter/features/widgets/focus_choice_chip.dart';
 
 /// Displays a list of [UserDebuff]s in a wrap.
@@ -33,6 +34,7 @@ class UserDebuffWrap extends StatelessWidget {
             selected: isSelected(debuff),
             selectedColor: debuff.color,
             onSelected: (bool selected) => onSelected(selected, debuff),
+            onLongPress: () => DebuffModal.show(context, debuff),
           ),
       ],
     );
