@@ -40,7 +40,7 @@ class RoutineCompletePage extends ConsumerWidget {
                 ),
                 verticalMargin16,
                 const Text(
-                  'Press [ ACCEPT ] to receive the following rewards:',
+                  'Press [Accpet] to complete the [Routine] and receive the following rewards:',
                   textAlign: TextAlign.center,
                 ),
                 ExpansionTile(
