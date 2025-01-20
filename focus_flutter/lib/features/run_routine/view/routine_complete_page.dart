@@ -45,6 +45,7 @@ class RoutineCompletePage extends ConsumerWidget {
                 ),
                 ExpansionTile(
                   title: const Text('Rewards'),
+                  initiallyExpanded: true,
                   children: [
                     AbilityStatsDisplay(stats: routine.stats),
                     verticalMargin16,
