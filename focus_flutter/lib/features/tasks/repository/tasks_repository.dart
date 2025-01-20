@@ -98,9 +98,9 @@ class TasksRepository extends AsyncNotifier<TaskState>
       final index = currentState.requireValue.tasks.indexWhere((element) => element.id == taskId);
       final tasks = currentState.requireValue.tasks;
       tasks[index] = userWithTask!.task;
-      authRepo.user = userWithTask.user;
       state = AsyncData(currentState.requireValue.copyWith(tasks: tasks));
       homeRepo.showPositiveSnack('Updated task: ${userWithTask.task.title}');
+      authRepo.user = userWithTask.user;
     } catch (error, stackTrace) {
       logSevere('error in toggleTaskComplete', error, stackTrace);
       state = AsyncError<TaskState>(error, stackTrace).copyWithPrevious(currentState);

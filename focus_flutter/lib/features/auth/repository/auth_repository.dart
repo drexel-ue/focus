@@ -22,11 +22,25 @@ final authRepositoryProvider = AsyncNotifierProvider<AuthRepository, AuthSession
 
 /// Manages [AuthSession].
 class AuthRepository extends AsyncNotifier<AuthSession>
-    with ClerkAuthProviderRef, Logging, ApiClientRef, ChangeNotifier, PersistenceRepoRef {
+    with
+        ClerkAuthProviderRef,
+        Logging,
+        ApiClientRef,
+        ChangeNotifier,
+        PersistenceRepoRef,
+        HomeRepoRef {
   @override
   set state(AsyncValue<AuthSession> value) {
+    final currentLevel = state.value?.user?.abilityStats.userLevel;
+    final newLevel = value.value?.user?.abilityStats.userLevel;
+    if (currentLevel != null && newLevel != null && newLevel > currentLevel) {
+      homeRepo.showPositiveSnack(
+        'Leveled up!',
+        () => homeRepo.tab = HomeTab.stats,
+      );
+    }
     super.state = value;
-    persistanceRepo.authSession = state.requireValue;
+    persistanceRepo.authSession = state.value;
     notifyListeners();
   }
 
