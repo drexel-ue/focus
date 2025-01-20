@@ -84,8 +84,8 @@ class TaskEndpoint extends Endpoint {
         }
         task.completed = !task.completed;
         user.abilityStats = task.completed
-            ? user.abilityStats + task.abilityExpValues
-            : user.abilityStats - task.abilityExpValues;
+            ? user.abilityStats + task.abilityExpValues.buffed(user.buffs).debuffed(user.debuffs)
+            : user.abilityStats - task.abilityExpValues.buffed(user.buffs).debuffed(user.debuffs);
         task.lastModifiedAt = DateTime.timestamp();
         final updatedUser = await User.db.updateRow(session, user);
         final updatedTask = await Task.db.updateRow(session, task, transaction: transaction);

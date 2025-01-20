@@ -287,7 +287,7 @@ class RoutineEndpoint extends Endpoint {
         perceptionExp: 0,
       );
       for (final step in routine.steps) {
-        stats = stats + step.abilityExpValues;
+        stats = stats + step.abilityExpValues.buffed(user.buffs).debuffed(user.debuffs);
       }
       user.abilityStats = user.abilityStats + stats;
     } else {

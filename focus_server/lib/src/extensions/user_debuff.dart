@@ -12,4 +12,26 @@ extension UserDebuffX on UserDebuff {
       UserDebuff.coldMuscle => const Duration(hours: 1),
     };
   }
+
+  /// Multiplier for [AbilityStats].
+  double get modifier {
+    return switch (this) {
+      UserDebuff.fatigued => 0.95,
+      UserDebuff.undisciplined => 0.95,
+      UserDebuff.dunce => 0.98,
+      UserDebuff.slacker => 0.98,
+      UserDebuff.coldMuscle => 0.98,
+    };
+  }
+
+  /// Stats modified by this debuff.
+  List<Ability> get modifies {
+    return switch (this) {
+      UserDebuff.fatigued => Ability.values,
+      UserDebuff.undisciplined => Ability.values,
+      UserDebuff.dunce => [Ability.intelligence],
+      UserDebuff.slacker => [Ability.vitality],
+      UserDebuff.coldMuscle => [Ability.agility, Ability.strength],
+    };
+  }
 }
