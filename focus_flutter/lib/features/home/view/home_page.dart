@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/assets.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/app/routing.dart';
@@ -92,9 +93,9 @@ class _HomePageState extends ConsumerState<HomePage> {
     final snack = homeState.snack;
     final text = snack?.message ?? homeState.tab.label;
     final color = switch (homeState.snack?.type) {
-      SnackType.neutral => Colors.white,
-      SnackType.positive => Colors.green,
-      SnackType.negative => Colors.red,
+      SnackType.neutral => AppColors.white,
+      SnackType.positive => AppColors.limeGreen,
+      SnackType.negative => AppColors.redOrange,
       _ => null,
     };
     ref.listen(homeRepositoryProvider, _homeRepositoryListener);

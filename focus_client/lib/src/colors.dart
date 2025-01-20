@@ -45,4 +45,7 @@ class AppColors {
 
   /// Black Silver.
   static const blackSilver = Color(0xFF737474);
+
+  /// Lime Green.
+  static const limeGreen = Color(0xFF32CD32);
 }
