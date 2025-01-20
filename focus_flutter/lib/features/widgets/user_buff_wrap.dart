@@ -11,7 +11,7 @@ class UserBuffWrap extends StatelessWidget {
     super.key,
     required this.buffs,
     required this.isSelected,
-    required this.onSelected,
+    this.onSelected,
   });
 
   /// [UserBuff]s to display.
@@ -21,7 +21,7 @@ class UserBuffWrap extends StatelessWidget {
   final bool Function(UserBuff buff) isSelected;
 
   /// Callback to run when a [UserBuff] is selected.
-  final void Function(bool selected, UserBuff buff) onSelected;
+  final void Function(bool selected, UserBuff buff)? onSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,9 @@ class UserBuffWrap extends StatelessWidget {
             label: buff.name,
             selected: isSelected(buff),
             selectedColor: buff.color,
-            onSelected: (bool selected) => onSelected(selected, buff),
+            onSelected: onSelected != null //
+                ? (bool selected) => onSelected!(selected, buff)
+                : null,
             onLongPress: () => BuffModal.show(context, buff),
           ),
       ],

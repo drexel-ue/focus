@@ -11,7 +11,7 @@ class UserDebuffWrap extends StatelessWidget {
     super.key,
     required this.debuffs,
     required this.isSelected,
-    required this.onSelected,
+    this.onSelected,
   });
 
   /// [UserDebuff]s to display.
@@ -21,7 +21,7 @@ class UserDebuffWrap extends StatelessWidget {
   final bool Function(UserDebuff buff) isSelected;
 
   /// Callback to run when a [UserDebuff] is selected.
-  final void Function(bool selected, UserDebuff buff) onSelected;
+  final void Function(bool selected, UserDebuff buff)? onSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,9 @@ class UserDebuffWrap extends StatelessWidget {
             label: debuff.name,
             selected: isSelected(debuff),
             selectedColor: debuff.color,
-            onSelected: (bool selected) => onSelected(selected, debuff),
+            onSelected: onSelected != null //
+                ? (bool selected) => onSelected!(selected, debuff)
+                : null,
             onLongPress: () => DebuffModal.show(context, debuff),
           ),
       ],

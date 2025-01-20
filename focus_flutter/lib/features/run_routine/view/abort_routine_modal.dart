@@ -52,7 +52,6 @@ class AbortRoutineModal extends ConsumerWidget {
           UserDebuffWrap(
             debuffs: routine?.debuffs ?? [],
             isSelected: (debuff) => true,
-            onSelected: (bool selected, debuff) {},
           ),
           verticalMargin16,
           verticalMargin16,

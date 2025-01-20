@@ -86,10 +86,12 @@ class _DurationStepPageState extends ConsumerState<DurationStepPage> {
           ValueListenableBuilder(
             valueListenable: _timerComplete,
             builder: (BuildContext context, bool value, Widget? child) {
-              return FocusCountdownTimer(
-                key: UniqueKey(),
-                duration: widget.step.duration!,
-                onFinished: _onTimerComplete,
+              return Center(
+                child: FocusCountdownTimer(
+                  key: UniqueKey(),
+                  duration: widget.step.duration!,
+                  onFinished: _onTimerComplete,
+                ),
               );
             },
           ),
