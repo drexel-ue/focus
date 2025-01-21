@@ -1,4 +1,5 @@
 import 'package:focus_server/src/custom_scope.dart';
+import 'package:focus_server/src/extensions/routine.dart';
 import 'package:focus_server/src/extensions/session_extension.dart';
 import 'package:focus_server/src/extensions/user_ability_stats.dart';
 import 'package:focus_server/src/future_calls/remove_user_buff_future_call.dart';
@@ -249,6 +250,102 @@ class RoutineEndpoint extends Endpoint {
           stackTrace: stackTrace,
         );
         rethrow;
+      }
+    });
+  }
+
+  /// Returns [RoutineStats] for [User].
+  Future<RoutineStats> getRoutineStats(Session session) async {
+    return await session.db.transaction((Transaction transaction) async {
+      try {
+        final user = await session.parseUserFromFocusSession(transaction);
+        final stats = RoutineStats(
+          completedStats: UserAbilityStats(
+            strengthExp: 0,
+            vitalityExp: 0,
+            agilityExp: 0,
+            intelligenceExp: 0,
+            perceptionExp: 0,
+          ),
+          abortedStats: UserAbilityStats(
+            strengthExp: 0,
+            vitalityExp: 0,
+            agilityExp: 0,
+            intelligenceExp: 0,
+            perceptionExp: 0,
+          ),
+          timedOutStats: UserAbilityStats(
+            strengthExp: 0,
+            vitalityExp: 0,
+            agilityExp: 0,
+            intelligenceExp: 0,
+            perceptionExp: 0,
+          ),
+          mostRecentCompleted: null,
+          mostRecentAborted: null,
+          mostRecentTimedOut: null,
+          mostFrequentCompleted: null,
+          mostFrequentAborted: null,
+          mostFrequentTimedOut: null,
+        );
+        final records = await RoutineRecord.db.find(
+          session,
+          where: (table) => table.userId.equals(user.id!),
+          transaction: transaction,
+        );
+        final routines = await Routine.db.find(
+          session,
+          where: (table) => table.userId.equals(user.id!),
+          transaction: transaction,
+        );
+        final completionTallies = <int, int>{};
+        final abortTallies = <int, int>{};
+        final timedOutTallies = <int, int>{};
+        for (final record in records) {
+          final routine = routines.firstWhere((el) => el.id == record.routineId);
+          if (record.status == RoutineRecordStatus.completed) {
+            stats.completedStats = stats.completedStats + routine.stats;
+            if (stats.mostRecentCompleted == null ||
+                record.lastModifiedAt.isAfter(stats.mostRecentCompleted!.lastModifiedAt)) {
+              stats.mostRecentCompleted = routine;
+            }
+            completionTallies[record.routineId] = (completionTallies[record.routineId] ?? 0) + 1;
+          }
+          if (record.status == RoutineRecordStatus.aborted) {
+            stats.abortedStats = stats.abortedStats + routine.stats;
+            if (stats.mostRecentAborted == null ||
+                record.lastModifiedAt.isAfter(stats.mostRecentAborted!.lastModifiedAt)) {
+              stats.mostRecentAborted = routine;
+            }
+            abortTallies[record.routineId] = (abortTallies[record.routineId] ?? 0) + 1;
+          }
+          if (record.status == RoutineRecordStatus.timedOut) {
+            stats.timedOutStats = stats.timedOutStats + routine.stats;
+            if (stats.mostRecentTimedOut == null ||
+                record.lastModifiedAt.isAfter(stats.mostRecentTimedOut!.lastModifiedAt)) {
+              stats.mostRecentTimedOut = routine;
+            }
+            timedOutTallies[record.routineId] = (timedOutTallies[record.routineId] ?? 0) + 1;
+          }
+        }
+        if (completionTallies.isNotEmpty) {
+          final sorted = completionTallies.entries.toList()
+            ..sort((a, b) => b.value.compareTo(a.value));
+          stats.mostFrequentCompleted = routines.firstWhere((el) => sorted.first.key == el.id);
+        }
+        if (abortTallies.isNotEmpty) {
+          final sorted = abortTallies.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
+          stats.mostFrequentAborted = routines.firstWhere((el) => sorted.first.key == el.id);
+        }
+        if (timedOutTallies.isNotEmpty) {
+          final sorted = timedOutTallies.entries.toList()
+            ..sort((a, b) => b.value.compareTo(a.value));
+          stats.mostFrequentTimedOut = routines.firstWhere((el) => sorted.first.key == el.id);
+        }
+        return stats;
+      } catch (error, stackTrace) {
+        session.logError('error in getRoutineStats', error, stackTrace);
+        throw FetchException(message: 'failed to fetch routine stats.');
       }
     });
   }

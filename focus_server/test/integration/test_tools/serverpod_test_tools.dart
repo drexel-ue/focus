@@ -24,10 +24,12 @@ import 'package:focus_server/src/generated/routine_record.dart' as _i10;
 import 'package:focus_server/src/generated/user_with_routine_record.dart'
     as _i11;
 import 'package:focus_server/src/generated/routine_with_record.dart' as _i12;
-import 'package:focus_server/src/generated/task.dart' as _i13;
-import 'package:focus_server/src/generated/user_ability_stats.dart' as _i14;
-import 'package:focus_server/src/generated/user_with_task.dart' as _i15;
-import 'package:focus_server/src/generated/task_stats.dart' as _i16;
+import 'package:focus_server/src/generated/generated/routine_stats.dart'
+    as _i13;
+import 'package:focus_server/src/generated/task.dart' as _i14;
+import 'package:focus_server/src/generated/user_ability_stats.dart' as _i15;
+import 'package:focus_server/src/generated/user_with_task.dart' as _i16;
+import 'package:focus_server/src/generated/task_stats.dart' as _i17;
 import 'package:focus_server/src/generated/protocol.dart';
 import 'package:focus_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -507,6 +509,33 @@ class _RoutineEndpoint {
       }
     });
   }
+
+  _i3.Future<_i13.RoutineStats> getRoutineStats(
+      _i1.TestSessionBuilder sessionBuilder) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'routine',
+        method: 'getRoutineStats',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'routine',
+          methodName: 'getRoutineStats',
+          parameters: _i1.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i13.RoutineStats>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
 }
 
 class _TaskEndpoint {
@@ -519,7 +548,7 @@ class _TaskEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<List<_i13.Task>> getTasks(
+  _i3.Future<List<_i14.Task>> getTasks(
     _i1.TestSessionBuilder sessionBuilder,
     int page,
   ) async {
@@ -540,7 +569,7 @@ class _TaskEndpoint {
         var _localReturnValue = await (_localCallContext.method.call(
           _localUniqueSession,
           _localCallContext.arguments,
-        ) as _i3.Future<List<_i13.Task>>);
+        ) as _i3.Future<List<_i14.Task>>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -548,11 +577,11 @@ class _TaskEndpoint {
     });
   }
 
-  _i3.Future<_i13.Task> createTask(
+  _i3.Future<_i14.Task> createTask(
     _i1.TestSessionBuilder sessionBuilder, {
     required String title,
     String? description,
-    required _i14.UserAbilityStats abilityExpValues,
+    required _i15.UserAbilityStats abilityExpValues,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -575,7 +604,7 @@ class _TaskEndpoint {
         var _localReturnValue = await (_localCallContext.method.call(
           _localUniqueSession,
           _localCallContext.arguments,
-        ) as _i3.Future<_i13.Task>);
+        ) as _i3.Future<_i14.Task>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -583,7 +612,7 @@ class _TaskEndpoint {
     });
   }
 
-  _i3.Future<_i15.UserWithTask> toggleTaskComplete(
+  _i3.Future<_i16.UserWithTask> toggleTaskComplete(
     _i1.TestSessionBuilder sessionBuilder,
     int taskId,
   ) async {
@@ -604,7 +633,7 @@ class _TaskEndpoint {
         var _localReturnValue = await (_localCallContext.method.call(
           _localUniqueSession,
           _localCallContext.arguments,
-        ) as _i3.Future<_i15.UserWithTask>);
+        ) as _i3.Future<_i16.UserWithTask>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -612,12 +641,12 @@ class _TaskEndpoint {
     });
   }
 
-  _i3.Future<_i13.Task> updateTask(
+  _i3.Future<_i14.Task> updateTask(
     _i1.TestSessionBuilder sessionBuilder, {
     required int taskId,
     required String title,
     String? description,
-    required _i14.UserAbilityStats abilityExpValues,
+    required _i15.UserAbilityStats abilityExpValues,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -641,7 +670,7 @@ class _TaskEndpoint {
         var _localReturnValue = await (_localCallContext.method.call(
           _localUniqueSession,
           _localCallContext.arguments,
-        ) as _i3.Future<_i13.Task>);
+        ) as _i3.Future<_i14.Task>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -649,7 +678,7 @@ class _TaskEndpoint {
     });
   }
 
-  _i3.Future<_i13.Task> deleteTask(
+  _i3.Future<_i14.Task> deleteTask(
     _i1.TestSessionBuilder sessionBuilder,
     int taskId,
   ) async {
@@ -670,7 +699,7 @@ class _TaskEndpoint {
         var _localReturnValue = await (_localCallContext.method.call(
           _localUniqueSession,
           _localCallContext.arguments,
-        ) as _i3.Future<_i13.Task>);
+        ) as _i3.Future<_i14.Task>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -678,7 +707,7 @@ class _TaskEndpoint {
     });
   }
 
-  _i3.Future<_i16.TaskStats> getTaskStats(
+  _i3.Future<_i17.TaskStats> getTaskStats(
       _i1.TestSessionBuilder sessionBuilder) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -697,7 +726,7 @@ class _TaskEndpoint {
         var _localReturnValue = await (_localCallContext.method.call(
           _localUniqueSession,
           _localCallContext.arguments,
-        ) as _i3.Future<_i16.TaskStats>);
+        ) as _i3.Future<_i17.TaskStats>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

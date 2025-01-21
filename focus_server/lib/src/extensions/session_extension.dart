@@ -64,4 +64,9 @@ extension SessionX on Session {
     }
     return routine;
   }
+
+  /// Logs an error.
+  void logError(String message, [Object? error, StackTrace? stackTrace]) {
+    log(message, level: LogLevel.error, exception: error, stackTrace: stackTrace);
+  }
 }

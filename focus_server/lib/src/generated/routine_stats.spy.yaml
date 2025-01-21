@@ -1,0 +1,21 @@
+### Completion stats for a [User]'s [Routine]s.
+class: RoutineStats
+fields:
+  ### Sum of [UserAbilityStats] for completed [Routine]s.
+  completedStats: UserAbilityStats
+  ### Sum of [UserAbilityStats] for aborted [Routine]s.
+  abortedStats: UserAbilityStats
+  ### Sum of [UserAbilityStats] for timed out [Routine]s.
+  timedOutStats: UserAbilityStats
+  ### Most recent [Routine] completed.
+  mostRecentCompleted: Routine?
+  ### Most recent [Routine] aborted.
+  mostRecentAborted: Routine?
+  ### Most recent [Routine] timed out.
+  mostRecentTimedOut: Routine?
+  ### Most frequent [Routine] completed.
+  mostFrequentCompleted: Routine?
+  ### Most frequent [Routine] aborted.
+  mostFrequentAborted: Routine?
+  ### Most frequent [Routine] timed out.
+  mostFrequentTimedOut: Routine?

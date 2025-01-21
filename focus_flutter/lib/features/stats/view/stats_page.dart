@@ -4,6 +4,7 @@ import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/auth/repository/auth_repository.dart';
 import 'package:focus_flutter/features/stats/view/ability_level_progress_tiles.dart';
+import 'package:focus_flutter/features/stats/view/routine_stats_tile.dart';
 import 'package:focus_flutter/features/stats/view/task_stats_tile.dart';
 import 'package:focus_flutter/features/stats/view/user_avatar.dart';
 import 'package:focus_flutter/features/widgets/buff_modal.dart';
@@ -95,6 +96,8 @@ class StatsPage extends ConsumerWidget {
                 ),
                 verticalMargin16,
                 TaskStatsTile(),
+                verticalMargin16,
+                RoutineStatsTile(),
               ],
             ),
           ),

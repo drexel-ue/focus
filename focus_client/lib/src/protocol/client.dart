@@ -21,11 +21,12 @@ import 'package:focus_client/src/protocol/routine_record.dart' as _i9;
 import 'package:focus_client/src/protocol/user_with_routine_record.dart'
     as _i10;
 import 'package:focus_client/src/protocol/routine_with_record.dart' as _i11;
-import 'package:focus_client/src/protocol/task.dart' as _i12;
-import 'package:focus_client/src/protocol/user_ability_stats.dart' as _i13;
-import 'package:focus_client/src/protocol/user_with_task.dart' as _i14;
-import 'package:focus_client/src/protocol/task_stats.dart' as _i15;
-import 'protocol.dart' as _i16;
+import 'package:focus_client/src/protocol/generated/routine_stats.dart' as _i12;
+import 'package:focus_client/src/protocol/task.dart' as _i13;
+import 'package:focus_client/src/protocol/user_ability_stats.dart' as _i14;
+import 'package:focus_client/src/protocol/user_with_task.dart' as _i15;
+import 'package:focus_client/src/protocol/task_stats.dart' as _i16;
+import 'protocol.dart' as _i17;
 
 /// Handles [AuthSession] creation.
 /// {@category Endpoint}
@@ -162,6 +163,14 @@ class EndpointRoutine extends _i1.EndpointRef {
         'findRunningRoutine',
         {},
       );
+
+  /// Returns [RoutineStats] for [User].
+  _i2.Future<_i12.RoutineStats> getRoutineStats() =>
+      caller.callServerEndpoint<_i12.RoutineStats>(
+        'routine',
+        'getRoutineStats',
+        {},
+      );
 }
 
 /// Handles work related to [Task]s.
@@ -173,20 +182,20 @@ class EndpointTask extends _i1.EndpointRef {
   String get name => 'task';
 
   /// Get tasks for a [User].
-  _i2.Future<List<_i12.Task>> getTasks(int page) =>
-      caller.callServerEndpoint<List<_i12.Task>>(
+  _i2.Future<List<_i13.Task>> getTasks(int page) =>
+      caller.callServerEndpoint<List<_i13.Task>>(
         'task',
         'getTasks',
         {'page': page},
       );
 
   /// Create a [Task].
-  _i2.Future<_i12.Task> createTask({
+  _i2.Future<_i13.Task> createTask({
     required String title,
     String? description,
-    required _i13.UserAbilityStats abilityExpValues,
+    required _i14.UserAbilityStats abilityExpValues,
   }) =>
-      caller.callServerEndpoint<_i12.Task>(
+      caller.callServerEndpoint<_i13.Task>(
         'task',
         'createTask',
         {
@@ -197,21 +206,21 @@ class EndpointTask extends _i1.EndpointRef {
       );
 
   /// Toggles the completion state of a [Task].
-  _i2.Future<_i14.UserWithTask> toggleTaskComplete(int taskId) =>
-      caller.callServerEndpoint<_i14.UserWithTask>(
+  _i2.Future<_i15.UserWithTask> toggleTaskComplete(int taskId) =>
+      caller.callServerEndpoint<_i15.UserWithTask>(
         'task',
         'toggleTaskComplete',
         {'taskId': taskId},
       );
 
   /// Update a [Task].
-  _i2.Future<_i12.Task> updateTask({
+  _i2.Future<_i13.Task> updateTask({
     required int taskId,
     required String title,
     String? description,
-    required _i13.UserAbilityStats abilityExpValues,
+    required _i14.UserAbilityStats abilityExpValues,
   }) =>
-      caller.callServerEndpoint<_i12.Task>(
+      caller.callServerEndpoint<_i13.Task>(
         'task',
         'updateTask',
         {
@@ -223,16 +232,16 @@ class EndpointTask extends _i1.EndpointRef {
       );
 
   /// Deletes a [Task].
-  _i2.Future<_i12.Task> deleteTask(int taskId) =>
-      caller.callServerEndpoint<_i12.Task>(
+  _i2.Future<_i13.Task> deleteTask(int taskId) =>
+      caller.callServerEndpoint<_i13.Task>(
         'task',
         'deleteTask',
         {'taskId': taskId},
       );
 
   /// Returns [TaskStats] for [User].
-  _i2.Future<_i15.TaskStats> getTaskStats() =>
-      caller.callServerEndpoint<_i15.TaskStats>(
+  _i2.Future<_i16.TaskStats> getTaskStats() =>
+      caller.callServerEndpoint<_i16.TaskStats>(
         'task',
         'getTaskStats',
         {},
@@ -255,7 +264,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
           host,
-          _i16.Protocol(),
+          _i17.Protocol(),
           securityContext: securityContext,
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,

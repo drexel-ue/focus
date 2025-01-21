@@ -4,54 +4,53 @@ import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/home/repository/home_repository.dart';
 import 'package:focus_flutter/features/stats/repository/stats_repository.dart';
-import 'package:focus_flutter/features/stats/view/complete_incomplete_slider.dart';
-import 'package:focus_flutter/features/stats/view/task_stats_expansion_tile.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
 import 'package:focus_flutter/features/widgets/loading_cover.dart';
 
-/// Displays [TaskStats].
+/// Displays [RoutineStats].
 @immutable
-class TaskStatsTile extends ConsumerStatefulWidget {
-  /// Constructs a const [TaskStatsTile].
-  const TaskStatsTile({super.key});
+class RoutineStatsTile extends ConsumerStatefulWidget {
+  /// Constructs a const [RoutineStatsTile].
+  const RoutineStatsTile({super.key});
 
   @override
-  ConsumerState<TaskStatsTile> createState() => _TaskStatsTileState();
+  ConsumerState<RoutineStatsTile> createState() => _RoutineStatsTileState();
 }
 
-class _TaskStatsTileState extends ConsumerState<TaskStatsTile> {
+class _RoutineStatsTileState extends ConsumerState<RoutineStatsTile> {
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(statsRepositoryProvider.notifier).loadTaskStats();
+      ref.read(statsRepositoryProvider.notifier).loadRoutineStats();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(statsRepositoryProvider);
-    final stats = state.value?.taskStats;
-    final hasTasks = (stats?.completedTally ?? 0) > 0 || (stats?.incompleteTally ?? 0) > 0;
+    final stats = state.value?.routineStats;
+    final hasRoutines = stats?.mostRecentAborted != null ||
+        stats?.mostRecentCompleted != null ||
+        stats?.mostRecentTimedOut != null;
     return LoadingCover(
       loading: state.isLoading,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (stats != null && hasTasks) ...[
+          if (stats != null && hasRoutines) ...[
             const Padding(
               padding: horizontalPadding16,
-              child: CompleteIncompleteSlider(),
+              child: Text('Routine stats'),
             ),
-            const TaskStatsExpansionTile(),
           ] else if (stats != null) ...[
             Center(
               child: SizedBox(
                 width: 200.0,
                 child: FocusButton(
-                  onTap: () => ref.read(homeRepositoryProvider.notifier).tab = HomeTab.tasks,
-                  child: const Text('Go to [Tasks]'),
+                  onTap: () => ref.read(homeRepositoryProvider.notifier).tab = HomeTab.routines,
+                  child: const Text('Go to [Routines]'),
                 ),
               ),
             ),
@@ -61,7 +60,7 @@ class _TaskStatsTileState extends ConsumerState<TaskStatsTile> {
                 width: 200.0,
                 child: FocusButton(
                   onTap: () => ref.read(statsRepositoryProvider.notifier).loadTaskStats(),
-                  child: const Text('Load [Task] stats'),
+                  child: const Text('Load [Routine] stats'),
                 ),
               ),
             ),

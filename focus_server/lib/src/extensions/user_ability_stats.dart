@@ -1,7 +1,6 @@
 import 'package:focus_server/src/extensions/user_buff.dart';
 import 'package:focus_server/src/extensions/user_debuff.dart';
 import 'package:focus_server/src/generated/protocol.dart';
-import 'package:focus_server/src/generated/user_ability_stats.dart';
 
 ///
 extension UserAbilityStatsX on UserAbilityStats {
