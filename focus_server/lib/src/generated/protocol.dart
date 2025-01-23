@@ -597,6 +597,11 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i34.UserWithTask?>()) {
       return (data != null ? _i34.UserWithTask.fromJson(data) : null) as T;
     }
+    if (t == Map<_i17.Routine, Duration>) {
+      return Map.fromEntries((data as List).map((e) => MapEntry(
+          deserialize<_i17.Routine>(e['k']),
+          deserialize<Duration>(e['v'])))) as dynamic;
+    }
     if (t == List<_i20.RoutineStep>) {
       return (data as List)
           .map((e) => deserialize<_i20.RoutineStep>(e))

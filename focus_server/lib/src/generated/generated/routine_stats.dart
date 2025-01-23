@@ -26,6 +26,12 @@ abstract class RoutineStats
     this.mostFrequentCompleted,
     this.mostFrequentAborted,
     this.mostFrequentTimedOut,
+    required this.completedTally,
+    required this.abortedTally,
+    required this.timedOutTally,
+    required this.averageCompletionTime,
+    required this.longestCompletionTime,
+    required this.shortestCompletionTime,
   });
 
   factory RoutineStats({
@@ -38,6 +44,12 @@ abstract class RoutineStats
     _i3.Routine? mostFrequentCompleted,
     _i3.Routine? mostFrequentAborted,
     _i3.Routine? mostFrequentTimedOut,
+    required int completedTally,
+    required int abortedTally,
+    required int timedOutTally,
+    required Map<_i3.Routine, Duration> averageCompletionTime,
+    required Map<_i3.Routine, Duration> longestCompletionTime,
+    required Map<_i3.Routine, Duration> shortestCompletionTime,
   }) = _RoutineStatsImpl;
 
   factory RoutineStats.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -72,6 +84,36 @@ abstract class RoutineStats
           ? null
           : _i3.Routine.fromJson((jsonSerialization['mostFrequentTimedOut']
               as Map<String, dynamic>)),
+      completedTally: jsonSerialization['completedTally'] as int,
+      abortedTally: jsonSerialization['abortedTally'] as int,
+      timedOutTally: jsonSerialization['timedOutTally'] as int,
+      averageCompletionTime:
+          (jsonSerialization['averageCompletionTime'] as List)
+              .fold<Map<_i3.Routine, Duration>>(
+                  {},
+                  (t, e) => {
+                        ...t,
+                        _i3.Routine.fromJson((e['k'] as Map<String, dynamic>)):
+                            _i1.DurationJsonExtension.fromJson(e['v'])
+                      }),
+      longestCompletionTime:
+          (jsonSerialization['longestCompletionTime'] as List)
+              .fold<Map<_i3.Routine, Duration>>(
+                  {},
+                  (t, e) => {
+                        ...t,
+                        _i3.Routine.fromJson((e['k'] as Map<String, dynamic>)):
+                            _i1.DurationJsonExtension.fromJson(e['v'])
+                      }),
+      shortestCompletionTime:
+          (jsonSerialization['shortestCompletionTime'] as List)
+              .fold<Map<_i3.Routine, Duration>>(
+                  {},
+                  (t, e) => {
+                        ...t,
+                        _i3.Routine.fromJson((e['k'] as Map<String, dynamic>)):
+                            _i1.DurationJsonExtension.fromJson(e['v'])
+                      }),
     );
   }
 
@@ -102,6 +144,24 @@ abstract class RoutineStats
   /// Most frequent [Routine] timed out.
   _i3.Routine? mostFrequentTimedOut;
 
+  /// Tally of completed [Routine]s.
+  int completedTally;
+
+  /// Tally of aborted [Routine]s.
+  int abortedTally;
+
+  /// Tally of timed out [Routine]s.
+  int timedOutTally;
+
+  /// Average completion time by [Routine].
+  Map<_i3.Routine, Duration> averageCompletionTime;
+
+  /// Longest completion time by [Routine].
+  Map<_i3.Routine, Duration> longestCompletionTime;
+
+  /// Shortest completion time by [Routine].
+  Map<_i3.Routine, Duration> shortestCompletionTime;
+
   RoutineStats copyWith({
     _i2.UserAbilityStats? completedStats,
     _i2.UserAbilityStats? abortedStats,
@@ -112,6 +172,12 @@ abstract class RoutineStats
     _i3.Routine? mostFrequentCompleted,
     _i3.Routine? mostFrequentAborted,
     _i3.Routine? mostFrequentTimedOut,
+    int? completedTally,
+    int? abortedTally,
+    int? timedOutTally,
+    Map<_i3.Routine, Duration>? averageCompletionTime,
+    Map<_i3.Routine, Duration>? longestCompletionTime,
+    Map<_i3.Routine, Duration>? shortestCompletionTime,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -131,6 +197,21 @@ abstract class RoutineStats
         'mostFrequentAborted': mostFrequentAborted?.toJson(),
       if (mostFrequentTimedOut != null)
         'mostFrequentTimedOut': mostFrequentTimedOut?.toJson(),
+      'completedTally': completedTally,
+      'abortedTally': abortedTally,
+      'timedOutTally': timedOutTally,
+      'averageCompletionTime': averageCompletionTime.toJson(
+        keyToJson: (k) => k.toJson(),
+        valueToJson: (v) => v.toJson(),
+      ),
+      'longestCompletionTime': longestCompletionTime.toJson(
+        keyToJson: (k) => k.toJson(),
+        valueToJson: (v) => v.toJson(),
+      ),
+      'shortestCompletionTime': shortestCompletionTime.toJson(
+        keyToJson: (k) => k.toJson(),
+        valueToJson: (v) => v.toJson(),
+      ),
     };
   }
 
@@ -152,6 +233,21 @@ abstract class RoutineStats
         'mostFrequentAborted': mostFrequentAborted?.toJsonForProtocol(),
       if (mostFrequentTimedOut != null)
         'mostFrequentTimedOut': mostFrequentTimedOut?.toJsonForProtocol(),
+      'completedTally': completedTally,
+      'abortedTally': abortedTally,
+      'timedOutTally': timedOutTally,
+      'averageCompletionTime': averageCompletionTime.toJson(
+        keyToJson: (k) => k.toJsonForProtocol(),
+        valueToJson: (v) => v.toJson(),
+      ),
+      'longestCompletionTime': longestCompletionTime.toJson(
+        keyToJson: (k) => k.toJsonForProtocol(),
+        valueToJson: (v) => v.toJson(),
+      ),
+      'shortestCompletionTime': shortestCompletionTime.toJson(
+        keyToJson: (k) => k.toJsonForProtocol(),
+        valueToJson: (v) => v.toJson(),
+      ),
     };
   }
 
@@ -174,6 +270,12 @@ class _RoutineStatsImpl extends RoutineStats {
     _i3.Routine? mostFrequentCompleted,
     _i3.Routine? mostFrequentAborted,
     _i3.Routine? mostFrequentTimedOut,
+    required int completedTally,
+    required int abortedTally,
+    required int timedOutTally,
+    required Map<_i3.Routine, Duration> averageCompletionTime,
+    required Map<_i3.Routine, Duration> longestCompletionTime,
+    required Map<_i3.Routine, Duration> shortestCompletionTime,
   }) : super._(
           completedStats: completedStats,
           abortedStats: abortedStats,
@@ -184,6 +286,12 @@ class _RoutineStatsImpl extends RoutineStats {
           mostFrequentCompleted: mostFrequentCompleted,
           mostFrequentAborted: mostFrequentAborted,
           mostFrequentTimedOut: mostFrequentTimedOut,
+          completedTally: completedTally,
+          abortedTally: abortedTally,
+          timedOutTally: timedOutTally,
+          averageCompletionTime: averageCompletionTime,
+          longestCompletionTime: longestCompletionTime,
+          shortestCompletionTime: shortestCompletionTime,
         );
 
   @override
@@ -197,6 +305,12 @@ class _RoutineStatsImpl extends RoutineStats {
     Object? mostFrequentCompleted = _Undefined,
     Object? mostFrequentAborted = _Undefined,
     Object? mostFrequentTimedOut = _Undefined,
+    int? completedTally,
+    int? abortedTally,
+    int? timedOutTally,
+    Map<_i3.Routine, Duration>? averageCompletionTime,
+    Map<_i3.Routine, Duration>? longestCompletionTime,
+    Map<_i3.Routine, Duration>? shortestCompletionTime,
   }) {
     return RoutineStats(
       completedStats: completedStats ?? this.completedStats.copyWith(),
@@ -220,6 +334,36 @@ class _RoutineStatsImpl extends RoutineStats {
       mostFrequentTimedOut: mostFrequentTimedOut is _i3.Routine?
           ? mostFrequentTimedOut
           : this.mostFrequentTimedOut?.copyWith(),
+      completedTally: completedTally ?? this.completedTally,
+      abortedTally: abortedTally ?? this.abortedTally,
+      timedOutTally: timedOutTally ?? this.timedOutTally,
+      averageCompletionTime: averageCompletionTime ??
+          this.averageCompletionTime.map((
+                key0,
+                value0,
+              ) =>
+                  MapEntry(
+                    key0.copyWith(),
+                    value0,
+                  )),
+      longestCompletionTime: longestCompletionTime ??
+          this.longestCompletionTime.map((
+                key0,
+                value0,
+              ) =>
+                  MapEntry(
+                    key0.copyWith(),
+                    value0,
+                  )),
+      shortestCompletionTime: shortestCompletionTime ??
+          this.shortestCompletionTime.map((
+                key0,
+                value0,
+              ) =>
+                  MapEntry(
+                    key0.copyWith(),
+                    value0,
+                  )),
     );
   }
 }

@@ -287,6 +287,12 @@ class RoutineEndpoint extends Endpoint {
           mostFrequentCompleted: null,
           mostFrequentAborted: null,
           mostFrequentTimedOut: null,
+          completedTally: 0,
+          abortedTally: 0,
+          timedOutTally: 0,
+          averageCompletionTime: {},
+          longestCompletionTime: {},
+          shortestCompletionTime: {},
         );
         final records = await RoutineRecord.db.find(
           session,
@@ -304,6 +310,21 @@ class RoutineEndpoint extends Endpoint {
         for (final record in records) {
           final routine = routines.firstWhere((el) => el.id == record.routineId);
           if (record.status == RoutineRecordStatus.completed) {
+            stats.completedTally += 1;
+            final currentAverage = stats.averageCompletionTime[routine] ?? Duration.zero;
+            final completionTime = record.lastModifiedAt.difference(record.createdAt);
+            stats.averageCompletionTime[routine] = Duration(
+              milliseconds: (currentAverage.inMilliseconds + completionTime.inMilliseconds) ~/
+                  stats.completedTally,
+            );
+            if (stats.longestCompletionTime[routine] == null ||
+                completionTime > stats.longestCompletionTime[routine]!) {
+              stats.longestCompletionTime[routine] = completionTime;
+            }
+            if (stats.shortestCompletionTime[routine] == null ||
+                completionTime < stats.shortestCompletionTime[routine]!) {
+              stats.shortestCompletionTime[routine] = completionTime;
+            }
             stats.completedStats = stats.completedStats + routine.stats;
             if (stats.mostRecentCompleted == null ||
                 record.lastModifiedAt.isAfter(stats.mostRecentCompleted!.lastModifiedAt)) {
@@ -312,6 +333,7 @@ class RoutineEndpoint extends Endpoint {
             completionTallies[record.routineId] = (completionTallies[record.routineId] ?? 0) + 1;
           }
           if (record.status == RoutineRecordStatus.aborted) {
+            stats.abortedTally += 1;
             stats.abortedStats = stats.abortedStats + routine.stats;
             if (stats.mostRecentAborted == null ||
                 record.lastModifiedAt.isAfter(stats.mostRecentAborted!.lastModifiedAt)) {
@@ -320,6 +342,7 @@ class RoutineEndpoint extends Endpoint {
             abortTallies[record.routineId] = (abortTallies[record.routineId] ?? 0) + 1;
           }
           if (record.status == RoutineRecordStatus.timedOut) {
+            stats.timedOutTally += 1;
             stats.timedOutStats = stats.timedOutStats + routine.stats;
             if (stats.mostRecentTimedOut == null ||
                 record.lastModifiedAt.isAfter(stats.mostRecentTimedOut!.lastModifiedAt)) {

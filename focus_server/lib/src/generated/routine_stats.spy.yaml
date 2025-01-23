@@ -19,3 +19,15 @@ fields:
   mostFrequentAborted: Routine?
   ### Most frequent [Routine] timed out.
   mostFrequentTimedOut: Routine?
+  ### Tally of completed [Routine]s.
+  completedTally: int
+  ### Tally of aborted [Routine]s.
+  abortedTally: int
+  ### Tally of timed out [Routine]s.
+  timedOutTally: int
+  ### Average completion time by [Routine].
+  averageCompletionTime: Map<Routine, Duration>
+  ### Longest completion time by [Routine].
+  longestCompletionTime: Map<Routine, Duration>
+  ### Shortest completion time by [Routine].
+  shortestCompletionTime: Map<Routine, Duration>
