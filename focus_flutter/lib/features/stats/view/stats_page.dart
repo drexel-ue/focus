@@ -98,6 +98,7 @@ class StatsPage extends ConsumerWidget {
                 TaskStatsTile(),
                 verticalMargin16,
                 RoutineStatsTile(),
+                verticalMargin16,
               ],
             ),
           ),

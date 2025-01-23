@@ -5,6 +5,7 @@ import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/home/repository/home_repository.dart';
 import 'package:focus_flutter/features/stats/repository/stats_repository.dart';
 import 'package:focus_flutter/features/stats/view/routine_pie_chart.dart';
+import 'package:focus_flutter/features/stats/view/routine_stats_expansion_tile.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
 import 'package:focus_flutter/features/widgets/loading_cover.dart';
 
@@ -45,6 +46,7 @@ class _RoutineStatsTileState extends ConsumerState<RoutineStatsTile> {
               padding: horizontalPadding16,
               child: RoutinePieChart(),
             ),
+            const RoutineStatsExpansionTile(),
           ] else if (stats != null) ...[
             Center(
               child: SizedBox(

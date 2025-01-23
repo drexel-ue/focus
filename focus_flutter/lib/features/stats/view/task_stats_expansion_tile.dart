@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart';
+import 'package:focus_flutter/extensions/duration.dart';
 import 'package:focus_flutter/features/stats/repository/stats_repository.dart';
 import 'package:focus_flutter/features/tasks/view/task_form.dart';
 import 'package:focus_flutter/features/widgets/ability_stats_display.dart';
@@ -88,7 +89,7 @@ class _TaskStatsExpansionTileState extends ConsumerState<TaskStatsExpansionTile>
             ],
           ),
         ),
-        verticalMargin8,
+        verticalMargin16,
         const Padding(
           padding: horizontalPadding16,
           child: Text('Completion time (shortest/avgerage/longest):'),
@@ -161,23 +162,5 @@ class _TaskStatsExpansionTileState extends ConsumerState<TaskStatsExpansionTile>
         verticalMargin8,
       ],
     );
-  }
-}
-
-extension on Duration {
-  String get asText {
-    if (this == Duration.zero) {
-      return 'n/a';
-    }
-    if (inDays > 0) {
-      return '$inDays days';
-    }
-    if (inHours > 0) {
-      return '$inHours hours';
-    }
-    if (inMinutes > 0) {
-      return '$inMinutes minutes';
-    }
-    return '$inSeconds seconds';
   }
 }
