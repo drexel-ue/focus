@@ -48,20 +48,22 @@ class _RoutinePieChartState extends ConsumerState<RoutinePieChart>
           textAlign: TextAlign.center,
         ),
         verticalMargin8,
-        SizedBox.square(
-          dimension: 200.0,
-          child: AnimatedBuilder(
-            animation: _controller,
-            builder: (BuildContext context, Widget? child) {
-              return CustomPaint(
-                painter: _PieChartPainter(
-                  completedRoutines: stats.completedTally,
-                  abortedRoutines: stats.abortedTally,
-                  timedOutRoutines: 1,
-                  animation: _controller,
-                ),
-              );
-            },
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 200.0, maxHeight: 200.0),
+          child: SizedBox.expand(
+            child: AnimatedBuilder(
+              animation: _controller,
+              builder: (BuildContext context, Widget? child) {
+                return CustomPaint(
+                  painter: _PieChartPainter(
+                    completedRoutines: stats.completedTally,
+                    abortedRoutines: stats.abortedTally,
+                    timedOutRoutines: 1,
+                    animation: _controller,
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ],
