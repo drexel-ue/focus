@@ -72,7 +72,7 @@ class _RoutinePieChartState extends ConsumerState<RoutinePieChart>
 }
 
 class _PieChartPainter extends CustomPainter {
-  const _PieChartPainter({
+  _PieChartPainter({
     required this.completedRoutines,
     required this.abortedRoutines,
     required this.timedOutRoutines,
@@ -83,6 +83,15 @@ class _PieChartPainter extends CustomPainter {
   final int abortedRoutines;
   final int timedOutRoutines;
   final Animation<double> animation;
+
+  late final _curvedAnimation = CurvedAnimation(
+    parent: animation,
+    curve: const Interval(
+      0.1,
+      0.7,
+      curve: Curves.easeOut,
+    ),
+  );
 
   int get _total => completedRoutines + abortedRoutines + timedOutRoutines;
   double get _completed => completedRoutines / _total;
@@ -122,22 +131,15 @@ class _PieChartPainter extends CustomPainter {
       ..color = Colors.white
       ..style = PaintingStyle.fill
       ..strokeWidth = 2.0;
-    final completedSweep = sweepAngle * _completed;
+    var completedSweep = sweepAngle * _completed;
+    completedSweep = completedSweep * _curvedAnimation.value;
     canvas.drawArc(
       Rect.fromCircle(
         center: center,
         radius: radius - 4.0,
       ),
       startAngle,
-      completedSweep *
-          CurvedAnimation(
-            parent: animation,
-            curve: const Interval(
-              0.1,
-              0.4,
-              curve: Curves.easeOut,
-            ),
-          ).value,
+      completedSweep,
       true,
       completedPaint,
     );
@@ -150,15 +152,7 @@ class _PieChartPainter extends CustomPainter {
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius - 4.0),
       startAngle + completedSweep,
-      abortedSweep *
-          CurvedAnimation(
-            parent: animation,
-            curve: const Interval(
-              0.4,
-              0.7,
-              curve: Curves.easeInOut,
-            ),
-          ).value,
+      abortedSweep * _curvedAnimation.value,
       true,
       abortedPaint,
     );
