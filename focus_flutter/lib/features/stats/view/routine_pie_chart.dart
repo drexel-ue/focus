@@ -23,8 +23,8 @@ class _RoutinePieChartState extends ConsumerState<RoutinePieChart>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 5000))
-      ..repeat();
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 2500))
+      ..forward();
   }
 
   @override
@@ -85,7 +85,6 @@ class _PieChartPainter extends CustomPainter {
   int get _total => completedRoutines + abortedRoutines + timedOutRoutines;
   double get _completed => completedRoutines / _total;
   double get _aborted => abortedRoutines / _total;
-  double get _timedOut => timedOutRoutines / _total;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -101,60 +100,66 @@ class _PieChartPainter extends CustomPainter {
     canvas.drawArc(
       Rect.fromCircle(
         center: center,
-        radius: radius *
-            CurvedAnimation(
-              parent: animation,
-              curve: const Interval(
-                0.0,
-                0.1,
-                curve: Curves.easeOut,
-              ),
-            ).value,
+        radius: radius,
       ),
       startAngle,
-      sweepAngle,
+      sweepAngle *
+          CurvedAnimation(
+            parent: animation,
+            curve: const Interval(
+              0.0,
+              0.1,
+              curve: Curves.easeOut,
+            ),
+          ).value,
       false,
       outerPaint,
     );
-    // // completed.
-    // final completedPaint = Paint()
-    //   ..color = Colors.white
-    //   ..style = PaintingStyle.fill
-    //   ..strokeWidth = 2.0;
-    // final completedSweep = sweepAngle * _completed;
-    // canvas.drawArc(
-    //   Rect.fromCircle(center: center, radius: radius - 4.0),
-    //   startAngle,
-    //   completedSweep,
-    //   true,
-    //   completedPaint,
-    // );
-    // // aborted.
-    // final abortedPaint = Paint()
-    //   ..color = AppColors.black
-    //   ..style = PaintingStyle.fill
-    //   ..strokeWidth = 2.0;
-    // final abortedSweep = sweepAngle * _aborted;
-    // canvas.drawArc(
-    //   Rect.fromCircle(center: center, radius: radius - 4.0),
-    //   startAngle + completedSweep,
-    //   abortedSweep,
-    //   true,
-    //   abortedPaint,
-    // );
-    // // timed out.
-    // final timedOutPaint = Paint()
-    //   ..color = AppColors.dullGray
-    //   ..style = PaintingStyle.fill
-    //   ..strokeWidth = 2.0;
-    // final timedOutSweep = sweepAngle * _timedOut;
-    // canvas.drawArc(
-    //   Rect.fromCircle(center: center, radius: radius - 4.0),
-    //   startAngle + completedSweep + abortedSweep,
-    //   timedOutSweep,
-    //   true,
-    //   timedOutPaint,
-    // );
+    // completed.
+    final completedPaint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.fill
+      ..strokeWidth = 2.0;
+    final completedSweep = sweepAngle * _completed;
+    canvas.drawArc(
+      Rect.fromCircle(
+        center: center,
+        radius: radius - 4.0,
+      ),
+      startAngle,
+      completedSweep *
+          CurvedAnimation(
+            parent: animation,
+            curve: const Interval(
+              0.1,
+              0.4,
+              curve: Curves.easeOut,
+            ),
+          ).value,
+      true,
+      completedPaint,
+    );
+    // aborted.
+    final abortedPaint = Paint()
+      ..color = AppColors.dullGray
+      ..style = PaintingStyle.fill
+      ..strokeWidth = 2.0;
+    final abortedSweep = sweepAngle * _aborted;
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius - 4.0),
+      startAngle + completedSweep,
+      abortedSweep *
+          CurvedAnimation(
+            parent: animation,
+            curve: const Interval(
+              0.4,
+              0.7,
+              curve: Curves.easeInOut,
+            ),
+          ).value,
+      true,
+      abortedPaint,
+    );
   }
 
   @override
