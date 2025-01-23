@@ -206,6 +206,10 @@ _For more examples, please refer to the [Documentation](https://example.com)_
   - [ ] Search tasks
     - [ ] By title
     - [ ] By description
+- [ ] Tools
+  - [ ] Wim Hoff breathing exercises
+  - [ ] Reaction time training
+  - [ ] Rhythm game
 - [ ] Settings
   - [x] Logout
   - [ ] Add peripherals
