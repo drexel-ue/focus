@@ -60,7 +60,7 @@ class _CompleteIncompleteSliderState extends ConsumerState<TasksCompleteIncomple
           'Tasks: Complete / Incomplete',
           textAlign: TextAlign.center,
         ),
-        verticalMargin4,
+        verticalMargin8,
         SizedBox(
           height: 16.0,
           child: Row(
