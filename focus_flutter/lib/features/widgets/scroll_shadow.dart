@@ -30,9 +30,9 @@ class ScrollShadow extends StatefulWidget {
 }
 
 class _ScrollShadowState extends State<ScrollShadow> {
-  static final _transparentWhite = AppColors.white.withAlpha(0);
-  static const _white = AppColors.white;
-  static const _shadowHeight = 12.0;
+  static final _transparentWhite = AppColors.white.withValues(alpha: 0);
+  static final _startColor = AppColors.white.withValues(alpha: 0.5);
+  static const _shadowHeight = 48.0;
 
   bool _atStart = true;
   bool _atEnd = false;
@@ -56,7 +56,7 @@ class _ScrollShadowState extends State<ScrollShadow> {
         gradient: LinearGradient(
           begin: widget.axis == Axis.vertical ? Alignment.topCenter : Alignment.centerLeft,
           end: widget.axis == Axis.vertical ? Alignment.bottomCenter : Alignment.centerRight,
-          colors: [_white, _transparentWhite],
+          colors: [_startColor, _transparentWhite],
         ),
       ),
     );
@@ -65,7 +65,7 @@ class _ScrollShadowState extends State<ScrollShadow> {
         gradient: LinearGradient(
           begin: widget.axis == Axis.vertical ? Alignment.bottomCenter : Alignment.centerRight,
           end: widget.axis == Axis.vertical ? Alignment.topCenter : Alignment.centerLeft,
-          colors: [_white, _transparentWhite],
+          colors: [_startColor, _transparentWhite],
         ),
       ),
     );
