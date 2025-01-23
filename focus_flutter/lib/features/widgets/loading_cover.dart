@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:focus_client/focus_client.dart';
 
 /// To be used to cover content in loading states.
 @immutable
@@ -22,9 +23,9 @@ class LoadingCover extends StatelessWidget {
       children: [
         child,
         if (loading)
-          const Material(
-            color: Colors.white10,
-            child: Center(
+          Material(
+            color: AppColors.white.withValues(alpha: 0.1),
+            child: const Center(
               child: CircularProgressIndicator(),
             ),
           ),

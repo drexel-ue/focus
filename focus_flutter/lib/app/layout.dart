@@ -2,7 +2,6 @@ import 'package:flutter/material.dart'
     show
         BorderRadius,
         BorderSide,
-        Colors,
         EdgeInsets,
         EdgeInsetsDirectional,
         OutlineInputBorder,
@@ -10,6 +9,7 @@ import 'package:flutter/material.dart'
         SizedBox,
         SliverToBoxAdapter,
         Spacer;
+import 'package:focus_client/focus_client.dart';
 
 /// SizedBox.shrink()
 const emptyWidget = SizedBox.shrink();
@@ -62,13 +62,13 @@ const verticalMargin12 = SizedBox(height: 12.0);
 
 /// Input border.
 const outlineInputBorder = OutlineInputBorder(
-  borderSide: BorderSide(color: Colors.white, width: 2.0),
+  borderSide: BorderSide(color: AppColors.white, width: 2.0),
   borderRadius: BorderRadius.all(Radius.zero),
 );
 
 /// Focused input border.
 const focusedOutlineInputBorder = OutlineInputBorder(
-  borderSide: BorderSide(color: Colors.white, width: 2.5),
+  borderSide: BorderSide(color: AppColors.white, width: 2.5),
   borderRadius: BorderRadius.all(Radius.zero),
 );
 

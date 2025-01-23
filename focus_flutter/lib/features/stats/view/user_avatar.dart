@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/assets.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/auth/repository/auth_repository.dart';
@@ -19,13 +20,13 @@ class UserAvatar extends ConsumerWidget {
       dimension: 64.0,
       child: Material(
         type: MaterialType.circle,
-        color: Colors.white,
+        color: AppColors.white,
         child: Padding(
           padding: allPadding2,
           child: Material(
             clipBehavior: Clip.antiAlias,
             type: MaterialType.circle,
-            color: Colors.black,
+            color: AppColors.black,
             child: CachedNetworkImage(
               imageUrl: user.profileImageUrl ?? '',
               fadeInDuration: const Duration(milliseconds: 300),

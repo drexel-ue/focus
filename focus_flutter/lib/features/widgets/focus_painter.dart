@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:focus_client/focus_client.dart';
 
 /// [CustomPainter] with focus reticles around child.
 @immutable
@@ -7,7 +8,7 @@ class FocusPainter extends CustomPainter {
   FocusPainter({
     Color? color,
   }) : _paint = Paint()
-          ..color = color ?? Colors.white
+          ..color = color ?? AppColors.white
           ..strokeWidth = 2.0;
 
   static const _lineLength = 8.0;

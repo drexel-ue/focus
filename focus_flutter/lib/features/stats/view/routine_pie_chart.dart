@@ -104,7 +104,7 @@ class _PieChartPainter extends CustomPainter {
     const startAngle = 0.0 - math.pi / 2.0;
     const sweepAngle = 2 * math.pi;
     final outerPaint = Paint()
-      ..color = Colors.white
+      ..color = AppColors.white
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
     // outer circle.
@@ -128,7 +128,7 @@ class _PieChartPainter extends CustomPainter {
     );
     // completed.
     final completedPaint = Paint()
-      ..color = Colors.white
+      ..color = AppColors.white
       ..style = PaintingStyle.fill
       ..strokeWidth = 2.0;
     var completedSweep = sweepAngle * _completed;

@@ -42,7 +42,7 @@ class AblilityLevelProgressTile extends ConsumerWidget {
                 widthFactor: levelWithRemainder.remainder,
                 child: const SizedBox(
                   height: 8.0,
-                  child: ColoredBox(color: Colors.white),
+                  child: ColoredBox(color: AppColors.white),
                 ),
               ),
             ),

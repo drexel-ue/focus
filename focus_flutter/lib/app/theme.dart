@@ -8,18 +8,18 @@ import 'package:google_fonts/google_fonts.dart';
 /// Focus theme.
 ThemeData generateTheme() {
   final colorScheme = ColorScheme.fromSeed(
-    seedColor: Colors.black,
-    surface: Colors.black,
-    primary: Colors.white,
+    seedColor: AppColors.black,
+    surface: AppColors.black,
+    primary: AppColors.white,
     secondary: AppColors.blackSilver,
   );
   const borderSide = BorderSide(color: AppColors.white, width: 2.0);
   return ThemeData(
     useMaterial3: true,
-    iconTheme: const IconThemeData(color: Colors.white),
+    iconTheme: const IconThemeData(color: AppColors.white),
     textTheme: GoogleFonts.robotoTextTheme().apply(
-      bodyColor: Colors.white,
-      displayColor: Colors.white,
+      bodyColor: AppColors.white,
+      displayColor: AppColors.white,
       decorationColor: AppColors.white,
     ),
     listTileTheme: const ListTileThemeData(
@@ -52,22 +52,22 @@ ThemeData generateTheme() {
       ),
     ),
     colorScheme: colorScheme,
-    inputDecorationTheme: const InputDecorationTheme(
+    inputDecorationTheme: InputDecorationTheme(
       contentPadding: allPadding8,
       border: outlineInputBorder,
       focusedBorder: focusedOutlineInputBorder,
       enabledBorder: outlineInputBorder,
       hintStyle: TextStyle(
-        color: Colors.white38,
+        color: AppColors.white.withValues(alpha: 0.38),
       ),
     ),
-    textSelectionTheme: const TextSelectionThemeData(
-      cursorColor: Colors.white,
-      selectionHandleColor: Colors.white,
-      selectionColor: Colors.white12,
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: AppColors.white,
+      selectionHandleColor: AppColors.white,
+      selectionColor: AppColors.white.withValues(alpha: 0.12),
     ),
     dropdownMenuTheme: const DropdownMenuThemeData(
-      // textStyle: TextStyle(color: Colors.white),
+      // textStyle: TextStyle(color:AppColors.white),
       inputDecorationTheme: InputDecorationTheme(
         iconColor: AppColors.white,
         suffixIconColor: AppColors.white,

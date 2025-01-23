@@ -26,7 +26,7 @@ class FocusBorder extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         border: Border.all(
-          color: Colors.white,
+          color: AppColors.white,
           width: thicc ? 2.5 : 2.0,
           strokeAlign: BorderSide.strokeAlignCenter,
         ),

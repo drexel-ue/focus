@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart';
 
 /// Focus themed button.
@@ -41,15 +42,15 @@ class FocusButton extends StatelessWidget {
       height: 48.0,
       decoration: BoxDecoration(
         border: Border.all(
-          color: Colors.white,
+          color: AppColors.white,
           width: selected ? 2.5 : 2.0,
           strokeAlign: BorderSide.strokeAlignCenter,
         ),
         color: !enabled
             ? Colors.grey
             : filled //
-                ? Colors.white
-                : Colors.black,
+                ? AppColors.white
+                : AppColors.black,
       ),
       child: InkWell(
         onTap: enabled ? () => onTap?.call() : null,
@@ -61,7 +62,7 @@ class FocusButton extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: filled ? Colors.black : Colors.white,
+                color: filled ? AppColors.black : AppColors.white,
                 fontWeight: selected ? FontWeight.w600 : null,
               ),
               child: child,

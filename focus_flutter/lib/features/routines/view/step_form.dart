@@ -131,7 +131,7 @@ class _StepFormState extends ConsumerState<StepForm> {
                 children: [
                   TextField(
                     controller: _titleController,
-                    cursorColor: Colors.white,
+                    cursorColor: AppColors.white,
                     decoration: const InputDecoration(
                       hintText: 'Title',
                     ),

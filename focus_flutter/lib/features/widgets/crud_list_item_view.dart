@@ -73,7 +73,7 @@ class CrudListItemView<T> extends StatelessWidget {
           alignment: Alignment.centerRight,
           child: IconButton(
             onPressed: () => onAddItem(),
-            icon: const Icon(Icons.add, color: Colors.white),
+            icon: const Icon(Icons.add, color: AppColors.white),
           ),
         ),
         Expanded(
@@ -99,8 +99,8 @@ class CrudListItemView<T> extends StatelessWidget {
                           SlidableAction(
                             onPressed: (_) => onDeleteItem(item),
                             icon: Icons.delete_forever_sharp,
-                            backgroundColor: Colors.red,
-                            foregroundColor: Colors.white,
+                            backgroundColor: AppColors.vibrantRed,
+                            foregroundColor: AppColors.white,
                           ),
                       ],
                     ),
