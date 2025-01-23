@@ -7,15 +7,15 @@ import 'package:focus_flutter/features/widgets/focus_border.dart';
 
 /// Displays the percentages of completed and incomplete tasks on a slider.
 @immutable
-class CompleteIncompleteSlider extends ConsumerStatefulWidget {
-  /// Constructs a const [CompleteIncompleteSlider].
-  const CompleteIncompleteSlider({super.key});
+class TasksCompleteIncompleteSlider extends ConsumerStatefulWidget {
+  /// Constructs a const [TasksCompleteIncompleteSlider].
+  const TasksCompleteIncompleteSlider({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _CompleteIncompleteSliderState();
 }
 
-class _CompleteIncompleteSliderState extends ConsumerState<CompleteIncompleteSlider>
+class _CompleteIncompleteSliderState extends ConsumerState<TasksCompleteIncompleteSlider>
     with SingleTickerProviderStateMixin {
   static const _duration = Duration(milliseconds: 550);
   static const _thumbWidth = 6.0;
