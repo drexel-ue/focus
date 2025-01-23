@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart';
+import 'package:focus_flutter/features/stats/repository/stats_repository.dart';
 
 /// Displays a pie chart of [Routine] stats.
 @immutable
@@ -22,7 +23,8 @@ class _RoutinePieChartState extends ConsumerState<RoutinePieChart>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 1000));
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 5000))
+      ..repeat();
   }
 
   @override
@@ -33,6 +35,10 @@ class _RoutinePieChartState extends ConsumerState<RoutinePieChart>
 
   @override
   Widget build(BuildContext context) {
+    final stats = ref.watch(statsRepositoryProvider).requireValue.routineStats;
+    if (stats == null) {
+      return emptyWidget;
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
@@ -44,13 +50,18 @@ class _RoutinePieChartState extends ConsumerState<RoutinePieChart>
         verticalMargin8,
         SizedBox.square(
           dimension: 200.0,
-          child: CustomPaint(
-            painter: _PieChartPainter(
-              completedRoutines: 10,
-              abortedRoutines: 10,
-              timedOutRoutines: 10,
-              animation: _controller,
-            ),
+          child: AnimatedBuilder(
+            animation: _controller,
+            builder: (BuildContext context, Widget? child) {
+              return CustomPaint(
+                painter: _PieChartPainter(
+                  completedRoutines: stats.completedTally,
+                  abortedRoutines: stats.abortedTally,
+                  timedOutRoutines: 1,
+                  animation: _controller,
+                ),
+              );
+            },
           ),
         ),
       ],
@@ -88,55 +99,64 @@ class _PieChartPainter extends CustomPainter {
       ..strokeWidth = 2.0;
     // outer circle.
     canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
+      Rect.fromCircle(
+        center: center,
+        radius: radius *
+            CurvedAnimation(
+              parent: animation,
+              curve: const Interval(
+                0.0,
+                0.1,
+                curve: Curves.easeOut,
+              ),
+            ).value,
+      ),
       startAngle,
       sweepAngle,
       false,
       outerPaint,
     );
-    // completed.
-    final completedPaint = Paint()
-      ..color = Colors.white
-      ..style = PaintingStyle.fill
-      ..strokeWidth = 2.0;
-    final completedSweep = sweepAngle * _completed;
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius - 4.0),
-      startAngle,
-      completedSweep,
-      true,
-      completedPaint,
-    );
-    // aborted.
-    final abortedPaint = Paint()
-      ..color = AppColors.black
-      ..style = PaintingStyle.fill
-      ..strokeWidth = 2.0;
-    final abortedSweep = sweepAngle * _aborted;
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius - 4.0),
-      startAngle + completedSweep,
-      abortedSweep,
-      true,
-      abortedPaint,
-    );
-    // timed out.
-    final timedOutPaint = Paint()
-      ..color = AppColors.dullGray
-      ..style = PaintingStyle.fill
-      ..strokeWidth = 2.0;
-    final timedOutSweep = sweepAngle * _timedOut;
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius - 4.0),
-      startAngle + completedSweep + abortedSweep,
-      timedOutSweep,
-      true,
-      timedOutPaint,
-    );
+    // // completed.
+    // final completedPaint = Paint()
+    //   ..color = Colors.white
+    //   ..style = PaintingStyle.fill
+    //   ..strokeWidth = 2.0;
+    // final completedSweep = sweepAngle * _completed;
+    // canvas.drawArc(
+    //   Rect.fromCircle(center: center, radius: radius - 4.0),
+    //   startAngle,
+    //   completedSweep,
+    //   true,
+    //   completedPaint,
+    // );
+    // // aborted.
+    // final abortedPaint = Paint()
+    //   ..color = AppColors.black
+    //   ..style = PaintingStyle.fill
+    //   ..strokeWidth = 2.0;
+    // final abortedSweep = sweepAngle * _aborted;
+    // canvas.drawArc(
+    //   Rect.fromCircle(center: center, radius: radius - 4.0),
+    //   startAngle + completedSweep,
+    //   abortedSweep,
+    //   true,
+    //   abortedPaint,
+    // );
+    // // timed out.
+    // final timedOutPaint = Paint()
+    //   ..color = AppColors.dullGray
+    //   ..style = PaintingStyle.fill
+    //   ..strokeWidth = 2.0;
+    // final timedOutSweep = sweepAngle * _timedOut;
+    // canvas.drawArc(
+    //   Rect.fromCircle(center: center, radius: radius - 4.0),
+    //   startAngle + completedSweep + abortedSweep,
+    //   timedOutSweep,
+    //   true,
+    //   timedOutPaint,
+    // );
   }
 
   @override
-  bool shouldRepaint(covariant _PieChartPainter oldDelegate) {
-    return animation.value != oldDelegate.animation.value;
-  }
+  bool shouldRepaint(covariant _PieChartPainter oldDelegate) => true;
 }
