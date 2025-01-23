@@ -102,7 +102,7 @@ class _OverlayMenuState extends ConsumerState<HomeOverlayMenu> with SingleTicker
         padding: bottomPadding16,
         child: AnimatedBuilder(
           animation: _animationController,
-          builder: (context, child) {
+          builder: (BuildContext context, Widget? child) {
             return ColoredBox(
               color: _colorAnimation.value!,
               child: child,

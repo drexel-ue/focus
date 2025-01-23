@@ -58,7 +58,7 @@ class _RoutinePieChartState extends ConsumerState<RoutinePieChart>
                   painter: _PieChartPainter(
                     completedRoutines: stats.completedTally,
                     abortedRoutines: stats.abortedTally,
-                    timedOutRoutines: 1,
+                    timedOutRoutines: stats.timedOutTally,
                     animation: _controller,
                   ),
                 );

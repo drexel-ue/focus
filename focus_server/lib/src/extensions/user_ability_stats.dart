@@ -17,12 +17,17 @@ extension UserAbilityStatsX on UserAbilityStats {
 
   /// Returns a new [UserAbilityStats] with the difference of this and [other].
   UserAbilityStats operator -(UserAbilityStats other) {
+    final newStrengthExp = (strengthExp - other.strengthExp).toInt();
+    final newVitalityExp = (vitalityExp - other.vitalityExp).toInt();
+    final newAgilityExp = (agilityExp - other.agilityExp).toInt();
+    final newIntelligenceExp = (intelligenceExp - other.intelligenceExp).toInt();
+    final newPerceptionExp = (perceptionExp - other.perceptionExp).toInt();
     return UserAbilityStats(
-      strengthExp: strengthExp - other.strengthExp,
-      vitalityExp: vitalityExp - other.vitalityExp,
-      agilityExp: agilityExp - other.agilityExp,
-      intelligenceExp: intelligenceExp - other.intelligenceExp,
-      perceptionExp: perceptionExp - other.perceptionExp,
+      strengthExp: newStrengthExp < 0 ? 0 : newStrengthExp,
+      vitalityExp: newVitalityExp < 0 ? 0 : newVitalityExp,
+      agilityExp: newAgilityExp < 0 ? 0 : newAgilityExp,
+      intelligenceExp: newIntelligenceExp < 0 ? 0 : newIntelligenceExp,
+      perceptionExp: newPerceptionExp < 0 ? 0 : newPerceptionExp,
     );
   }
 
