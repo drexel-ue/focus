@@ -210,6 +210,12 @@ _For more examples, please refer to the [Documentation](https://example.com)_
   - [ ] Wim Hoff breathing exercises
   - [ ] Reaction time training
   - [ ] Rhythm game
+- [ ] Social
+  - [ ] Share stats
+  - [ ] Share routines
+  - [ ] Share tasks
+  - [ ] Share goals
+  - [ ] Group goals
 - [ ] Settings
   - [x] Logout
   - [ ] Add peripherals
