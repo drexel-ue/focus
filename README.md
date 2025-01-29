@@ -210,18 +210,31 @@ _For more examples, please refer to the [Documentation](https://example.com)_
   - [ ] Wim Hoff breathing exercises
   - [ ] Reaction time training
   - [ ] Rhythm game
+  - [ ] Calendar integration
 - [ ] Social
   - [ ] Share stats
   - [ ] Share routines
   - [ ] Share tasks
   - [ ] Share goals
   - [ ] Group goals
+  - [ ] AR based games
 - [ ] Settings
   - [x] Logout
   - [ ] Add peripherals
-    - [ ] Brilliant Labs Frame AR Glasses
+    - [ ] Brilliant Labs Frame AR Glasses for HUD
+      - [ ] Accept accelerometer input for HUD
+      - [ ] Display health data
+      - [ ] Display stats
+      - [ ] Allow customization of HUD
+      - [ ] Flutter to Lua bridge
+      - [ ] Waze like turn by turn navigation
+      - [ ] Waze like alerts for arriving to calendar events on time
     - [ ] Apple Watch
+      - [ ] Health data
+      - [ ] Accelerometer input for HUD
     - [ ] WearOS
+      - [ ] Health data
+      - [ ] Accelerometer input for HUD
 
 See the [open issues](https://github.com/drexel-ue/focus/issues) for a full list of proposed features (and known issues).
 
