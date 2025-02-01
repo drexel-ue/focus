@@ -25,10 +25,9 @@ class TaskForm extends ConsumerStatefulWidget {
 class _TaskFormState extends ConsumerState<TaskForm> {
   late final _titleController = TextEditingController(text: widget.task?.title)
     ..addListener(_listener);
-  late final _descriptionController = TextEditingController(text: widget.task?.description);
-
-  // FIXME(drexel-ue): should be using value notifiers.
-  void _listener() => setState(() {});
+  late final _descriptionController = TextEditingController(text: widget.task?.description)
+    ..addListener(_listener);
+  final _enabled = ValueNotifier(false);
 
   bool get _createEnabled {
     if (widget.task case Task task) {
@@ -42,6 +41,8 @@ class _TaskFormState extends ConsumerState<TaskForm> {
       return true;
     }
   }
+
+  void _listener() => _enabled.value = _createEnabled;
 
   Future<void> _submit() async {
     if (widget.task case Task task) {
@@ -111,11 +112,16 @@ class _TaskFormState extends ConsumerState<TaskForm> {
                 ),
                 horizontalMargin16,
                 Expanded(
-                  child: FocusButton(
-                    onTap: () => _submit(),
-                    filled: true,
-                    enabled: _createEnabled,
-                    child: Text(widget.task != null ? 'Update' : 'Create'),
+                  child: ValueListenableBuilder(
+                    valueListenable: _enabled,
+                    builder: (BuildContext context, bool value, Widget? child) {
+                      return FocusButton(
+                        onTap: () => _submit(),
+                        filled: true,
+                        enabled: value,
+                        child: Text(widget.task != null ? 'Update' : 'Create'),
+                      );
+                    },
                   ),
                 ),
               ],
