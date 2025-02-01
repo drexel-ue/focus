@@ -3,7 +3,7 @@ import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
 import 'package:focus_flutter/features/widgets/focus_choice_chip.dart';
-import 'package:focus_flutter/features/widgets/focus_modal.dart';
+import 'package:focus_flutter/features/widgets/focus_window.dart';
 
 /// Modal that displays buff information.
 @immutable
@@ -13,9 +13,9 @@ class BuffModal extends StatelessWidget {
 
   /// Shows a [BuffModal].
   static void show(BuildContext context, UserBuff buff) {
-    FocusModal.show(
+    FocusWindow.show(
       context,
-      (BuildContext context, CloseModal closeModal) {
+      (BuildContext context, CloseWindow closeModal) {
         return BuffModal._(buff: buff);
       },
     );

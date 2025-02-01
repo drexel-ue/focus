@@ -9,7 +9,7 @@ import 'package:focus_flutter/features/run_routine/view/focus_tally_counter.dart
 import 'package:focus_flutter/features/tasks/repository/tasks_repository.dart';
 import 'package:focus_flutter/features/widgets/digits_only_input_formatter.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
-import 'package:focus_flutter/features/widgets/focus_modal.dart';
+import 'package:focus_flutter/features/widgets/focus_window.dart';
 import 'package:focus_flutter/features/widgets/loading_cover.dart';
 import 'package:focus_flutter/features/widgets/scroll_shadow.dart';
 
@@ -24,7 +24,7 @@ class StepForm extends ConsumerStatefulWidget {
   });
 
   /// Callback to call when cancelling.
-  final CloseModal<RoutineStep?> close;
+  final CloseWindow<RoutineStep?> close;
 
   /// [RoutineStep] to edit.
   final RoutineStep? step;

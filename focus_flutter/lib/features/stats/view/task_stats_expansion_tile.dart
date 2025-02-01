@@ -6,7 +6,7 @@ import 'package:focus_flutter/extensions/duration.dart';
 import 'package:focus_flutter/features/stats/repository/stats_repository.dart';
 import 'package:focus_flutter/features/tasks/view/task_form.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
-import 'package:focus_flutter/features/widgets/focus_modal.dart';
+import 'package:focus_flutter/features/widgets/focus_window.dart';
 
 /// Displays [TaskStats].
 @immutable
@@ -22,9 +22,9 @@ class _TaskStatsExpansionTileState extends ConsumerState<TaskStatsExpansionTile>
   bool _isExpanded = false;
 
   void _showTaskForm(BuildContext context, Task task) {
-    FocusModal.show(
+    FocusWindow.show(
       context,
-      (BuildContext context, CloseModal closeModal) {
+      (BuildContext context, CloseWindow closeModal) {
         return TaskForm(task: task);
       },
     );

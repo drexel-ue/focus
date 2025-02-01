@@ -5,9 +5,9 @@ import 'package:focus_flutter/features/routines/repository/routines_repository.d
 import 'package:focus_flutter/features/routines/view/delete_routine_modal.dart';
 import 'package:focus_flutter/features/routines/view/routine_form.dart';
 import 'package:focus_flutter/features/run_routine/repository/run_routine_repository.dart';
-import 'package:focus_flutter/features/run_routine/view/run_routine_modal.dart';
+import 'package:focus_flutter/features/run_routine/view/run_routine_window.dart';
 import 'package:focus_flutter/features/widgets/crud_list_item_view.dart';
-import 'package:focus_flutter/features/widgets/focus_modal.dart';
+import 'package:focus_flutter/features/widgets/focus_window.dart';
 
 /// Routines Page.
 @immutable
@@ -29,13 +29,13 @@ class _RoutinesPageState extends ConsumerState<RoutinesPage> {
   }
 
   void _showRoutineForm(BuildContext context, [Routine? routine]) {
-    FocusModal.show(
+    FocusWindow.show(
       context,
-      (BuildContext context, CloseModal closeModal) => RoutineForm(routine: routine),
+      (BuildContext context, CloseWindow closeModal) => RoutineForm(routine: routine),
     );
   }
 
-  void _showDeleteModal(BuildContext context, Routine routine) => FocusModal.show(
+  void _showDeleteModal(BuildContext context, Routine routine) => FocusWindow.show(
         context,
         (_, __) => DeleteRoutineModal(routine: routine),
       );
@@ -43,15 +43,7 @@ class _RoutinesPageState extends ConsumerState<RoutinesPage> {
   Future<void> _runRoutine(BuildContext context, Routine routine) async {
     await ref.read(runRoutineRepositoryProvider.notifier).runRoutine(routine);
     if (context.mounted) {
-      FocusModal.show(
-        context,
-        barrierDismissible: false,
-        (_, __) => const RunRoutineModal(),
-        constraints: const BoxConstraints(
-          maxWidth: 500.0,
-          maxHeight: 700.0,
-        ),
-      );
+      RunRoutineWindow.show(context);
     }
   }
 

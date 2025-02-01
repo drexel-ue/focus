@@ -3,7 +3,7 @@ import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
 import 'package:focus_flutter/features/widgets/focus_choice_chip.dart';
-import 'package:focus_flutter/features/widgets/focus_modal.dart';
+import 'package:focus_flutter/features/widgets/focus_window.dart';
 
 /// Modal that displays debuff information.
 @immutable
@@ -13,9 +13,9 @@ class DebuffModal extends StatelessWidget {
 
   /// Shows a [DebuffModal].
   static void show(BuildContext context, UserDebuff debuff) {
-    FocusModal.show(
+    FocusWindow.show(
       context,
-      (BuildContext context, CloseModal closeModal) {
+      (BuildContext context, CloseWindow closeModal) {
         return DebuffModal._(debuff: debuff);
       },
     );

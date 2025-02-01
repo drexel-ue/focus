@@ -100,6 +100,11 @@ ThemeData generateTheme() {
       thumbShape: FocusSliderThumbShape(),
       trackShape: FocusSliderTrackShape(),
     ),
+    progressIndicatorTheme: const ProgressIndicatorThemeData(
+      linearTrackColor: AppColors.black,
+      circularTrackColor: AppColors.black,
+      color: AppColors.white,
+    ),
     splashFactory: NoSplash.splashFactory,
   );
 }

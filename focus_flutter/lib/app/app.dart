@@ -2,7 +2,7 @@ import 'package:clerk_flutter/clerk_flutter.dart' hide outlineInputBorder;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:focus_flutter/app/persistence.dart';
+import 'package:focus_flutter/features/persistence/repository/persistence_repository.dart';
 import 'package:focus_flutter/app/routing.dart';
 import 'package:focus_flutter/app/theme.dart';
 import 'package:focus_flutter/features/auth/repository/clerk_auth_provider.dart';

@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/widgets/focus_border.dart';
 
-/// Callback for closing a modal with an optional value.
-typedef CloseModal<T> = void Function([T? value]);
+/// Callback for closing a window with an optional value.
+typedef CloseWindow<T> = void Function([T? value]);
 
-/// Callback for rendering the content of the model. Provides a callback for closing the modal.
-typedef ModalBuilder<T> = Widget Function(BuildContext context, CloseModal<T?> closeModel);
+/// Callback for rendering the content of the window. Provides a callback for closing the window.
+typedef WindowBuilder<T> = Widget Function(BuildContext context, CloseWindow<T?> closeWindow);
 
-/// Focus themed modal.
+/// Focus themed modal window.
 @immutable
-class FocusModal<T> extends StatefulWidget {
-  const FocusModal._({
+class FocusWindow<T> extends StatefulWidget {
+  const FocusWindow._({
     required this.builder,
     this.constraints = const BoxConstraints(
       maxWidth: 500.0,
@@ -20,7 +20,7 @@ class FocusModal<T> extends StatefulWidget {
   });
 
   /// Content builder.
-  final ModalBuilder<T> builder;
+  final WindowBuilder<T> builder;
 
   /// Constraints for the modal.
   final BoxConstraints constraints;
@@ -28,7 +28,7 @@ class FocusModal<T> extends StatefulWidget {
   /// Show the modal.
   static Future<T?> show<T>(
     BuildContext context,
-    ModalBuilder builder, {
+    WindowBuilder builder, {
     BoxConstraints constraints = const BoxConstraints(),
     bool barrierDismissible = true,
   }) async {
@@ -42,7 +42,7 @@ class FocusModal<T> extends StatefulWidget {
         Animation<double> animation,
         Animation<double> secondaryAnimation,
       ) {
-        return FocusModal._(
+        return FocusWindow._(
           builder: builder,
           constraints: constraints,
         );
@@ -59,10 +59,10 @@ class FocusModal<T> extends StatefulWidget {
   }
 
   @override
-  State<FocusModal<T>> createState() => _FocusModalState<T>();
+  State<FocusWindow<T>> createState() => _FocusWindowState<T>();
 }
 
-class _FocusModalState<T> extends State<FocusModal<T>> {
+class _FocusWindowState<T> extends State<FocusWindow<T>> {
   @override
   Widget build(BuildContext context) {
     final transitionController = ModalRoute.of(context)!.animation!;

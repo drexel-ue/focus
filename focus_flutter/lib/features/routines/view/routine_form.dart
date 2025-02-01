@@ -7,7 +7,7 @@ import 'package:focus_flutter/features/routines/repository/routines_repository.d
 import 'package:focus_flutter/features/routines/view/step_form.dart';
 import 'package:focus_flutter/features/widgets/focus_border.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
-import 'package:focus_flutter/features/widgets/focus_modal.dart';
+import 'package:focus_flutter/features/widgets/focus_window.dart';
 import 'package:focus_flutter/features/widgets/loading_cover.dart';
 import 'package:focus_flutter/features/widgets/scroll_shadow.dart';
 import 'package:focus_flutter/features/widgets/user_buff_wrap.dart';
@@ -67,9 +67,9 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
   }
 
   Future<void> _addStep() async {
-    final step = await FocusModal.show(
+    final step = await FocusWindow.show(
       context,
-      (BuildContext context, CloseModal<RoutineStep?> closeModal) {
+      (BuildContext context, CloseWindow<RoutineStep?> closeModal) {
         return StepForm(close: closeModal);
       },
     );
@@ -79,9 +79,9 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
   }
 
   Future<void> _editStep(int index) async {
-    final step = await FocusModal.show(
+    final step = await FocusWindow.show(
       context,
-      (BuildContext context, CloseModal<RoutineStep?> closeModal) {
+      (BuildContext context, CloseWindow<RoutineStep?> closeModal) {
         return StepForm(close: closeModal, step: _steps[index]);
       },
     );

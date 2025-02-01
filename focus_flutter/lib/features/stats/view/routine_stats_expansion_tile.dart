@@ -7,7 +7,7 @@ import 'package:focus_flutter/features/routines/view/routine_form.dart';
 import 'package:focus_flutter/features/stats/repository/stats_repository.dart';
 import 'package:focus_flutter/features/widgets/ability_stats_display.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
-import 'package:focus_flutter/features/widgets/focus_modal.dart';
+import 'package:focus_flutter/features/widgets/focus_window.dart';
 
 /// Displays [RoutineStats].
 @immutable
@@ -23,9 +23,9 @@ class _RoutineStatsExpansionTileState extends ConsumerState<RoutineStatsExpansio
   bool _isExpanded = false;
 
   void _showRoutineForm(BuildContext context, Routine routine) {
-    FocusModal.show(
+    FocusWindow.show(
       context,
-      (BuildContext context, CloseModal closeModal) {
+      (BuildContext context, CloseWindow closeModal) {
         return RoutineForm(routine: routine);
       },
     );

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/run_routine/repository/run_routine_repository.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
-import 'package:focus_flutter/features/widgets/focus_modal.dart';
+import 'package:focus_flutter/features/widgets/focus_window.dart';
 import 'package:focus_flutter/features/widgets/user_debuff_wrap.dart';
 
 /// Confirms aborting a [Routine].
@@ -14,9 +14,9 @@ class AbortRoutineModal extends ConsumerWidget {
 
   /// Shows the [AbortRoutineModal].
   static Future<void> show(BuildContext context, WidgetRef ref) async {
-    final abort = await FocusModal.show<bool>(
+    final abort = await FocusWindow.show<bool>(
       context,
-      (BuildContext context, CloseModal closeModal) => AbortRoutineModal._(closeModal: closeModal),
+      (BuildContext context, CloseWindow closeModal) => AbortRoutineModal._(closeModal: closeModal),
     );
     if (abort == true) {
       await ref.read(runRoutineRepositoryProvider.notifier).abortRoutine();
@@ -27,7 +27,7 @@ class AbortRoutineModal extends ConsumerWidget {
   }
 
   /// Callback to run when modal is closed.
-  final CloseModal closeModal;
+  final CloseWindow closeModal;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

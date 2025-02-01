@@ -3,8 +3,17 @@ PODS:
     - Flutter
     - FlutterMacOS
   - Flutter (1.0.0)
+  - flutter_gemma (0.0.1):
+    - Flutter
+    - MediaPipeTasksGenAI (= 0.10.20)
+    - MediaPipeTasksGenAIC (= 0.10.20)
   - image_picker_ios (0.0.1):
     - Flutter
+  - large_file_handler (0.0.1):
+    - Flutter
+  - MediaPipeTasksGenAI (0.10.20):
+    - MediaPipeTasksGenAIC (= 0.10.20)
+  - MediaPipeTasksGenAIC (0.10.20)
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -18,18 +27,29 @@ PODS:
 DEPENDENCIES:
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/darwin`)
   - Flutter (from `Flutter`)
+  - flutter_gemma (from `.symlinks/plugins/flutter_gemma/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
+  - large_file_handler (from `.symlinks/plugins/large_file_handler/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - sqflite_darwin (from `.symlinks/plugins/sqflite_darwin/darwin`)
   - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/darwin`)
+
+SPEC REPOS:
+  trunk:
+    - MediaPipeTasksGenAI
+    - MediaPipeTasksGenAIC
 
 EXTERNAL SOURCES:
   connectivity_plus:
     :path: ".symlinks/plugins/connectivity_plus/darwin"
   Flutter:
     :path: Flutter
+  flutter_gemma:
+    :path: ".symlinks/plugins/flutter_gemma/ios"
   image_picker_ios:
     :path: ".symlinks/plugins/image_picker_ios/ios"
+  large_file_handler:
+    :path: ".symlinks/plugins/large_file_handler/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   sqflite_darwin:
@@ -40,11 +60,15 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   connectivity_plus: 18382e7311ba19efcaee94442b23b32507b20695
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  flutter_gemma: 1292b201469b878b8e41bed5cc319bff2884ce6a
   image_picker_ios: c560581cceedb403a6ff17f2f816d7fea1421fc1
+  large_file_handler: e3686e246052b0f03955789d3a04604574f80afe
+  MediaPipeTasksGenAI: 26d0c1cd0aac100d1651a37477748287aca2bf31
+  MediaPipeTasksGenAIC: f7dc1fc6a11654b24c536579c7eb10471621fa7b
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   sqflite_darwin: 5a7236e3b501866c1c9befc6771dfd73ffb8702d
   webview_flutter_wkwebview: 0982481e3d9c78fd5c6f62a002fcd24fc791f1e4
 
-PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796
+PODFILE CHECKSUM: 92906b04914919e75004799b609448ddd7c0a72e
 
 COCOAPODS: 1.16.2

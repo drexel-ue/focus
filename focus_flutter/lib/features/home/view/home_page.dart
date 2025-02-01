@@ -5,8 +5,10 @@ import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/assets.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/app/routing.dart';
+import 'package:focus_flutter/features/llm/view/llm_loading_window.dart';
+import 'package:focus_flutter/features/llm/repository/gemma_repository.dart';
 import 'package:focus_flutter/features/run_routine/repository/run_routine_repository.dart';
-import 'package:focus_flutter/features/run_routine/view/run_routine_modal.dart';
+import 'package:focus_flutter/features/run_routine/view/run_routine_window.dart';
 import 'package:focus_flutter/features/tools/view/tools_page.dart';
 import 'package:focus_flutter/features/goals/view/goals_page.dart';
 import 'package:focus_flutter/features/home/repository/home_repository.dart';
@@ -17,7 +19,6 @@ import 'package:focus_flutter/features/stats/view/stats_page.dart';
 import 'package:focus_flutter/features/tasks/view/tasks_page.dart';
 import 'package:focus_flutter/features/widgets/focus_border.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
-import 'package:focus_flutter/features/widgets/focus_modal.dart';
 import 'package:focus_flutter/features/widgets/focus_painter.dart';
 import 'package:focus_flutter/features/widgets/marquee_text.dart';
 import 'package:go_router/go_router.dart';
@@ -57,7 +58,10 @@ class _HomePageState extends ConsumerState<HomePage> {
     _pageController = PageController(initialPage: ref.read(homeRepositoryProvider).tab.index);
     _layerLink = LayerLink();
     _overlayController = OverlayPortalController();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _checkForRunningRoutine());
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _loadLLM();
+      _checkForRunningRoutine();
+    });
   }
 
   void _homeRepositoryListener(HomeState? prev, HomeState next) {
@@ -71,12 +75,17 @@ class _HomePageState extends ConsumerState<HomePage> {
   Future<void> _checkForRunningRoutine() async {
     if (await ref.read(runRoutineRepositoryProvider.notifier).checkForRunningRoutine()) {
       if (mounted) {
-        FocusModal.show(
-          context,
-          barrierDismissible: false,
-          (_, __) => const RunRoutineModal(),
-        );
+        RunRoutineWindow.show(context);
       }
+    }
+  }
+
+  Future<void> _loadLLM() async {
+    if (ref.read(gemmaRepositoryProvider.notifier).modelLoaded) {
+      return;
+    }
+    if (mounted) {
+      LLMLoadingWindow.show(context);
     }
   }
 

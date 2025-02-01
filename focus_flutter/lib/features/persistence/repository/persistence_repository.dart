@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:focus_client/focus_client.dart';
+import 'package:focus_flutter/features/llm/repository/loaded_models.dart';
+import 'package:focus_flutter/features/persistence/repository/persisted_data.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-const _keyAuthSession = 'authSession';
-const _keyCurrentStep = 'currentStep';
+export 'package:focus_flutter/features/persistence/repository/persisted_data.dart';
 
 /// A mixin that provides access to the [PersistenceRepository] instance.
 mixin PersistenceRepoRef<T> on AsyncNotifier<T> {
@@ -21,61 +21,9 @@ final persistenceRepositoryProvider = Provider<PersistenceRepository>((ref) {
   return PersistenceRepository();
 });
 
-/// Data persisted to disk.
-@immutable
-class PersistedData {
-  /// Constructs a const [PersistedData].
-  const PersistedData({
-    AuthSession? authSession,
-    int? currentStep,
-  })  : _authSession = authSession,
-        _currentStep = currentStep;
-
-  /// Creates a new [PersistedData] while preserving data.
-  factory PersistedData.fromJson(Map<String, dynamic> jsonSerialization) {
-    return PersistedData(
-      authSession: jsonSerialization[_keyAuthSession] == null
-          ? null
-          : AuthSession.fromJson(jsonSerialization[_keyAuthSession]),
-      currentStep: jsonSerialization[_keyCurrentStep] as int?,
-    );
-  }
-
-  /// [AuthSession].
-  final AuthSession? _authSession;
-
-  /// [AuthSession].
-  AuthSession? get authSession => _authSession;
-
-  /// Current [Routine] step.
-  final int? _currentStep;
-
-  /// Current [Routine] step.
-  int? get currentStep => _currentStep;
-
-  /// Creates a new [PersistedData] while preserving data.
-  PersistedData copyWith({
-    AuthSession? authSession,
-    int? currentStep,
-  }) {
-    return PersistedData(
-      authSession: authSession ?? _authSession,
-      currentStep: currentStep ?? _currentStep,
-    );
-  }
-
-  /// Returns JSON serialization of [PersistedData].
-  Map<String, dynamic> toJson() {
-    return {
-      if (_authSession != null) _keyAuthSession: _authSession.toJson(),
-      if (_currentStep != null) _keyCurrentStep: _currentStep,
-    };
-  }
-}
-
 /// Repository for persisting data.
 class PersistenceRepository {
-  PersistedData _persistedData = const PersistedData();
+  PersistedData _persistedData = PersistedData();
   late File _file;
   Timer? _saveTimer;
 
@@ -96,7 +44,7 @@ class PersistenceRepository {
   /// Sets [AuthSession].
   set authSession(AuthSession? value) {
     if (value == null) {
-      _persistedData = PersistedData(currentStep: _persistedData.currentStep);
+      _persistedData = _persistedData.copyWithout(authSession: true);
     } else {
       _persistedData = _persistedData.copyWith(authSession: value);
     }
@@ -106,23 +54,22 @@ class PersistenceRepository {
   /// Gets [AuthSession].
   AuthSession? get authSession => _persistedData.authSession;
 
-  /// Sets current [Routine] step.
-  set currentStep(int? value) {
-    if (value == null) {
-      _persistedData = PersistedData(authSession: _persistedData.authSession);
-    } else {
-      _persistedData = _persistedData.copyWith(currentStep: value);
-    }
+  /// Returns whether the model has been loaded.
+  bool get modelLoaded => _persistedData.selectedModelData.isLoaded;
+
+  /// Gets the selected model data.
+  ModelData get selectedModel => _persistedData.selectedModelData;
+
+  /// Marks the selected model as loaded.
+  void markAsLoaded() {
+    _persistedData.markAsLoaded(_persistedData.model);
     _saveData();
   }
-
-  /// Gets current [Routine] step.
-  int? get currentStep => _persistedData.currentStep;
 
   /// Reset state.
   Future<void> logout() async {
     _saveTimer?.cancel();
-    _persistedData = const PersistedData();
+    _persistedData = PersistedData();
     final jsonSerialization = json.encode(_persistedData.toJson());
     await _file.writeAsString(jsonSerialization);
   }

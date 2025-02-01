@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/api/api_client.dart';
-import 'package:focus_flutter/app/persistence.dart';
+import 'package:focus_flutter/features/persistence/repository/persistence_repository.dart';
 import 'package:focus_flutter/features/auth/repository/clerk_auth_provider.dart';
 import 'package:focus_flutter/features/home/repository/home_repository.dart';
 import 'package:focus_flutter/features/tasks/repository/tasks_repository.dart';

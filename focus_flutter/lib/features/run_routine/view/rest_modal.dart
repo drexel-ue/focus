@@ -6,7 +6,7 @@ import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/features/run_routine/repository/run_routine_repository.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
 import 'package:focus_flutter/features/widgets/focus_countdown_timer.dart';
-import 'package:focus_flutter/features/widgets/focus_modal.dart';
+import 'package:focus_flutter/features/widgets/focus_window.dart';
 
 /// Rest modal.
 @immutable
@@ -20,9 +20,9 @@ class RestModal extends ConsumerWidget {
 
   /// Shows a [RestModal].
   static Future<void> show(BuildContext context, [String? nextStep]) async {
-    await FocusModal.show<void>(
+    await FocusWindow.show<void>(
       context,
-      (BuildContext context, CloseModal closeModal) => RestModal(
+      (BuildContext context, CloseWindow closeModal) => RestModal(
         nextStep: nextStep,
         closeModal: closeModal,
       ),
@@ -33,7 +33,7 @@ class RestModal extends ConsumerWidget {
   final String? nextStep;
 
   /// Callback to close modal.
-  final CloseModal closeModal;
+  final CloseWindow closeModal;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

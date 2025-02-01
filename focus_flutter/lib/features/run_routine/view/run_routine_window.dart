@@ -9,19 +9,29 @@ import 'package:focus_flutter/features/run_routine/view/routine_complete_page.da
 import 'package:focus_flutter/features/run_routine/view/start_routine_page.dart';
 import 'package:focus_flutter/features/run_routine/view/tally_step_page.dart';
 import 'package:focus_flutter/features/run_routine/view/time_out_countdown.dart';
+import 'package:focus_flutter/features/widgets/focus_window.dart';
 import 'package:focus_flutter/features/widgets/loading_cover.dart';
 
 /// Runs a [Routine].
 @immutable
-class RunRoutineModal extends ConsumerStatefulWidget {
-  /// Constructs a const [RunRoutineModal].
-  const RunRoutineModal({super.key});
+class RunRoutineWindow extends ConsumerStatefulWidget {
+  /// Constructs a const [RunRoutineWindow].
+  const RunRoutineWindow._();
+
+  /// Shows a [RunRoutineWindow].
+  static Future<void> show(BuildContext context) async {
+    return await FocusWindow.show(
+      context,
+      (BuildContext context, CloseWindow closeWindow) => const RunRoutineWindow._(),
+      barrierDismissible: false,
+    );
+  }
 
   @override
-  ConsumerState<RunRoutineModal> createState() => _RunRoutineModalState();
+  ConsumerState<RunRoutineWindow> createState() => _RunRoutineModalState();
 }
 
-class _RunRoutineModalState extends ConsumerState<RunRoutineModal> {
+class _RunRoutineModalState extends ConsumerState<RunRoutineWindow> {
   late final PageController _pageController;
 
   @override
