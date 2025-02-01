@@ -335,6 +335,25 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<String?>(),
               nullable: true,
             ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['task'] as _i5.TaskEndpoint).createTask(
+            session,
+            title: params['title'],
+            description: params['description'],
+          ),
+        ),
+        'completeTask': _i1.MethodConnector(
+          name: 'completeTask',
+          params: {
+            'taskId': _i1.ParameterDescription(
+              name: 'taskId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
             'abilityExpValues': _i1.ParameterDescription(
               name: 'abilityExpValues',
               type: _i1.getType<_i10.UserAbilityStats>(),
@@ -345,29 +364,10 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['task'] as _i5.TaskEndpoint).createTask(
-            session,
-            title: params['title'],
-            description: params['description'],
-            abilityExpValues: params['abilityExpValues'],
-          ),
-        ),
-        'toggleTaskComplete': _i1.MethodConnector(
-          name: 'toggleTaskComplete',
-          params: {
-            'taskId': _i1.ParameterDescription(
-              name: 'taskId',
-              type: _i1.getType<int>(),
-              nullable: false,
-            )
-          },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['task'] as _i5.TaskEndpoint).toggleTaskComplete(
+              (endpoints['task'] as _i5.TaskEndpoint).completeTask(
             session,
             params['taskId'],
+            params['abilityExpValues'],
           ),
         ),
         'updateTask': _i1.MethodConnector(
@@ -388,11 +388,6 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<String?>(),
               nullable: true,
             ),
-            'abilityExpValues': _i1.ParameterDescription(
-              name: 'abilityExpValues',
-              type: _i1.getType<_i10.UserAbilityStats>(),
-              nullable: false,
-            ),
           },
           call: (
             _i1.Session session,
@@ -403,7 +398,6 @@ class Endpoints extends _i1.EndpointDispatch {
             taskId: params['taskId'],
             title: params['title'],
             description: params['description'],
-            abilityExpValues: params['abilityExpValues'],
           ),
         ),
         'deleteTask': _i1.MethodConnector(

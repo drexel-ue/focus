@@ -113,7 +113,9 @@ class CrudListItemView<T> extends StatelessWidget {
                           children: [
                             if (T == Task)
                               FocusCheckbox(
-                                onTap: () => onCheckboxTapped?.call(item as Task),
+                                onTap: (item as Task).completed
+                                    ? null
+                                    : () => onCheckboxTapped?.call(item as Task),
                                 selected: (item as Task).completed,
                               ),
                             horizontalMargin16,

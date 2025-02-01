@@ -10,7 +10,6 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import 'user_ability_stats.dart' as _i2;
 
 /// A one-off task to be completed.
 abstract class Task implements _i1.TableRow, _i1.ProtocolSerialization {
@@ -22,7 +21,6 @@ abstract class Task implements _i1.TableRow, _i1.ProtocolSerialization {
     required this.title,
     this.description,
     bool? completed,
-    required this.abilityExpValues,
   }) : completed = completed ?? false;
 
   factory Task({
@@ -33,7 +31,6 @@ abstract class Task implements _i1.TableRow, _i1.ProtocolSerialization {
     required String title,
     String? description,
     bool? completed,
-    required _i2.UserAbilityStats abilityExpValues,
   }) = _TaskImpl;
 
   factory Task.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -47,8 +44,6 @@ abstract class Task implements _i1.TableRow, _i1.ProtocolSerialization {
       title: jsonSerialization['title'] as String,
       description: jsonSerialization['description'] as String?,
       completed: jsonSerialization['completed'] as bool,
-      abilityExpValues: _i2.UserAbilityStats.fromJson(
-          (jsonSerialization['abilityExpValues'] as Map<String, dynamic>)),
     );
   }
 
@@ -77,9 +72,6 @@ abstract class Task implements _i1.TableRow, _i1.ProtocolSerialization {
   /// Is the task completed?
   bool completed;
 
-  /// Collection of exp to be rewarded upon completion of this task.
-  _i2.UserAbilityStats abilityExpValues;
-
   @override
   _i1.Table get table => t;
 
@@ -91,7 +83,6 @@ abstract class Task implements _i1.TableRow, _i1.ProtocolSerialization {
     String? title,
     String? description,
     bool? completed,
-    _i2.UserAbilityStats? abilityExpValues,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -103,7 +94,6 @@ abstract class Task implements _i1.TableRow, _i1.ProtocolSerialization {
       'title': title,
       if (description != null) 'description': description,
       'completed': completed,
-      'abilityExpValues': abilityExpValues.toJson(),
     };
   }
 
@@ -117,7 +107,6 @@ abstract class Task implements _i1.TableRow, _i1.ProtocolSerialization {
       'title': title,
       if (description != null) 'description': description,
       'completed': completed,
-      'abilityExpValues': abilityExpValues.toJsonForProtocol(),
     };
   }
 
@@ -162,7 +151,6 @@ class _TaskImpl extends Task {
     required String title,
     String? description,
     bool? completed,
-    required _i2.UserAbilityStats abilityExpValues,
   }) : super._(
           id: id,
           createdAt: createdAt,
@@ -171,7 +159,6 @@ class _TaskImpl extends Task {
           title: title,
           description: description,
           completed: completed,
-          abilityExpValues: abilityExpValues,
         );
 
   @override
@@ -183,7 +170,6 @@ class _TaskImpl extends Task {
     String? title,
     Object? description = _Undefined,
     bool? completed,
-    _i2.UserAbilityStats? abilityExpValues,
   }) {
     return Task(
       id: id is int? ? id : this.id,
@@ -193,7 +179,6 @@ class _TaskImpl extends Task {
       title: title ?? this.title,
       description: description is String? ? description : this.description,
       completed: completed ?? this.completed,
-      abilityExpValues: abilityExpValues ?? this.abilityExpValues.copyWith(),
     );
   }
 }
@@ -225,10 +210,6 @@ class TaskTable extends _i1.Table {
       this,
       hasDefault: true,
     );
-    abilityExpValues = _i1.ColumnSerializable(
-      'abilityExpValues',
-      this,
-    );
   }
 
   /// Timestamp of entry into database.
@@ -249,9 +230,6 @@ class TaskTable extends _i1.Table {
   /// Is the task completed?
   late final _i1.ColumnBool completed;
 
-  /// Collection of exp to be rewarded upon completion of this task.
-  late final _i1.ColumnSerializable abilityExpValues;
-
   @override
   List<_i1.Column> get columns => [
         id,
@@ -261,7 +239,6 @@ class TaskTable extends _i1.Table {
         title,
         description,
         completed,
-        abilityExpValues,
       ];
 }
 

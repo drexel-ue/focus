@@ -27,8 +27,8 @@ import 'package:focus_server/src/generated/routine_with_record.dart' as _i12;
 import 'package:focus_server/src/generated/generated/routine_stats.dart'
     as _i13;
 import 'package:focus_server/src/generated/task.dart' as _i14;
-import 'package:focus_server/src/generated/user_ability_stats.dart' as _i15;
-import 'package:focus_server/src/generated/user_with_task.dart' as _i16;
+import 'package:focus_server/src/generated/user_with_task.dart' as _i15;
+import 'package:focus_server/src/generated/user_ability_stats.dart' as _i16;
 import 'package:focus_server/src/generated/task_stats.dart' as _i17;
 import 'package:focus_server/src/generated/protocol.dart';
 import 'package:focus_server/src/generated/endpoints.dart';
@@ -581,7 +581,6 @@ class _TaskEndpoint {
     _i1.TestSessionBuilder sessionBuilder, {
     required String title,
     String? description,
-    required _i15.UserAbilityStats abilityExpValues,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -597,7 +596,6 @@ class _TaskEndpoint {
           parameters: _i1.testObjectToJson({
             'title': title,
             'description': description,
-            'abilityExpValues': abilityExpValues,
           }),
           serializationManager: _serializationManager,
         );
@@ -612,28 +610,32 @@ class _TaskEndpoint {
     });
   }
 
-  _i3.Future<_i16.UserWithTask> toggleTaskComplete(
+  _i3.Future<_i15.UserWithTask> completeTask(
     _i1.TestSessionBuilder sessionBuilder,
     int taskId,
+    _i16.UserAbilityStats abilityExpValues,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
           (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
         endpoint: 'task',
-        method: 'toggleTaskComplete',
+        method: 'completeTask',
       );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
           endpointPath: 'task',
-          methodName: 'toggleTaskComplete',
-          parameters: _i1.testObjectToJson({'taskId': taskId}),
+          methodName: 'completeTask',
+          parameters: _i1.testObjectToJson({
+            'taskId': taskId,
+            'abilityExpValues': abilityExpValues,
+          }),
           serializationManager: _serializationManager,
         );
         var _localReturnValue = await (_localCallContext.method.call(
           _localUniqueSession,
           _localCallContext.arguments,
-        ) as _i3.Future<_i16.UserWithTask>);
+        ) as _i3.Future<_i15.UserWithTask>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -646,7 +648,6 @@ class _TaskEndpoint {
     required int taskId,
     required String title,
     String? description,
-    required _i15.UserAbilityStats abilityExpValues,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -663,7 +664,6 @@ class _TaskEndpoint {
             'taskId': taskId,
             'title': title,
             'description': description,
-            'abilityExpValues': abilityExpValues,
           }),
           serializationManager: _serializationManager,
         );

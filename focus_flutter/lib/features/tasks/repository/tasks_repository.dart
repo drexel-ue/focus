@@ -56,7 +56,6 @@ class TasksRepository extends AsyncNotifier<TaskState>
   Future<void> createTask({
     required String title,
     String? description,
-    required UserAbilityStats abilityExpValues,
   }) async {
     final currentState = state;
     try {
@@ -66,7 +65,6 @@ class TasksRepository extends AsyncNotifier<TaskState>
         return await api.task.createTask(
           title: title,
           description: description,
-          abilityExpValues: abilityExpValues,
         );
       });
       state = AsyncData(
@@ -82,19 +80,28 @@ class TasksRepository extends AsyncNotifier<TaskState>
         await createTask(
           title: title,
           description: description,
-          abilityExpValues: abilityExpValues,
         );
       });
     }
   }
 
-  /// Toggles the complete status of a [Task].
-  Future<void> toggleTaskComplete(int taskId) async {
+  /// Marks a [Task] as complete.
+  Future<void> completeTask(int taskId) async {
     final currentState = state;
     try {
       state = const AsyncLoading<TaskState>().copyWithPrevious(currentState);
-      final userWithTask =
-          await refreshIfNeeded((api) async => await api.task.toggleTaskComplete(taskId));
+      final userWithTask = await refreshIfNeeded(
+        (api) async => await api.task.completeTask(
+          taskId,
+          UserAbilityStats(
+            strengthExp: 0,
+            vitalityExp: 0,
+            agilityExp: 0,
+            intelligenceExp: 0,
+            perceptionExp: 0,
+          ),
+        ),
+      );
       final index = currentState.requireValue.tasks.indexWhere((element) => element.id == taskId);
       final tasks = currentState.requireValue.tasks;
       tasks[index] = userWithTask!.task;
@@ -102,10 +109,10 @@ class TasksRepository extends AsyncNotifier<TaskState>
       homeRepo.showPositiveSnack('Updated task: ${userWithTask.task.title}');
       authRepo.user = userWithTask.user;
     } catch (error, stackTrace) {
-      logSevere('error in toggleTaskComplete', error, stackTrace);
+      logSevere('error in completeTask', error, stackTrace);
       state = AsyncError<TaskState>(error, stackTrace).copyWithPrevious(currentState);
       homeRepo.showNegativeSnack('Failed to update task. Tap to retry.', () async {
-        await toggleTaskComplete(taskId);
+        await completeTask(taskId);
       });
     }
   }
@@ -115,7 +122,6 @@ class TasksRepository extends AsyncNotifier<TaskState>
     required int taskId,
     required String title,
     String? description,
-    required UserAbilityStats abilityExpValues,
   }) async {
     final currentState = state;
     try {
@@ -126,7 +132,6 @@ class TasksRepository extends AsyncNotifier<TaskState>
           taskId: taskId,
           title: title,
           description: description,
-          abilityExpValues: abilityExpValues,
         );
       });
       final index = currentState.requireValue.tasks.indexWhere((element) => element.id == taskId);
@@ -142,7 +147,6 @@ class TasksRepository extends AsyncNotifier<TaskState>
           taskId: taskId,
           title: title,
           description: description,
-          abilityExpValues: abilityExpValues,
         );
       });
     }

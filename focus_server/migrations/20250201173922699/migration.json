@@ -1,0 +1,43 @@
+{
+  "actions": [
+    {
+      "type": "alterTable",
+      "alterTable": {
+        "name": "tasks",
+        "schema": "public",
+        "addColumns": [],
+        "deleteColumns": [
+          "abilityExpValues"
+        ],
+        "modifyColumns": [],
+        "addIndexes": [],
+        "deleteIndexes": [],
+        "addForeignKeys": [],
+        "deleteForeignKeys": [],
+        "warnings": [
+          {
+            "type": "columnDropped",
+            "message": "Column \"abilityExpValues\" of table \"tasks\" will be dropped.",
+            "table": "tasks",
+            "columns": [
+              "abilityExpValues"
+            ],
+            "destrucive": true
+          }
+        ]
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "type": "columnDropped",
+      "message": "Column \"abilityExpValues\" of table \"tasks\" will be dropped.",
+      "table": "tasks",
+      "columns": [
+        "abilityExpValues"
+      ],
+      "destrucive": true
+    }
+  ],
+  "migrationApiVersion": 1
+}

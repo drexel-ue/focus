@@ -16,7 +16,7 @@ routine:
 task:
   - getTasks:
   - createTask:
-  - toggleTaskComplete:
+  - completeTask:
   - updateTask:
   - deleteTask:
   - getTaskStats:

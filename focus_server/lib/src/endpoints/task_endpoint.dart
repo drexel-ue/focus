@@ -26,12 +26,7 @@ class TaskEndpoint extends Endpoint {
       } on InvalidTokenException catch (_) {
         rethrow;
       } catch (error, stackTrace) {
-        session.log(
-          'error in getTasks',
-          level: LogLevel.error,
-          exception: error,
-          stackTrace: stackTrace,
-        );
+        session.logError('error in getTasks', error, stackTrace);
         throw FetchException(message: 'failed to fetch tasks.');
       }
     });
@@ -42,7 +37,6 @@ class TaskEndpoint extends Endpoint {
     Session session, {
     required String title,
     String? description,
-    required UserAbilityStats abilityExpValues,
   }) async {
     return session.db.transaction((Transaction transaction) async {
       try {
@@ -54,23 +48,21 @@ class TaskEndpoint extends Endpoint {
           userId: user.id!,
           title: title,
           description: description,
-          abilityExpValues: abilityExpValues,
         );
         return await Task.db.insertRow(session, task, transaction: transaction);
       } catch (error, stackTrace) {
-        session.log(
-          'error in createTask',
-          level: LogLevel.error,
-          exception: error,
-          stackTrace: stackTrace,
-        );
+        session.logError('error in createTask', error, stackTrace);
         throw CreationException(message: 'failed to create task.');
       }
     });
   }
 
-  /// Toggles the completion state of a [Task].
-  Future<UserWithTask> toggleTaskComplete(Session session, int taskId) async {
+  /// Marks a [Task] as complete.
+  Future<UserWithTask> completeTask(
+    Session session,
+    int taskId,
+    UserAbilityStats abilityExpValues,
+  ) async {
     return await session.db.transaction((Transaction transaction) async {
       try {
         final user = await session.parseUserFromFocusSession(transaction);
@@ -82,10 +74,10 @@ class TaskEndpoint extends Endpoint {
         if (task == null) {
           throw NotFoundException(message: 'task not found');
         }
-        task.completed = !task.completed;
+        task.completed = true;
         user.abilityStats = task.completed
-            ? user.abilityStats + task.abilityExpValues.buffed(user.buffs).debuffed(user.debuffs)
-            : user.abilityStats - task.abilityExpValues.buffed(user.buffs).debuffed(user.debuffs);
+            ? user.abilityStats + abilityExpValues.buffed(user.buffs).debuffed(user.debuffs)
+            : user.abilityStats - abilityExpValues.buffed(user.buffs).debuffed(user.debuffs);
         task.lastModifiedAt = DateTime.timestamp();
         final updatedUser = await User.db.updateRow(session, user);
         final updatedTask = await Task.db.updateRow(session, task, transaction: transaction);
@@ -93,12 +85,7 @@ class TaskEndpoint extends Endpoint {
       } on NotFoundException catch (_) {
         rethrow;
       } catch (error, stackTrace) {
-        session.log(
-          'error in toggleTaskComplete',
-          level: LogLevel.error,
-          exception: error,
-          stackTrace: stackTrace,
-        );
+        session.logError('error in completeTask', error, stackTrace);
         throw UpdateException(message: 'failed to update task.');
       }
     });
@@ -110,7 +97,6 @@ class TaskEndpoint extends Endpoint {
     required int taskId,
     required String title,
     String? description,
-    required UserAbilityStats abilityExpValues,
   }) async {
     return session.db.transaction((Transaction transaction) async {
       try {
@@ -126,18 +112,12 @@ class TaskEndpoint extends Endpoint {
         task
           ..lastModifiedAt = DateTime.timestamp()
           ..title = title
-          ..description = description
-          ..abilityExpValues = abilityExpValues;
+          ..description = description;
         return await Task.db.updateRow(session, task, transaction: transaction);
       } on NotFoundException catch (_) {
         rethrow;
       } catch (error, stackTrace) {
-        session.log(
-          'error in updateTask',
-          level: LogLevel.error,
-          exception: error,
-          stackTrace: stackTrace,
-        );
+        session.logError('error in updateTask', error, stackTrace);
         throw CreationException(message: 'failed to update task.');
       }
     });
@@ -158,12 +138,7 @@ class TaskEndpoint extends Endpoint {
         }
         return await Task.db.deleteRow(session, task, transaction: transaction);
       } catch (error, stackTrace) {
-        session.log(
-          'error in deleteTask',
-          level: LogLevel.error,
-          exception: error,
-          stackTrace: stackTrace,
-        );
+        session.logError('error in deleteTask', error, stackTrace);
         throw DeletionException(message: 'failed to delete task.');
       }
     });
@@ -179,20 +154,6 @@ class TaskEndpoint extends Endpoint {
           where: (TaskTable table) => table.userId.equals(user.id!),
           transaction: transaction,
         );
-        var completedStats = UserAbilityStats(
-          strengthExp: 0,
-          vitalityExp: 0,
-          agilityExp: 0,
-          intelligenceExp: 0,
-          perceptionExp: 0,
-        );
-        var incompletedStats = UserAbilityStats(
-          strengthExp: 0,
-          vitalityExp: 0,
-          agilityExp: 0,
-          intelligenceExp: 0,
-          perceptionExp: 0,
-        );
         var completedTally = 0;
         var incompleteTally = 0;
         var longestRunningTaskTime = Duration.zero;
@@ -204,7 +165,6 @@ class TaskEndpoint extends Endpoint {
         final now = DateTime.timestamp();
         for (final task in tasks) {
           if (task.completed) {
-            completedStats = completedStats + task.abilityExpValues;
             completedTally += 1;
             final completionTime = task.lastModifiedAt.difference(task.createdAt);
             if (completionTime > longestRunningTaskTime) {
@@ -217,7 +177,6 @@ class TaskEndpoint extends Endpoint {
             }
             completionDurations.add(completionTime);
           } else {
-            incompletedStats = incompletedStats + task.abilityExpValues;
             incompleteTally += 1;
             final runningTime = now.difference(task.createdAt);
             if (runningTime > longestRunningTaskTime) {
@@ -235,8 +194,6 @@ class TaskEndpoint extends Endpoint {
             ? Duration(milliseconds: averageInMilliseconds)
             : Duration.zero;
         return TaskStats(
-          completedStats: completedStats,
-          incompleteStats: incompletedStats,
           completedTally: completedTally,
           incompleteTally: incompleteTally,
           averageCompletionTime: averageCompletionTime,
@@ -248,12 +205,7 @@ class TaskEndpoint extends Endpoint {
           shortestCompletedTask: shortestCompletedTask,
         );
       } catch (error, stackTrace) {
-        session.log(
-          'error in getTaskStats',
-          level: LogLevel.error,
-          exception: error,
-          stackTrace: stackTrace,
-        );
+        session.logError('error in getTaskStats', error, stackTrace);
         throw FetchException(message: 'failed to fetch task stats.');
       }
     });

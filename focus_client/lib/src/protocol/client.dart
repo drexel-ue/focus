@@ -23,8 +23,8 @@ import 'package:focus_client/src/protocol/user_with_routine_record.dart'
 import 'package:focus_client/src/protocol/routine_with_record.dart' as _i11;
 import 'package:focus_client/src/protocol/generated/routine_stats.dart' as _i12;
 import 'package:focus_client/src/protocol/task.dart' as _i13;
-import 'package:focus_client/src/protocol/user_ability_stats.dart' as _i14;
-import 'package:focus_client/src/protocol/user_with_task.dart' as _i15;
+import 'package:focus_client/src/protocol/user_with_task.dart' as _i14;
+import 'package:focus_client/src/protocol/user_ability_stats.dart' as _i15;
 import 'package:focus_client/src/protocol/task_stats.dart' as _i16;
 import 'protocol.dart' as _i17;
 
@@ -193,7 +193,6 @@ class EndpointTask extends _i1.EndpointRef {
   _i2.Future<_i13.Task> createTask({
     required String title,
     String? description,
-    required _i14.UserAbilityStats abilityExpValues,
   }) =>
       caller.callServerEndpoint<_i13.Task>(
         'task',
@@ -201,16 +200,21 @@ class EndpointTask extends _i1.EndpointRef {
         {
           'title': title,
           'description': description,
-          'abilityExpValues': abilityExpValues,
         },
       );
 
-  /// Toggles the completion state of a [Task].
-  _i2.Future<_i15.UserWithTask> toggleTaskComplete(int taskId) =>
-      caller.callServerEndpoint<_i15.UserWithTask>(
+  /// Marks a [Task] as complete.
+  _i2.Future<_i14.UserWithTask> completeTask(
+    int taskId,
+    _i15.UserAbilityStats abilityExpValues,
+  ) =>
+      caller.callServerEndpoint<_i14.UserWithTask>(
         'task',
-        'toggleTaskComplete',
-        {'taskId': taskId},
+        'completeTask',
+        {
+          'taskId': taskId,
+          'abilityExpValues': abilityExpValues,
+        },
       );
 
   /// Update a [Task].
@@ -218,7 +222,6 @@ class EndpointTask extends _i1.EndpointRef {
     required int taskId,
     required String title,
     String? description,
-    required _i14.UserAbilityStats abilityExpValues,
   }) =>
       caller.callServerEndpoint<_i13.Task>(
         'task',
@@ -227,7 +230,6 @@ class EndpointTask extends _i1.EndpointRef {
           'taskId': taskId,
           'title': title,
           'description': description,
-          'abilityExpValues': abilityExpValues,
         },
       );
 

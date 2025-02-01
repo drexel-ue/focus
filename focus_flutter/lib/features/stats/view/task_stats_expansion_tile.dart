@@ -5,7 +5,6 @@ import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/extensions/duration.dart';
 import 'package:focus_flutter/features/stats/repository/stats_repository.dart';
 import 'package:focus_flutter/features/tasks/view/task_form.dart';
-import 'package:focus_flutter/features/widgets/ability_stats_display.dart';
 import 'package:focus_flutter/features/widgets/focus_button.dart';
 import 'package:focus_flutter/features/widgets/focus_modal.dart';
 
@@ -140,24 +139,6 @@ class _TaskStatsExpansionTileState extends ConsumerState<TaskStatsExpansionTile>
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.start,
           ),
-        ),
-        verticalMargin8,
-        const Padding(
-          padding: horizontalPadding16,
-          child: Text('Stats gained:'),
-        ),
-        Padding(
-          padding: leftPadding32 + rightPadding16,
-          child: AbilityStatsDisplay(stats: stats.completedStats),
-        ),
-        verticalMargin8,
-        const Padding(
-          padding: horizontalPadding16,
-          child: Text('Stats on table:'),
-        ),
-        Padding(
-          padding: leftPadding32 + rightPadding16,
-          child: AbilityStatsDisplay(stats: stats.incompleteStats),
         ),
         verticalMargin8,
       ],

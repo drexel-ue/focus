@@ -1,10 +1,6 @@
 ### Completion stats for a [User]'s [Task]s.
 class: TaskStats
 fields:
-  ### Sum of [UserAbilityStats] for completed [Task]s.
-  completedStats: UserAbilityStats
-  ### Sum of [UserAbilityStats] for incomplete [Task]s.
-  incompleteStats: UserAbilityStats
   ### Tally of completed [Task]s.
   completedTally: int
   ### Tally of incomplete [Task]s.

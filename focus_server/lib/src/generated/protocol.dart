@@ -276,12 +276,6 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'bool',
           columnDefault: 'false',
         ),
-        _i2.ColumnDefinition(
-          name: 'abilityExpValues',
-          columnType: _i2.ColumnType.json,
-          isNullable: false,
-          dartType: 'protocol:UserAbilityStats',
-        ),
       ],
       foreignKeys: [],
       indexes: [

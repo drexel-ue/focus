@@ -51,7 +51,7 @@ class _TasksPageState extends ConsumerState<TasksPage> {
       onAddItem: () => _showTaskForm(context),
       onDeleteItem: (task) => _showDeleteModal(context, task),
       onItemTapped: (task) => _showTaskForm(context, task),
-      onCheckboxTapped: (task) => notifier.toggleTaskComplete(task.id!),
+      onCheckboxTapped: (task) => notifier.completeTask(task.id!),
     );
   }
 }

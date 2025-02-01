@@ -14,5 +14,3 @@ fields:
   description: String?
   ### Is the task completed?
   completed: bool, default=false
-  ### Collection of exp to be rewarded upon completion of this task.
-  abilityExpValues: UserAbilityStats
