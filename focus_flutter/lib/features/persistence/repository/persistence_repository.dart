@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:focus_client/focus_client.dart';
-import 'package:focus_flutter/features/llm/repository/loaded_models.dart';
 import 'package:focus_flutter/features/persistence/repository/persisted_data.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -23,7 +22,7 @@ final persistenceRepositoryProvider = Provider<PersistenceRepository>((ref) {
 
 /// Repository for persisting data.
 class PersistenceRepository {
-  PersistedData _persistedData = PersistedData();
+  PersistedData _persistedData = const PersistedData();
   late File _file;
   Timer? _saveTimer;
 
@@ -54,22 +53,10 @@ class PersistenceRepository {
   /// Gets [AuthSession].
   AuthSession? get authSession => _persistedData.authSession;
 
-  /// Returns whether the model has been loaded.
-  bool get modelLoaded => _persistedData.selectedModelData.isLoaded;
-
-  /// Gets the selected model data.
-  ModelData get selectedModel => _persistedData.selectedModelData;
-
-  /// Marks the selected model as loaded.
-  void markAsLoaded() {
-    _persistedData.markAsLoaded(_persistedData.model);
-    _saveData();
-  }
-
   /// Reset state.
   Future<void> logout() async {
     _saveTimer?.cancel();
-    _persistedData = PersistedData();
+    _persistedData = const PersistedData();
     final jsonSerialization = json.encode(_persistedData.toJson());
     await _file.writeAsString(jsonSerialization);
   }

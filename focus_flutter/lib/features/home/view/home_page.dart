@@ -5,8 +5,6 @@ import 'package:focus_client/focus_client.dart';
 import 'package:focus_flutter/app/assets.dart';
 import 'package:focus_flutter/app/layout.dart';
 import 'package:focus_flutter/app/routing.dart';
-import 'package:focus_flutter/features/llm/view/llm_loading_window.dart';
-import 'package:focus_flutter/features/llm/repository/gemma_repository.dart';
 import 'package:focus_flutter/features/run_routine/repository/run_routine_repository.dart';
 import 'package:focus_flutter/features/run_routine/view/run_routine_window.dart';
 import 'package:focus_flutter/features/tools/view/tools_page.dart';
@@ -58,8 +56,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     _pageController = PageController(initialPage: ref.read(homeRepositoryProvider).tab.index);
     _layerLink = LayerLink();
     _overlayController = OverlayPortalController();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await _loadLLM();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkForRunningRoutine();
     });
   }
@@ -77,15 +74,6 @@ class _HomePageState extends ConsumerState<HomePage> {
       if (mounted) {
         RunRoutineWindow.show(context);
       }
-    }
-  }
-
-  Future<void> _loadLLM() async {
-    if (ref.read(gemmaRepositoryProvider.notifier).modelLoaded) {
-      return;
-    }
-    if (mounted) {
-      LLMLoadingWindow.show(context);
     }
   }
 
@@ -133,7 +121,6 @@ class _HomePageState extends ConsumerState<HomePage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            // FIXME(drexel-ue): can this me made to stick to the right?
             Expanded(
               child: Align(
                 alignment: Alignment.centerRight,
