@@ -46,7 +46,11 @@ class AuthRepository extends AsyncNotifier<AuthSession>
 
   set session(AuthSession session) => state = AsyncData(session);
 
-  set user(User value) => state = AsyncData(state.requireValue.copyWith(user: value));
+  /// [User].
+  set user(User? value) => state = AsyncData(state.requireValue.copyWith(user: value));
+
+  /// [User].
+  User? get user => state.value?.user;
 
   /// Requests a new [AuthSession].
   Future<void> authenticate(BuildContext context) async {
