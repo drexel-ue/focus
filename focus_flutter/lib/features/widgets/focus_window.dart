@@ -69,7 +69,7 @@ class _FocusWindowState<T> extends State<FocusWindow<T>> {
     return SafeArea(
       child: Center(
         child: Padding(
-          padding: allPadding32,
+          padding: allPadding32 + MediaQuery.of(context).viewInsets,
           child: ConstrainedBox(
             constraints: widget.constraints,
             child: FocusBorder(
