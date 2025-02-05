@@ -12,7 +12,8 @@ class FocusButton extends StatelessWidget {
     this.square = false,
     this.filled = false,
     this.enabled = true,
-    required this.onTap,
+    this.onTap,
+    this.onLongPress,
     required this.child,
   });
 
@@ -30,6 +31,9 @@ class FocusButton extends StatelessWidget {
 
   /// Callback to be ran on tap.
   final VoidCallback? onTap;
+
+  /// Callback to be ran on long press.
+  final VoidCallback? onLongPress;
 
   /// Child.
   final Widget child;
@@ -53,7 +57,8 @@ class FocusButton extends StatelessWidget {
                 : AppColors.black,
       ),
       child: InkWell(
-        onTap: enabled ? () => onTap?.call() : null,
+        onTap: enabled && onTap != null ? () => onTap!.call() : null,
+        onLongPress: enabled && onLongPress != null ? () => onLongPress!.call() : null,
         child: Center(
           child: Padding(
             padding: square ? allPadding4 : horizontalPadding10,
