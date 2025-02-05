@@ -134,7 +134,7 @@ class _RoutineFormState extends ConsumerState<RoutineForm> {
             padding: horizontalPadding16,
             child: TextField(
               controller: _titleController,
-              cursorColor: AppColors.white,
+              keyboardAppearance: Brightness.dark,
               decoration: const InputDecoration(
                 hintText: 'Title',
               ),

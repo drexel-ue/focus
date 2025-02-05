@@ -84,7 +84,7 @@ class _TaskFormState extends ConsumerState<TaskForm> {
           children: [
             TextField(
               controller: _titleController,
-              cursorColor: AppColors.white,
+              keyboardAppearance: Brightness.dark,
               decoration: const InputDecoration(
                 hintText: 'Title',
               ),
@@ -96,6 +96,7 @@ class _TaskFormState extends ConsumerState<TaskForm> {
                 expands: true,
                 maxLines: null,
                 textAlignVertical: TextAlignVertical.top,
+                keyboardAppearance: Brightness.dark,
                 decoration: const InputDecoration(
                   hintText: 'Description',
                 ),

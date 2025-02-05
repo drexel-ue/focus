@@ -131,7 +131,7 @@ class _StepFormState extends ConsumerState<StepForm> {
                 children: [
                   TextField(
                     controller: _titleController,
-                    cursorColor: AppColors.white,
+                    keyboardAppearance: Brightness.dark,
                     decoration: const InputDecoration(
                       hintText: 'Title',
                     ),
@@ -159,6 +159,7 @@ class _StepFormState extends ConsumerState<StepForm> {
                               textAlign: TextAlign.center,
                               textAlignVertical: TextAlignVertical.center,
                               keyboardType: TextInputType.number,
+                              keyboardAppearance: Brightness.dark,
                               inputFormatters: [
                                 DigitOnlyInputFormatter(),
                                 FilteringTextInputFormatter.digitsOnly,
