@@ -10,6 +10,7 @@ resolution: workspace
 dependencies:
   serverpod: 2.3.1
   dart_jsonwebtoken: ^2.14.2
+  crypto: ^3.0.6
 
 dev_dependencies:
   lints: '>=3.0.0 <6.0.0'

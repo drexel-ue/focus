@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:focus_server/src/custom_scope.dart';
+import 'package:focus_server/src/extensions/session_extension.dart';
 import 'package:focus_server/src/future_calls/remove_user_buff_future_call.dart';
 import 'package:focus_server/src/future_calls/remove_user_debuff_future_call.dart';
 import 'package:focus_server/src/future_calls/routine_completion_check_future_call.dart';
@@ -87,25 +88,24 @@ Future<AuthenticationInfo?> _validateClerkToken(Session session, String token) a
 
 Future<AuthenticationInfo?> _validateFocusToken(Session session, String token) async {
   try {
-    // FIXME(drexel-ue): replace with actual key.
-    final secretKey = SecretKey('secret');
-    final jwt = JWT.verify(token, secretKey);
-    final userId = int.parse(jwt.subject!);
-    // FIXME(drexel): replace with extension.
-    final user = await User.db.findById(session, userId);
-    if (user != null) {
-      final scopes = jwt.payload['scopes'] //
-          .split(', ')
-          .map<CustomScope>(CustomScope.parse);
+    return await session.db.transaction((Transaction transaction) async {
+      final jwt = JWT.verify(token, session.secretKey);
+      final userId = int.parse(jwt.subject!);
+      final user = await User.db.findById(session, userId);
+      if (user != null) {
+        final scopes = jwt.payload['scopes'] //
+            .split(', ')
+            .map<CustomScope>(CustomScope.parse);
+        return AuthenticationInfo(
+          user.id!,
+          Set<Scope>.from(scopes),
+        );
+      }
       return AuthenticationInfo(
-        user.id!,
-        Set<Scope>.from(scopes),
+        jwt.subject.hashCode,
+        <Scope>{Scope.none},
       );
-    }
-    return AuthenticationInfo(
-      jwt.subject.hashCode,
-      <Scope>{Scope.none},
-    );
+    });
   } on JWTExpiredException catch (_) {
     throw ExpiredJWTException();
   } catch (error, stackTrace) {

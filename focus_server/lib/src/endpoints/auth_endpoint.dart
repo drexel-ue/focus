@@ -11,8 +11,6 @@ class AuthEndpoint extends Endpoint {
   @override
   Set<Scope> get requiredScopes => {CustomScope.auth};
 
-  final _secretKey = SecretKey('secret');
-
   /// Creates a new [AuthSession].
   Future<AuthSession> authenticate(Session session) async {
     return session.db.transaction((Transaction transaction) async {
@@ -52,7 +50,7 @@ class AuthEndpoint extends Endpoint {
   Future<AuthSession> refresh(Session session, AuthToken authToken) async {
     return await session.db.transaction((Transaction transaction) async {
       try {
-        final jwt = JWT.verify(authToken.refreshToken, _secretKey);
+        final jwt = JWT.verify(authToken.refreshToken, session.secretKey);
         if (jwt.payload['parent_token'] == authToken.accessToken) {
           final userId = int.parse(jwt.subject!);
           var user = await User.db.findById(session, userId);
@@ -149,7 +147,7 @@ class AuthEndpoint extends Endpoint {
       issuer: issuer,
     );
     final accessTokenString = accessTokenJwt.sign(
-      _secretKey,
+      session.secretKey,
       // FIXME(drexel-ue): would it be better to set iat in payload using [Timestamp] and just calculate the expiry based on token type?
       expiresIn: const Duration(minutes: 15),
     );
@@ -162,7 +160,7 @@ class AuthEndpoint extends Endpoint {
       issuer: issuer,
     );
     final refreshTokenString = refreshTokenJwt.sign(
-      _secretKey,
+      session.secretKey,
       expiresIn: const Duration(days: 30),
     );
     return AuthToken(

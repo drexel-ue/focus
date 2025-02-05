@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:crypto/crypto.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:focus_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
@@ -30,8 +32,7 @@ extension SessionX on Session {
 
   /// Parses [User] from focus auth token.
   Future<User> parseUserFromFocusSession([Transaction? transaction]) async {
-    // FIXME(drexel-ue): replace with actual key.
-    final jwt = JWT.verify(authenticationKey!, SecretKey('secret'));
+    final jwt = JWT.verify(authenticationKey!, secretKey);
     final user = await User.db.findById(this, int.parse(jwt.subject!), transaction: transaction);
     if (user == null) {
       throw InvalidTokenException();
@@ -68,5 +69,12 @@ extension SessionX on Session {
   /// Logs an error.
   void logError(String message, [Object? error, StackTrace? stackTrace]) {
     log(message, level: LogLevel.error, exception: error, stackTrace: stackTrace);
+  }
+
+  /// Returns a [SecretKey] parsed from the environment.
+  SecretKey get secretKey {
+    final focusJwtSecret = passwords['focusJwtSecret'] as String;
+    final encodedKey = sha256.convert(utf8.encode(focusJwtSecret)).toString();
+    return SecretKey(encodedKey);
   }
 }
